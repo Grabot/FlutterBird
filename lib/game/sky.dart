@@ -1,9 +1,9 @@
 import 'dart:ui';
 
-import 'package:age_of_gold/game/flutter_bird.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
+import 'package:flutter_bird/game/flutter_bird.dart';
 
 
 class Sky extends ParallaxComponent<FlutterBird> {

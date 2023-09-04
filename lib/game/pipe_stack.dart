@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:age_of_gold/game/flutter_bird.dart';
-import 'package:age_of_gold/game/pipe.dart';
 import 'package:flame/components.dart';
+import 'package:flutter_bird/game/flutter_bird.dart';
+import 'package:flutter_bird/game/pipe.dart';
 
 class PipeStack extends PositionComponent with HasGameRef<FlutterBird> {
   static final Random _rng = Random();

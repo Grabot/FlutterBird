@@ -1,5 +1,5 @@
-name: age_of_gold
-description: Age Of Gold
+name: flutter_bird
+description: Flutter Bird
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

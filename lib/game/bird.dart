@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:age_of_gold/game/flutter_bird.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<FlutterBird> {
 

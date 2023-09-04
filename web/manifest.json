@@ -1,11 +1,11 @@
 {
-    "name": "age_of_gold",
-    "short_name": "age_of_gold",
+    "name": "flutter_bird",
+    "short_name": "flutter_bird",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Age Of Gold",
+    "description": "Flutter Bird",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

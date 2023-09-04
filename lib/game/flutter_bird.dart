@@ -1,10 +1,10 @@
 
-import 'package:age_of_gold/game/bird.dart';
-import 'package:age_of_gold/game/pipe_stack.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flutter_bird/game/bird.dart';
 
+import 'pipe_stack.dart';
 import 'sky.dart';
 
 class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
