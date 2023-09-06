@@ -5,6 +5,7 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/game/pipe.dart';
 
 class PipeStack extends PositionComponent with HasGameRef<FlutterBird> {
+
   static final Random _rng = Random();
 
   @override
@@ -30,6 +31,6 @@ class PipeStack extends PositionComponent with HasGameRef<FlutterBird> {
     if (position.x < -Pipe.initialSize.x) {
       removeFromParent();
     }
-    position.x -= gameRef.speed * dt;
+    super.update(dt);
   }
 }
