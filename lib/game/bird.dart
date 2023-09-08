@@ -7,7 +7,7 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<FlutterBird> {
 
-  double flapSpeed = 800;
+  double flapSpeed = 500;
   double velocityY = 0;
   double accelerationY = 50;
   double rotation = 0;
@@ -16,9 +16,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   @override
   Future<void> onLoad() async {
-    debugPaint.strokeWidth = 5;
-    debugMode = true;
-    add(CircleHitbox()..debugPaint.strokeWidth = 5);
+    add(CircleHitbox());
     final image = await Flame.images.load('flutter_yellow.png');
     animation = SpriteAnimation.fromFrameData(image, SpriteAnimationData.sequenced(
       amount: 3,
@@ -27,17 +25,18 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     ));
 
     anchor = Anchor.center;
-    flapSpeed = 800;
-    velocityY = 0;
-    accelerationY = 40;
-    rotation = 0;
 
     double posY = (gameRef.size.y/4);
     position = Vector2(100, posY);
-    print("gameref height ${gameRef.size.y}");
-    addMenuY = gameRef.size.y / 10;
 
     return super.onLoad();
+  }
+
+  gameStarted() {
+    flapSpeed = 500;
+    velocityY = 0;
+    accelerationY = 50;
+    rotation = 0;
   }
 
   @override
@@ -55,7 +54,6 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     angle = radians(rotation * -1);
   }
 
-  double addMenuY = 1;
   double maxVelY = 400;
   double minVelY = -400;
   _updatePositionMenu(double dt) {
@@ -65,8 +63,8 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY -= accelerationY * -1;
 
     position.y -= (velocityY * dt) * -1;
-    // rotation = ((velocityY * -1) / 12).clamp(-90, 20);
-    // angle = radians(rotation * -1);
+    rotation = ((velocityY * -1) / 12).clamp(-90, 20);
+    angle = radians(rotation * -1);
   }
 
   @override

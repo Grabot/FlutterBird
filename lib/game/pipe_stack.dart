@@ -31,6 +31,7 @@ class PipeStack extends PositionComponent with HasGameRef<FlutterBird> {
     if (position.x < -Pipe.initialSize.x) {
       removeFromParent();
     }
+    position.x -= gameRef.speed * dt;
     super.update(dt);
   }
 }

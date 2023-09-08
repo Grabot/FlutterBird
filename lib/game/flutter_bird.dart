@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter_bird/game/bird.dart';
 import 'package:flutter_bird/game/floor.dart';
+import 'package:flutter_bird/game/help_message.dart';
 
 import 'pipe_stack.dart';
 import 'sky.dart';
@@ -18,12 +19,16 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   double _timeSinceBox = 0;
   double _boxInterval = 1;
 
+  late HelpMessage helpMessage;
+
   @override
   Future<void> onLoad() async {
     bird = Bird();
     add(Sky());
     add(bird);
     add(Floor());
+    helpMessage = HelpMessage();
+    add(helpMessage);
     add(ScreenHitbox());
     return super.onLoad();
   }
@@ -32,6 +37,8 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   void onTap() {
     if (!gameStarted) {
       gameStarted = true;
+      bird.gameStarted();
+      remove(helpMessage);
     } else {
       // game running
       bird.fly();
