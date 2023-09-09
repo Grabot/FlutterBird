@@ -5,8 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flutter_bird/game/bird.dart';
 import 'package:flutter_bird/game/floor.dart';
 import 'package:flutter_bird/game/help_message.dart';
-
-import 'pipe_stack.dart';
+import 'package:flutter_bird/game/pipe.dart';
 import 'sky.dart';
 
 class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
@@ -52,7 +51,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     if (gameStarted) {
       _timeSinceBox += dt;
       if (_timeSinceBox > _boxInterval) {
-        add(PipeStack());
+        add(Pipe(
+          position: Vector2(size.x, size.y),
+        ));
         _timeSinceBox = 0;
       }
     }

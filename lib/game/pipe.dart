@@ -2,15 +2,17 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter_bird/game/flutter_bird.dart';
 
-class Pipe extends SpriteComponent {
-  static Vector2 initialSize = Vector2.all(150);
-  Pipe({super.position}) : super(size: Vector2.all(150));
+class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
+  Pipe({super.position});
 
   @override
   Future<void> onLoad() async {
-    final image = await Flame.images.load('pipe.png');
+    final image = await Flame.images.load('pipe-green.png');
+    final gameHeight = gameRef.size.y;
     sprite = Sprite(image);
+    anchor = Anchor.center;
     add(RectangleHitbox());
     return super.onLoad();
   }

@@ -23,6 +23,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
     }
     // placed in the center with a size of 200x267
     position = Vector2(gameRef.size.x/2, gameRef.size.y/2);
+    position.y -= gameRef.size.y/8;
     size = Vector2((((gameRef.size.y / 2) / 267) * 200), gameRef.size.y/2);
     sprite = Sprite(image);
     return super.onLoad();
@@ -32,6 +33,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
   void onGameResize(Vector2 gameSize) async {
     super.onGameResize(gameSize);
     position = Vector2(gameSize.x/2, gameSize.y/2);
+    position.y -= gameSize.y/8;
     size = Vector2((((gameSize.y / 2) / 267) * 200), gameSize.y/2);
 
     if (gameSize.x < 800 && !mobile) {

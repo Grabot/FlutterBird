@@ -7,13 +7,9 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<FlutterBird> {
 
-  double flapSpeed = 500;
-  double velocityY = 0;
-  double accelerationY = 50;
-  double rotation = 0;
-
   Bird() : super(size: Vector2(85, 60));
 
+  double heightScale = 1;
   @override
   Future<void> onLoad() async {
     add(CircleHitbox());
@@ -24,19 +20,29 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       textureSize: Vector2(17, 12),
     ));
 
+    heightScale = gameRef.size.y / 800;
+
+    size.y = (gameRef.size.y / 10000) * 466;
+    size.x = (size.y / 12) * 17;
+
     anchor = Anchor.center;
 
-    double posY = (gameRef.size.y/4);
-    position = Vector2(100, posY);
+    double posY = (gameRef.size.y/3);
+    position = Vector2(200, posY);
 
     return super.onLoad();
   }
 
+  double flapSpeed = 500;
+  double velocityY = 0;
+  double accelerationY = 30;
+  double rotation = 0;
   gameStarted() {
-    flapSpeed = 500;
+    flapSpeed = 600;
     velocityY = 0;
-    accelerationY = 50;
+    accelerationY = 40;
     rotation = 0;
+    fly();
   }
 
   @override
@@ -62,7 +68,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     }
     velocityY -= accelerationY * -1;
 
-    position.y -= (velocityY * dt) * -1;
+    position.y -= ((velocityY * dt) * -1) / heightScale;
     rotation = ((velocityY * -1) / 12).clamp(-90, 20);
     angle = radians(rotation * -1);
   }
@@ -75,10 +81,24 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     } else {
       _updatePositionGame(dt);
     }
-
   }
 
   fly() {
     velocityY = flapSpeed * -1;
+  }
+
+  @override
+  void onGameResize(Vector2 gameSize) {
+    super.onGameResize(gameSize);
+    size.y = (gameSize.y / 10000) * 466;
+    size.x = (size.y / 12) * 17;
+
+    if (!gameRef.gameStarted) {
+      position = Vector2(200, (gameSize.y/3));
+      flapSpeed = 500;
+      velocityY = 0;
+      accelerationY = 30;
+      rotation = 0;
+    }
   }
 }
