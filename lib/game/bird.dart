@@ -50,9 +50,18 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     fly();
   }
 
+  reset() {
+    double posY = (gameRef.size.y/3);
+    position = Vector2(200, posY);
+    flapSpeed = 600;
+    velocityY = 0;
+    accelerationY = 80;
+    rotation = 0;
+  }
+
   @override
   onCollisionStart(_, __) {
-    // gameRef.pauseEngine();
+    gameRef.gameOver();
     position.y = 0 ;
     super.onCollisionStart(_, __);
   }

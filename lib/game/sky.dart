@@ -22,4 +22,16 @@ class Sky extends ParallaxComponent<FlutterBird> {
       filterQuality: FilterQuality.none,
     );
   }
+
+  gameOver() {
+    if (parallax != null) {
+      parallax!.baseVelocity = Vector2(0, 0);
+    }
+  }
+
+  reset() {
+    if (parallax != null) {
+      parallax!.baseVelocity = Vector2(20, 0);
+    }
+  }
 }

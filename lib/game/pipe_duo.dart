@@ -42,12 +42,14 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
   @override
   void update(double dt) {
-    if (position.x < -(pipe_x + pipe_width)) {
-      removeFromParent();
+    if (gameRef.gameStarted) {
+      if (position.x < -(pipe_x + pipe_width)) {
+        gameRef.removePipe(this);
+      }
+      double change = (gameRef.speed * dt) * heightScale;
+      position.x -= change;
+      totalShiftX += change;
     }
-    double change = (gameRef.speed * dt) * heightScale;
-    position.x -= change;
-    totalShiftX += change;
     super.update(dt);
   }
 
@@ -78,14 +80,17 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
     return [lower!, upper!];
   }
 
+
   @override
   void onGameResize(Vector2 gameSize) {
     heightScale = gameSize.y / 800;
+    pipe_height = (400 * heightScale) * 1.5;
+    pipe_width = (52 * heightScale) * 1.5;
 
     double gap_y = randomNumber * (800 * heightScale) * 0.45 - (pipe_gap * heightScale);
     gap_y += ((800 * heightScale) * 0.5).toInt();
 
-    double pipe_x = position.x + pipe_width + (pipe_gap * heightScale);
+    pipe_x = position.x + pipe_width + (pipe_gap * heightScale);
 
     double uLower = (800 * heightScale) + (gap_y - (pipe_gap * heightScale));
     double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
