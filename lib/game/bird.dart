@@ -35,6 +35,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     double posY = (gameRef.size.y/3);
     position = Vector2(200, posY);
 
+    priority = 1;
     return super.onLoad();
   }
 
@@ -62,9 +63,27 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   @override
   onCollisionStart(_, __) {
-    gameRef.gameOver();
-    // TODO: death animation
+    // There can be multiple collisions after death, we only want to handle the first one
+    if (!gameRef.gameEnded) {
+      // For the death animation we set the velocity such that the bird flies up and then falls down
+      velocityY = -1000;
+      gameRef.gameOver();
+    }
     super.onCollisionStart(_, __);
+  }
+
+  _updatePositionDeath(double dt) {
+    double floorHeight = gameRef.size.y * 0.785;
+    if (position.y >= floorHeight) {
+      velocityY = 0;
+      return;
+    }
+
+    velocityY -= (accelerationY * -1);
+    position.y -= ((velocityY * dt) * -1) * heightScale;
+
+    rotation = ((velocityY * -1) / 12).clamp(-90, 90);
+    angle = radians(rotation * -1);
   }
 
   _updatePositionGame(double dt) {
@@ -90,11 +109,14 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   @override
   void update(double dt) {
-    super.update(dt);
-    if (!gameRef.gameStarted) {
+    if (!gameRef.gameStarted && !gameRef.gameEnded) {
       _updatePositionMenu(dt);
+      super.update(dt);
+    } else if (gameRef.gameEnded) {
+      _updatePositionDeath(dt);
     } else {
       _updatePositionGame(dt);
+      super.update(dt);
     }
   }
 
