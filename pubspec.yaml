@@ -72,6 +72,16 @@ flutter:
     - assets/images/message_phone.png
     - assets/images/message_web.png
     - assets/images/gameover.png
+    - assets/images/score/0.png
+    - assets/images/score/1.png
+    - assets/images/score/2.png
+    - assets/images/score/3.png
+    - assets/images/score/4.png
+    - assets/images/score/5.png
+    - assets/images/score/6.png
+    - assets/images/score/7.png
+    - assets/images/score/8.png
+    - assets/images/score/9.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

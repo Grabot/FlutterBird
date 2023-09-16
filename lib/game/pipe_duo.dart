@@ -26,6 +26,8 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
   double totalShiftX = 0;
 
+  bool passed = false;
+
   @override
   Future<void> onLoad() async {
     anchor = Anchor.center;
@@ -51,6 +53,10 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
       totalShiftX += change;
     }
     super.update(dt);
+  }
+
+  pipePassed() {
+    passed = true;
   }
 
   spawnNewPipes() {

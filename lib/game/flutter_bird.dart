@@ -8,6 +8,7 @@ import 'package:flutter_bird/game/floor.dart';
 import 'package:flutter_bird/game/game_over_message.dart';
 import 'package:flutter_bird/game/help_message.dart';
 import 'package:flutter_bird/game/pipe_duo.dart';
+import 'package:flutter_bird/game/score_indicator.dart';
 import 'sky.dart';
 
 class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
@@ -27,11 +28,14 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   late HelpMessage helpMessage;
   late GameOverMessage gameOverMessage;
   late Sky sky;
+  late ScoreIndicator scoreIndicator;
 
   double timeSinceEnded = 0;
 
   bool playSounds = true;
   double soundVolume = 1.0;
+
+  int score = 0;
 
   @override
   Future<void> onLoad() async {
@@ -39,6 +43,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     bird = Bird();
     helpMessage = HelpMessage();
     gameOverMessage = GameOverMessage();
+    scoreIndicator = ScoreIndicator();
     add(sky);
     add(bird);
     add(Floor());
@@ -57,6 +62,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
     );
+    newPipeDuo.pipePassed();
     add(newPipeDuo);
     return super.onLoad();
   }
@@ -67,6 +73,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       gameStarted = true;
       bird.gameStarted();
       remove(helpMessage);
+      add(scoreIndicator);
       spawnInitialPipes();
     } else if (!gameStarted && gameEnded) {
       if (timeSinceEnded < 0.4) {
@@ -74,8 +81,10 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         return;
       }
       timeSinceEnded = 0;
+      // score = 0;
       gameEnded = false;
       add(helpMessage);
+      remove(scoreIndicator);
       remove(gameOverMessage);
       clearPipes();
       bird.reset();
@@ -146,8 +155,26 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
           lastPipeDuo = newPipeDuo;
         }
       }
+      checkPipePassed();
     } else if (gameEnded) {
       timeSinceEnded += dt;
+    }
+  }
+
+  checkPipePassed() {
+    for (PipeDuo pipe in pipes) {
+      if (pipe.passed) {
+        continue;
+      }
+      // bird.position.x will always be 200 in this case.
+      if ((pipe.position.x + pipe.pipe_x) < bird.position.x) {
+        pipe.pipePassed();
+        score += 1;
+        scoreIndicator.scoreChange(score);
+        if (playSounds) {
+          FlameAudio.play("point.wav", volume: soundVolume);
+        }
+      }
     }
   }
 
