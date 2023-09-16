@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<FlutterBird> {
@@ -62,7 +63,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   @override
   onCollisionStart(_, __) {
     gameRef.gameOver();
-    position.y = 0 ;
+    // TODO: death animation
     super.onCollisionStart(_, __);
   }
 
@@ -99,6 +100,9 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   fly() {
     velocityY = flapSpeed * -1;
+    if (gameRef.playSounds) {
+      FlameAudio.play("wing.wav", volume: gameRef.soundVolume);
+    }
   }
 
   @override

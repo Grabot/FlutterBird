@@ -2,6 +2,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter_bird/game/bird.dart';
 import 'package:flutter_bird/game/floor.dart';
 import 'package:flutter_bird/game/game_over_message.dart';
@@ -26,6 +27,11 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   late HelpMessage helpMessage;
   late GameOverMessage gameOverMessage;
   late Sky sky;
+
+  double timeSinceEnded = 0;
+
+  bool playSounds = true;
+  double soundVolume = 1.0;
 
   @override
   Future<void> onLoad() async {
@@ -63,6 +69,11 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       remove(helpMessage);
       spawnInitialPipes();
     } else if (!gameStarted && gameEnded) {
+      if (timeSinceEnded < 0.4) {
+        // We assume the user tried to fly
+        return;
+      }
+      timeSinceEnded = 0;
       gameEnded = false;
       add(helpMessage);
       remove(gameOverMessage);
@@ -79,6 +90,10 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
   gameOver() {
     if (gameStarted && !gameEnded) {
+      if (playSounds) {
+        FlameAudio.play("hit.wav", volume: soundVolume);
+        FlameAudio.play("die.wav", volume: soundVolume);
+      }
       gameStarted = false;
       gameEnded = true;
       add(gameOverMessage);
@@ -117,7 +132,6 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     }
   }
 
-
   @override
   Future<void> update(double dt) async {
     super.update(dt);
@@ -132,6 +146,8 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
           lastPipeDuo = newPipeDuo;
         }
       }
+    } else if (gameEnded) {
+      timeSinceEnded += dt;
     }
   }
 
