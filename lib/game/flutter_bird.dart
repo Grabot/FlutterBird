@@ -106,6 +106,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       score = 0;
       gameEnded = false;
       add(helpMessage);
+      scoreIndicator.scoreChange(0);
       remove(scoreIndicator);
       remove(gameOverMessage);
       clearPipes();
@@ -117,7 +118,6 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     }
     super.onTap();
   }
-
 
   gameOver() {
     if (gameStarted && !gameEnded) {
