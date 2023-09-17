@@ -1,4 +1,4 @@
-package ageof.gold.age_of_gold
+package flutterbird.eu.flutterBird
 
 import io.flutter.embedding.android.FlutterActivity
 

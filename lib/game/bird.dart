@@ -12,9 +12,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   double heightScale = 1;
 
+  late AudioPool wingPool;
+
   @override
   Future<void> onLoad() async {
     add(CircleHitbox());
+    // debugMode = true;
     final image = await Flame.images.load('flutter_yellow.png');
     animation = SpriteAnimation.fromFrameData(image, SpriteAnimationData.sequenced(
       amount: 3,
@@ -33,20 +36,27 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     anchor = Anchor.center;
 
     double posY = (gameRef.size.y/3);
-    position = Vector2(200, posY);
+    position = Vector2(100, posY);
 
     priority = 1;
+
+    wingPool = await FlameAudio.createPool(
+      "wing.wav",
+      minPlayers: 0,
+      maxPlayers: 4,
+    );
+
     return super.onLoad();
   }
 
   double flapSpeed = 600;
   double velocityY = 0;
-  double accelerationY = 80;
+  double accelerationY = 5000;
   double rotation = 0;
   gameStarted() {
     flapSpeed = 600;
     velocityY = 0;
-    accelerationY = 80;
+    accelerationY = 5000;
     rotation = 0;
 
     fly();
@@ -54,10 +64,10 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   reset() {
     double posY = (gameRef.size.y/3);
-    position = Vector2(200, posY);
+    position = Vector2(100, posY);
     flapSpeed = 600;
     velocityY = 0;
-    accelerationY = 80;
+    accelerationY = 5000;
     rotation = 0;
   }
 
@@ -78,37 +88,43 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       velocityY = 0;
       return;
     }
-
-    velocityY -= (accelerationY * -1);
-    position.y -= ((velocityY * dt) * -1) * heightScale;
+    velocityY -= (((accelerationY * dt) / 2) * -1);
+    position.y -= ((velocityY * dt) * heightScale) * -1;
 
     rotation = ((velocityY * -1) / 12).clamp(-90, 90);
     angle = radians(rotation * -1);
   }
 
   _updatePositionGame(double dt) {
-    velocityY -= (accelerationY * -1);
-    position.y -= ((velocityY * dt) * -1) * heightScale;
+    velocityY -= (((accelerationY * dt) / 2) * -1);
+    position.y -= ((velocityY * dt) * heightScale) * -1;
 
     rotation = ((velocityY * -1) / 12).clamp(-90, 20);
     angle = radians(rotation * -1);
   }
 
-  double maxMenuVelY = 400;
-  double minMenuVelY = -400;
   _updatePositionMenu(double dt) {
-    if (velocityY > maxMenuVelY || velocityY < minMenuVelY) {
+    if ((position.y > ((gameRef.size.y/3) + (100 * heightScale))) && accelerationY > 0) {
       accelerationY *= -1;
     }
-    velocityY -= (accelerationY * -1);
+    if ((position.y < ((gameRef.size.y/3) - (100 * heightScale))) && accelerationY < 0) {
+      accelerationY *= -1;
+    }
+    velocityY -= (((accelerationY * dt) / 2) * -1);
+    velocityY = velocityY.clamp(-250, 250);
+    position.y -= ((velocityY * dt) * heightScale) * -1;
 
-    position.y -= ((velocityY * dt) * -1) * heightScale;
-    rotation = ((velocityY * -1) / 12).clamp(-90, 20);
+    rotation = ((velocityY * -1) / 12).clamp(-90, 90);
     angle = radians(rotation * -1);
   }
 
+  double startupTimer = 0.5;
   @override
   void update(double dt) {
+    if (startupTimer > 0) {
+      startupTimer -= dt;
+      return;
+    }
     if (!gameRef.gameStarted && !gameRef.gameEnded) {
       _updatePositionMenu(dt);
       super.update(dt);
@@ -123,7 +139,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   fly() {
     velocityY = flapSpeed * -1;
     if (gameRef.playSounds) {
-      FlameAudio.play("wing.wav", volume: gameRef.soundVolume);
+      wingPool.start(volume: gameRef.soundVolume);
     }
   }
 
@@ -135,7 +151,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     heightScale = gameSize.y / 800;
 
     if (!gameRef.gameStarted) {
-      position = Vector2(200, (gameSize.y/3));
+      position = Vector2(100, (gameSize.y/3));
     }
   }
 }

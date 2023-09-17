@@ -37,6 +37,10 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
   int score = 0;
 
+  late AudioPool pointPool;
+  late AudioPool diePool;
+  late AudioPool hitPool;
+
   @override
   Future<void> onLoad() async {
     sky = Sky();
@@ -64,8 +68,26 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     );
     newPipeDuo.pipePassed();
     add(newPipeDuo);
+
+    pointPool = await FlameAudio.createPool(
+      "point.wav",
+      minPlayers: 0,
+      maxPlayers: 4,
+    );
+    diePool = await FlameAudio.createPool(
+      "die.wav",
+      minPlayers: 0,
+      maxPlayers: 4,
+    );
+    hitPool = await FlameAudio.createPool(
+      "hit.wav",
+      minPlayers: 0,
+      maxPlayers: 4,
+    );
+
     return super.onLoad();
   }
+
 
   @override
   Future<void> onTap() async {
@@ -81,7 +103,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         return;
       }
       timeSinceEnded = 0;
-      // score = 0;
+      score = 0;
       gameEnded = false;
       add(helpMessage);
       remove(scoreIndicator);
@@ -100,8 +122,10 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   gameOver() {
     if (gameStarted && !gameEnded) {
       if (playSounds) {
-        FlameAudio.play("hit.wav", volume: soundVolume);
-        FlameAudio.play("die.wav", volume: soundVolume);
+        hitPool.start(volume: soundVolume);
+        diePool.start(volume: soundVolume);
+        // FlameAudio.play("hit.wav", volume: soundVolume);
+        // FlameAudio.play("die.wav", volume: soundVolume);
       }
       gameStarted = false;
       gameEnded = true;
@@ -159,6 +183,23 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     } else if (gameEnded) {
       timeSinceEnded += dt;
     }
+    updateFps(dt);
+  }
+
+  double frameTimes = 0.0;
+  int frames = 0;
+  int fps = 0;
+  int variant = 0;
+  updateFps(double dt) {
+    frameTimes += dt;
+    frames += 1;
+
+    if (frameTimes >= 1) {
+      fps = frames;
+      print("fps: $fps");
+      frameTimes = 0;
+      frames = 0;
+    }
   }
 
   checkPipePassed() {
@@ -172,7 +213,8 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         score += 1;
         scoreIndicator.scoreChange(score);
         if (playSounds) {
-          FlameAudio.play("point.wav", volume: soundVolume);
+          // FlameAudio.play("point.wav", volume: soundVolume);
+          pointPool.start(volume: soundVolume);
         }
       }
     }

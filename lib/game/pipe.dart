@@ -12,6 +12,7 @@ class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
   double originalSizeX = 0;
   double originalSizeY = 0;
 
+
   @override
   Future<void> onLoad() async {
     final image = await Flame.images.load('pipe-green_big.png');
