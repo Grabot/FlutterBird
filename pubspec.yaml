@@ -32,6 +32,15 @@ dependencies:
 
   flame: ^1.8.2
   flame_audio: ^2.0.5
+  get_it: ^7.2.0
+  url_strategy: ^0.2.0
+  oktoast: ^3.3.1
+  socket_io_client: ^2.0.2
+  intl: ^0.17.0
+  dio: ^5.1.2
+  flutter_secure_storage: ^6.1.0
+  jwt_decode: ^0.3.1
+  dropdown_button2: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -36,7 +36,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     anchor = Anchor.center;
 
     double posY = (gameRef.size.y/3);
-    position = Vector2(100, posY);
+    position = Vector2((gameRef.size.x / 10), posY);
 
     priority = 1;
 
@@ -64,7 +64,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   reset() {
     double posY = (gameRef.size.y/3);
-    position = Vector2(100, posY);
+    position = Vector2((gameRef.size.x / 10), posY);
     flapSpeed = 600;
     velocityY = 0;
     accelerationY = 5000;
@@ -104,10 +104,10 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   }
 
   _updatePositionMenu(double dt) {
-    if ((position.y > ((gameRef.size.y/3) + (100 * heightScale))) && accelerationY > 0) {
+    if ((position.y > ((gameRef.size.y/3) + (20 * heightScale))) && accelerationY > 0) {
       accelerationY *= -1;
     }
-    if ((position.y < ((gameRef.size.y/3) - (100 * heightScale))) && accelerationY < 0) {
+    if ((position.y < ((gameRef.size.y/3) - (20 * heightScale))) && accelerationY < 0) {
       accelerationY *= -1;
     }
     velocityY -= (((accelerationY * dt) / 2) * -1);
@@ -151,7 +151,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     heightScale = gameSize.y / 800;
 
     if (!gameRef.gameStarted) {
-      position = Vector2(100, (gameSize.y/3));
+      position = Vector2((gameRef.size.x / 10), (gameSize.y/3));
     }
   }
 }
