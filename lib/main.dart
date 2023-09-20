@@ -8,7 +8,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'services/navigation_service.dart';
 import 'services/settings.dart';
-import 'views/user_interface/chat_box/chat_box.dart';
+import 'views/user_interface/score_screen/score_screen.dart';
 
 Future<void> main() async {
   setPathUrlStrategy();
@@ -28,10 +28,10 @@ Future<void> main() async {
         focusNode: gameFocus,
         game: game,
         overlayBuilderMap: const {
-          'chatBox': _chatBoxBuilder,
+          'scoreScreen': _scoreScreenBuilder,
         },
         initialActiveOverlays: const [
-          'chatBox',
+          'scoreScreen',
         ],
       )
   );
@@ -64,6 +64,6 @@ Future<void> main() async {
   );
 }
 
-Widget _chatBoxBuilder(BuildContext buildContext, FlutterBird game) {
-  return ChatBox(key: UniqueKey(), game: game);
+Widget _scoreScreenBuilder(BuildContext buildContext, FlutterBird game) {
+  return ScoreScreen(key: UniqueKey(), game: game);
 }

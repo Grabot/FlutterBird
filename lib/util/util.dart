@@ -3,7 +3,6 @@ import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/rest/models/login_response.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/socket_services.dart';
-import 'package:flutter_bird/views/user_interface/chat_box/chat_messages.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -73,7 +72,6 @@ successfulLogin(LoginResponse loginResponse) async {
     }
     SocketServices().login(user.id);
   }
-  ChatMessages().login();
   settings.setLoggingIn(false);
   // ProfileChangeNotifier().notify();
 }

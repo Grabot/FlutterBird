@@ -68,17 +68,17 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
     double gap_y = randomNumber * (800 * heightScale) * 0.45 - (pipe_gap * heightScale);
     gap_y += ((800 * heightScale) * 0.5).toInt();
 
-    pipe_x = position.x + pipe_width + (pipe_gap * heightScale);
+    pipe_x = position.x + pipe_width + pipe_gap;
 
     double uLower = (800 * heightScale) + (gap_y - (pipe_gap * heightScale));
 
     Pipe lower_pipe = Pipe(
-      position: Vector2(pipe_x, uLower),
+      position: Vector2(0, uLower),
     );
 
     double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
     Pipe upper_pipe = Pipe(
-      position: Vector2(pipe_x, yUpper),
+      position: Vector2(0, yUpper),
     );
 
     upper = upper_pipe;
@@ -89,28 +89,28 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
   @override
   void onGameResize(Vector2 gameSize) {
-    heightScale = gameSize.y / 800;
-    pipe_height = (400 * heightScale) * 1.5;
-    pipe_width = (52 * heightScale) * 1.5;
-
-    double gap_y = randomNumber * (800 * heightScale) * 0.45 - (pipe_gap * heightScale);
-    gap_y += ((800 * heightScale) * 0.5).toInt();
-
-    pipe_x = position.x + pipe_width + (pipe_gap * heightScale);
-
-    double uLower = (800 * heightScale) + (gap_y - (pipe_gap * heightScale));
-    double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
-
-    if (lower != null) {
-      double lowerX = pipe_x - totalShiftX;
-      lower!.position.y = uLower;
-      lower!.position.x = lowerX;
-    }
-    if (upper != null) {
-      double upperX = pipe_x - totalShiftX;
-      upper!.position.y = yUpper;
-      upper!.position.x = upperX;
-    }
+    // heightScale = gameSize.y / 800;
+    // pipe_height = (400 * heightScale) * 1.5;
+    // pipe_width = (52 * heightScale) * 1.5;
+    //
+    // double gap_y = randomNumber * (800 * heightScale) * 0.45 - (pipe_gap * heightScale);
+    // gap_y += ((800 * heightScale) * 0.5).toInt();
+    //
+    // pipe_x = position.x + pipe_width + pipe_gap;
+    //
+    // double uLower = (800 * heightScale) + (gap_y - (pipe_gap * heightScale));
+    // double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
+    //
+    // if (lower != null) {
+    //   double lowerX = pipe_x - totalShiftX;
+    //   lower!.position.y = uLower;
+    //   lower!.position.x = lowerX;
+    // }
+    // if (upper != null) {
+    //   double upperX = pipe_x - totalShiftX;
+    //   upper!.position.y = yUpper;
+    //   upper!.position.x = upperX;
+    // }
     super.onGameResize(gameSize);
   }
 

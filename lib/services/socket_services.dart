@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/friend.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/util/util.dart';
-import 'package:flutter_bird/views/user_interface/chat_box/chat_messages.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'settings.dart';
 
@@ -11,8 +10,6 @@ class SocketServices extends ChangeNotifier {
   late io.Socket socket;
 
   static final SocketServices _instance = SocketServices._internal();
-
-  late ChatMessages chatMessages;
 
   SocketServices._internal() {
     startSockConnection();
@@ -40,12 +37,6 @@ class SocketServices extends ChangeNotifier {
       print("on disconnect");
       socket.emit('message_event', 'Disconnected!');
     });
-
-    // TODO: Fix the part after this
-    // socket.open();
-    ChatMessages chatMessages = ChatMessages();
-    chatMessages.login();
-    checkMessages(chatMessages);
   }
 
   login(int userId) {
@@ -73,42 +64,6 @@ class SocketServices extends ChangeNotifier {
         'user_id': userId,
       });
     }
-  }
-
-  bool joinedChatRooms = false;
-  void checkMessages(ChatMessages chatMessages) {
-    if (joinedChatRooms) {
-      return;
-    }
-    joinedChatRooms = true;
-    this.chatMessages = chatMessages;
-    // socket.on('send_message_global', (data) {
-    //   String from = data["sender_name"];
-    //   int senderId = data["sender_id"];
-    //   String message = data["body"];
-    //   String timestamp = data["timestamp"];
-    //   receivedMessage(from, senderId, message, timestamp);
-    //   notifyListeners();
-    // });
-    // socket.on('send_message_personal', (data) {
-    //   print("received a personal message! :D");
-    //   String from = data["sender_name"];
-    //   int senderId = data["sender_id"];
-    //   String to = data["receiver_name"];
-    //   String message = data["message"];
-    //   String timestamp = data["timestamp"];
-    //   receivedMessagePersonal(from, senderId, to, message, timestamp);
-    //   notifyListeners();
-    // });
-  }
-
-  void receivedMessage(String from, int senderId, String message, String timestamp) {
-    print("received message $senderId");
-    chatMessages.addMessage(from, senderId, message, timestamp);
-  }
-
-  void receivedMessagePersonal(String from, int senderId, String to, String message, String timestamp) {
-    chatMessages.addPersonalMessage(from, senderId, to, message, timestamp);
   }
 
   bool joinedFriendRooms = false;
