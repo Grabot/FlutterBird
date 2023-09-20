@@ -51,12 +51,15 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   double deathTimer = 1;
   bool death = false;
   bool scoreRemoved = false;
-  bool showEndScreen = false;
 
   double frameTimes = 0.0;
   int frames = 0;
   int fps = 0;
   int variant = 0;
+
+  List<PipeDuo> pipes = [];
+
+  late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
 
   @override
   Future<void> onLoad() async {
@@ -101,6 +104,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       maxPlayers: 4,
     );
 
+    scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
     return super.onLoad();
   }
 
@@ -118,11 +122,15 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     clearPipes();
     bird.reset();
     sky.reset();
+    if (scoreScreenChangeNotifier.getScoreScreenVisible()) {
+      ScoreScreenChangeNotifier().setScoreScreenVisible(false);
+    }
   }
 
   @override
   Future<void> onTap() async {
     if (!gameStarted && !gameEnded) {
+      // start game
       gameStarted = true;
       death = false;
       bird.gameStarted();
@@ -131,6 +139,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       scoreRemoved = false;
       spawnInitialPipes();
     } else if (!gameStarted && gameEnded) {
+      // go to the main screen with help message
       if (timeSinceEnded < 0.4) {
         // We assume the user tried to fly
         return;
@@ -169,7 +178,6 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     remove(pipeDuo);
   }
 
-  List<PipeDuo> pipes = [];
   Future<void> spawnInitialPipes() async {
     double pipeX = pipeBuffer;
     PipeDuo newPipeDuo = PipeDuo(
@@ -208,6 +216,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         }
       }
       checkPipePassed();
+      checkOutOfBounds();
     } else if (gameEnded) {
       timeSinceEnded += dt;
       if (deathTimer <= 0) {
@@ -217,7 +226,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
           remove(scoreIndicator);
         }
         scoreRemoved = true;
-        if (!showEndScreen) {
+        if (!scoreScreenChangeNotifier.getScoreScreenVisible()) {
           ScoreScreenChangeNotifier().setScoreScreenVisible(true);
         }
       }
@@ -253,6 +262,18 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
           pointPool.start(volume: soundVolume);
         }
       }
+    }
+  }
+
+  checkOutOfBounds() {
+    // There is a bug where the bird can go out of bounds when the frame rate drops and the
+    // acceleration gets super high. The collision with the screen is not triggered and the
+    // bird flies below all the pipes and gets all the points.
+    // We add this simple check to ensure that this bug is not exploited.
+    if (bird.position.y < -100) {
+      gameOver();
+    } else if (bird.position.y > (size.y + 100)) {
+      gameOver();
     }
   }
 

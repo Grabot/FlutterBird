@@ -20,6 +20,8 @@ class Settings extends ChangeNotifier {
 
   bool loggingIn = false;
 
+  int highScore = 0;
+
   Settings._internal() {
     if (kIsWeb) {
 
@@ -88,5 +90,13 @@ class Settings extends ChangeNotifier {
 
   Uint8List? getAvatar() {
     return avatar;
+  }
+
+  int getHighScore() {
+    return highScore;
+  }
+
+  setHighScore(int highScore) {
+    this.highScore = highScore;
   }
 }

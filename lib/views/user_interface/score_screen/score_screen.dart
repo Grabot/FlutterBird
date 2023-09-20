@@ -56,9 +56,18 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   Widget scoreScreenWidget(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    double heightScale = height / 800;
+
+    double scoreWidth = 400 * heightScale;
+    if (width < scoreWidth) {
+      scoreWidth = width;
+    }
     return Container(
-      width: 400,
-      height: 400,
+      width: scoreWidth,
+      height: scoreWidth/2,
       color: Colors.red,
     );
   }
