@@ -28,10 +28,8 @@ class ScoreIndicator extends PositionComponent with HasGameRef<FlutterBird> {
   }
 
   scoreChange(int newScore) {
-    // First remove the old score numbers
-    for (ScoreNumber scoreNumber in scoreNumbers) {
-      remove(scoreNumber);
-    }
+    // We clone the old numbers so we can remove them at the end
+    List<ScoreNumber> oldScoreNumbers = List.from(scoreNumbers);
     scoreNumbers.clear();
 
     List<String> scoreString = newScore.toString().split('');
@@ -53,6 +51,10 @@ class ScoreIndicator extends PositionComponent with HasGameRef<FlutterBird> {
 
       scoreNumbers.add(scoreNumber);
       add(scoreNumber);
+    }
+    // We remove the old numbers at the end so it doesn't flicker when the numbers change
+    for (ScoreNumber scoreNumber in oldScoreNumbers) {
+      remove(scoreNumber);
     }
   }
 

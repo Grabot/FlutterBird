@@ -63,6 +63,14 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  fonts:
+    - family: visitor
+      fonts:
+        - asset: assets/fonts/visitor/visitor1.ttf
+          weight: 700
+        - asset: assets/fonts/visitor/visitor2.ttf
+          weight: 700
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/pipe-green.png

@@ -46,7 +46,7 @@ Future<void> main() async {
             brightness: Brightness.dark,
             primaryColor: Colors.lightBlue,
             // Define the default font family.
-            fontFamily: 'Georgia',
+            fontFamily: 'visitor',
           ),
           initialRoute: '/',
           routes: {

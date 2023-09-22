@@ -1,4 +1,3 @@
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -6,10 +5,10 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/bird.dart';
 import 'package:flutter_bird/game/floor.dart';
-import 'package:flutter_bird/game/game_over_message.dart';
 import 'package:flutter_bird/game/help_message.dart';
 import 'package:flutter_bird/game/pipe_duo.dart';
 import 'package:flutter_bird/game/score_indicator.dart';
+import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
 import 'sky.dart';
 
@@ -33,7 +32,6 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   double pipeInterval = 0;
 
   late HelpMessage helpMessage;
-  late GameOverMessage gameOverMessage;
   late Sky sky;
   late ScoreIndicator scoreIndicator;
 
@@ -60,13 +58,13 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   List<PipeDuo> pipes = [];
 
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
+  late Settings settings;
 
   @override
   Future<void> onLoad() async {
     sky = Sky();
     bird = Bird();
     helpMessage = HelpMessage();
-    gameOverMessage = GameOverMessage();
     scoreIndicator = ScoreIndicator();
     add(sky);
     add(bird);
@@ -105,6 +103,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     );
 
     scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
+    settings = Settings();
     return super.onLoad();
   }
 
@@ -118,12 +117,11 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       remove(scoreIndicator);
     }
     scoreRemoved = true;
-    remove(gameOverMessage);
     clearPipes();
     bird.reset();
     sky.reset();
     if (scoreScreenChangeNotifier.getScoreScreenVisible()) {
-      ScoreScreenChangeNotifier().setScoreScreenVisible(false);
+      scoreScreenChangeNotifier.setScoreScreenVisible(false);
     }
   }
 
@@ -133,6 +131,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       // start game
       gameStarted = true;
       death = false;
+      deathTimer = 1;
       bird.gameStarted();
       remove(helpMessage);
       add(scoreIndicator);
@@ -161,7 +160,6 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       death = true;
       gameStarted = false;
       gameEnded = true;
-      add(gameOverMessage);
       sky.gameOver();
     }
   }
@@ -218,6 +216,12 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       checkPipePassed();
       checkOutOfBounds();
     } else if (gameEnded) {
+      bool isHighScore = false;
+      if (score > settings.getHighScore()) {
+        isHighScore = true;
+        settings.setHighScore(score);
+      }
+      scoreScreenChangeNotifier.setScore(score, isHighScore);
       timeSinceEnded += dt;
       if (deathTimer <= 0) {
         // Show the game over screen
@@ -227,7 +231,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         }
         scoreRemoved = true;
         if (!scoreScreenChangeNotifier.getScoreScreenVisible()) {
-          ScoreScreenChangeNotifier().setScoreScreenVisible(true);
+          scoreScreenChangeNotifier.setScoreScreenVisible(true);
         }
       }
       deathTimer -= dt;
@@ -280,6 +284,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   @override
   void onGameResize(Vector2 gameSize) {
     heightScale = gameSize.y / 800;
+    double pipe_width = (52 * heightScale) * 1.5;
+    pipeInterval = (pipeGap * heightScale) + pipe_width;
+    pipeBuffer = gameSize.x + pipeInterval;
     super.onGameResize(gameSize);
   }
 
