@@ -45,6 +45,7 @@ dependencies:
   isolated_worker: ^0.1.1
   file_picker: ^5.2.7
   back_button_interceptor: ^6.0.2
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +94,10 @@ flutter:
     - assets/images/message_phone.png
     - assets/images/message_web.png
     - assets/images/gameover.png
+    - assets/images/brocast_transparent.png
+    - assets/images/reddit_button.png
+    - assets/images/google_button.png
+    - assets/images/github_button.png
     - assets/images/score/0.png
     - assets/images/score/1.png
     - assets/images/score/2.png

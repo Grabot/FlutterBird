@@ -10,6 +10,7 @@ import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/change_avatar_box/change_avatar_change_notifier.dart';
+import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
 import 'profile_change_notifier.dart';
 
@@ -262,7 +263,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
           margin: EdgeInsets.only(top: 20),
           child: ElevatedButton(
             onPressed: () {
-              _navigationService.navigateTo(routes.HomeRoute, arguments: {'message': "Checked out the world and ready to register!"});
+              LoginScreenChangeNotifier().setLoginScreenVisible(true);
             },
             style: buttonStyle(false, Colors.blue),
             child: Container(

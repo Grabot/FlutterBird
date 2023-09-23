@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_bird/constants/url_base.dart';
 import 'package:flutter_bird/services/rest/models/login_response.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/util/util.dart';
@@ -17,7 +18,6 @@ class AuthApi {
   factory AuthApi() => _singleton;
 
   static Dio createDio() {
-    String apiUrlV1_0 = ""; // TODO: baseurl
     var dio = Dio(
         BaseOptions(
           baseUrl: apiUrlV1_0,
@@ -43,7 +43,6 @@ class AppInterceptors extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    String apiUrlV1_0 = ""; // TODO: baseurl
     Settings settings = Settings();
     int expiration = settings.getAccessTokenExpiration();
     if (expiration == 0) {
