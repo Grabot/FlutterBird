@@ -84,6 +84,15 @@ class Settings extends ChangeNotifier {
     return loggingIn;
   }
 
+  logout() {
+    accessToken = "";
+    refreshToken = "";
+    accessTokenExpiration = 0;
+    user = null;
+    avatar = null;
+    loggingIn = false;
+  }
+
   setAvatar(Uint8List avatar) {
     this.avatar = avatar;
   }

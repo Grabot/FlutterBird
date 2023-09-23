@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/services/navigation_service.dart';
+import 'package:flutter_bird/services/rest/auth_service_login.dart';
 import 'package:flutter_bird/services/rest/models/login_response.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/socket_services.dart';
+import 'package:flutter_bird/constants/route_paths.dart' as routes;
+import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -92,4 +96,22 @@ InputDecoration textFieldInputDecoration(String hintText) {
       enabledBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.white54),
       ));
+}
+
+bool emailValid(String possibleEmail) {
+  return RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(possibleEmail);
+}
+
+logoutUser(Settings settings, NavigationService navigationService) async {
+  if (settings.getUser() != null) {
+    await AuthServiceLogin().logout();  // we assume it will work, but it doesn't matter if it doesn't
+    SocketServices().logout(settings.getUser()!.id);
+  }
+  ProfileChangeNotifier().setProfileVisible(false);
+  settings.logout();
+  SecureStorage().logout().then((value) {
+    navigationService.navigateTo(routes.HomeRoute, arguments: {'message': "Logged out"});
+  });
 }

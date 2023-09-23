@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
+import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/settings.dart';
 
 import 'score_screen_change_notifier.dart';
@@ -74,20 +75,37 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
+  Widget achievementsNobodyLoggedIn(double fontSize) {
+    return Text(
+        "TODO:",
+        style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+        )
+    );
+  }
+
+  Widget achievementsLoggedIn(User currentUser) {
+    // TODO: Test this
+    return SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Text("TODO: ${currentUser.getUserName()}")
+            ],
+          ),
+        )
+    );
+  }
+
   Widget medalImage(double medalWidth, double fontSize) {
+    User? currentUser = settings.getUser();
     return Container(
       alignment: Alignment.center,
       width: medalWidth,
       height: (medalWidth/6)*4,
-      color: Colors.blue,
-      child: Text(
-          "TODO:",
-          style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-          )
-      ),
+      child: currentUser == null ? achievementsNobodyLoggedIn(fontSize) : achievementsLoggedIn(currentUser),
     );
   }
 
@@ -120,7 +138,7 @@ class ScoreScreenState extends State<ScoreScreen> {
               fontSize: fontSize*3,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
-                ..strokeWidth = 10
+                ..strokeWidth = (scoreWidth / 30)
                 ..color = Colors.black,
             ),
           ),
@@ -165,7 +183,7 @@ class ScoreScreenState extends State<ScoreScreen> {
               fontSize: fontSize*3,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
-                ..strokeWidth = 10
+                ..strokeWidth = (scoreWidth / 30)
                 ..color = Colors.black,
             ),
           ),
@@ -227,7 +245,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     return Container(
       width: 400,
       height: 100,
-      color: Colors.green,
+      // color: Colors.green,
     );
   }
 

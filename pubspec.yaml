@@ -13,7 +13,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
+# Read more about iOS verszng at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
 
@@ -41,6 +41,10 @@ dependencies:
   flutter_secure_storage: ^6.1.0
   jwt_decode: ^0.3.1
   dropdown_button2: ^1.0.0
+  image: ^4.0.6
+  isolated_worker: ^0.1.1
+  file_picker: ^5.2.7
+  back_button_interceptor: ^6.0.2
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +103,7 @@ flutter:
     - assets/images/score/7.png
     - assets/images/score/8.png
     - assets/images/score/9.png
+    - assets/images/default_avatar.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav
