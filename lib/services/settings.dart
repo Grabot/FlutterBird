@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/util/web_storage.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
 
@@ -21,6 +22,12 @@ class Settings extends ChangeNotifier {
   bool loggingIn = false;
 
   int highScore = 0;
+
+  int totalFlutters = 0;
+  int totalPipesCleared = 0;
+  int totalGames = 0;
+
+  SecureStorage secureStorage = SecureStorage();
 
   Settings._internal() {
     if (kIsWeb) {
@@ -109,5 +116,32 @@ class Settings extends ChangeNotifier {
 
   setHighScore(int highScore) {
     this.highScore = highScore;
+  }
+
+  addTotalFlutters(int flutters) async {
+    totalFlutters += flutters;
+    await secureStorage.setTotalFlutters(totalFlutters.toString());
+  }
+
+  getTotalFlutters() {
+    return totalFlutters;
+  }
+
+  addTotalPipesCleared(int pipesCleared) async {
+    totalPipesCleared += pipesCleared;
+    await secureStorage.setTotalPipes(totalPipesCleared.toString());
+  }
+
+  getTotalPipesCleared() {
+    return totalPipesCleared;
+  }
+
+  addTotalGames(int games) async {
+    totalGames += games;
+    await secureStorage.setTotalGames(totalGames.toString());
+  }
+
+  getTotalGames() {
+    return totalGames;
   }
 }

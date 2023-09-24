@@ -60,6 +60,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
   late Settings settings;
 
+  int flutters = 0;
+  int pipesCleared = 0;
+
   @override
   Future<void> onLoad() async {
     sky = Sky();
@@ -143,15 +146,18 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         // We assume the user tried to fly
         return;
       }
+      flutters = 0;
+      pipesCleared = 0;
       startGame();
     } else if (gameStarted) {
       // game running
       bird.fly();
+      flutters += 1;
     }
     super.onTap();
   }
 
-  gameOver() {
+  gameOver() async {
     if (gameStarted && !gameEnded) {
       if (playSounds) {
         hitPool.start(volume: soundVolume);
@@ -160,6 +166,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       death = true;
       gameStarted = false;
       gameEnded = true;
+      settings.addTotalFlutters(flutters);
+      settings.addTotalPipesCleared(pipesCleared);
+      settings.addTotalGames(1);
       sky.gameOver();
     }
   }
@@ -261,6 +270,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         pipe.pipePassed();
         score += 1;
         scoreIndicator.scoreChange(score);
+        pipesCleared += 1;
         if (playSounds) {
           // FlameAudio.play("point.wav", volume: soundVolume);
           pointPool.start(volume: soundVolume);

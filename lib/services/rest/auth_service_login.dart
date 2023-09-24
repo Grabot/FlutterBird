@@ -198,8 +198,9 @@ class AuthServiceLogin {
     return baseResponse;
   }
 
-  Future<LoginResponse> getTest() async {
-    String endPoint = "test";
+  Future<String?> getAvatarUser() async {
+
+    String endPoint = "get/avatar/user";
     var response = await AuthApi().dio.post(endPoint,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -209,10 +210,19 @@ class AuthServiceLogin {
       )
     );
 
-    LoginResponse loginResponse = LoginResponse.fromJson(response.data);
-    if (loginResponse.getResult()) {
-      print("test endpoint was positive");
+    Map<String, dynamic> json = response.data;
+    if (!json.containsKey("result")) {
+      return null;
+    } else {
+      if (json["result"]) {
+        if (!json.containsKey("avatar")) {
+          return null;
+        } else {
+          return json["avatar"].replaceAll("\n", "");
+        }
+      } else {
+        return null;
+      }
     }
-    return loginResponse;
   }
 }

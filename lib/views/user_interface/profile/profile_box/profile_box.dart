@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/rest/auth_service_setting.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/render_avatar.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
@@ -43,7 +45,6 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
 
   User? currentUser;
 
-  late AnimationController _controller;
   int levelClock = 0;
   bool canChangeTiles = true;
 
@@ -63,28 +64,24 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
   final TextEditingController passwordController = TextEditingController();
   final FocusNode _focusPasswordChange = FocusNode();
 
+  ScrollController _controller = ScrollController();
+  bool showTopScoreScreen = true;
+  bool showBottomScoreScreen = true;
+
   @override
   void initState() {
     profileChangeNotifier = ProfileChangeNotifier();
     profileChangeNotifier.addListener(profileChangeListener);
 
     currentUser = settings.getUser();
-    _controller = AnimationController(
-        vsync: this,
-        duration: Duration(
-            seconds:
-            levelClock)
-    );
-    _controller.forward();
-    updateTimeLock();
 
     _focusProfileBox.addListener(_onFocusChange);
     settings.addListener(settingsChangeListener);
     _focusUsernameChange.addListener(_onFocusUsernameChange);
     _focusPasswordChange.addListener(_onFocusPasswordChange);
 
-    setState(() {
-
+    _controller.addListener(() {
+      checkTopBottomScroll();
     });
     super.initState();
   }
@@ -95,18 +92,44 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  checkTopBottomScroll() {
+    if (_controller.hasClients) {
+      double distanceToBottom =
+          _controller.position.maxScrollExtent -
+              _controller.position.pixels;
+      double distanceToTop =
+          _controller.position.minScrollExtent -
+              _controller.position.pixels;
+      if (distanceToBottom != 0) {
+        setState(() {
+          showBottomScoreScreen = false;
+        });
+      } else {
+        setState(() {
+          showBottomScoreScreen = true;
+        });
+      }
+      if (distanceToTop != 0) {
+        setState(() {
+          showTopScoreScreen = false;
+        });
+      } else {
+        setState(() {
+          showTopScoreScreen = true;
+        });
+      }
+    }
+  }
+
   profileChangeListener() {
     if (mounted) {
       if (!showProfile && profileChangeNotifier.getProfileVisible()) {
-        setState(() {
-          showProfile = true;
-        });
+        showProfile = true;
       }
       if (showProfile && !profileChangeNotifier.getProfileVisible()) {
-        setState(() {
-          showProfile = false;
-        });
+        showProfile = false;
       }
+      setState(() {});
     }
   }
 
@@ -128,30 +151,6 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     }
   }
 
-  updateTimeLock() {
-    if (currentUser != null) {
-      DateTime timeLock = settings.getUser()!.getTileLock();
-      if (timeLock.isAfter(DateTime.now())) {
-        levelClock = timeLock.difference(DateTime.now()).inSeconds;
-        _controller = AnimationController(
-            vsync: this,
-            duration: Duration(
-                seconds:
-                levelClock)
-        );
-        _controller.forward();
-        _controller.addStatusListener((status) {
-          if(status == AnimationStatus.completed) {
-            setState(() {
-              canChangeTiles = true;
-            });
-          }
-        });
-        canChangeTiles = false;
-      }
-    }
-  }
-
   Widget profile() {
     // normal mode is for desktop, mobile mode is for mobile.
     bool normalMode = true;
@@ -167,20 +166,31 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     }
     double headerHeight = 40;
 
-    return SingleChildScrollView(
-      child: Container(
-        width: width,
-        height: height,
-        color: Colors.grey,
-        child: Column(
-            children:
-            [
-              profileHeader(width, headerHeight, fontSize),
-              SizedBox(height: 20),
-              userInformationBox(width, fontSize, normalMode),
-            ]
+    return Container(
+      width: width,
+      height: height,
+      child: CustomPaint(
+        painter: BoxWindowPainter(showTop: showTopScoreScreen, showBottom: showBottomScoreScreen),
+        child: NotificationListener(
+          child: SingleChildScrollView(
+              controller: _controller,
+              child: Container(
+                child: Column(
+                    children:
+                    [
+                      profileHeader(width-80, headerHeight, fontSize),
+                      SizedBox(height: 20),
+                      userInformationBox(width-80, fontSize, normalMode),
+                    ]
+                ),
+              )
+          ),
+          onNotification: (t) {
+            checkTopBottomScroll();
+            return true;
+          }
         ),
-      )
+      ),
     );
   }
 
@@ -259,35 +269,141 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     );
   }
 
-  Widget nobodyLoggedIn(double width, double fontSize) {
+  Widget userStats(double userStatsWidth) {
     return Column(
       children: [
-        Container(
-          margin: EdgeInsets.only(top: 20),
-          child: ElevatedButton(
-            onPressed: () {
-              LoginScreenChangeNotifier().setLoginScreenVisible(true);
-            },
-            style: buttonStyle(false, Colors.blue),
-            child: Container(
-              alignment: Alignment.center,
-              width: 400,
-              height: 50,
-              child: Text(
-                'Go to log in screen',
-                style: simpleTextStyle(fontSize),
+        expandedText(userStatsWidth, "Number of games played: ", 24, false),
+        expandedText(userStatsWidth, "${settings.getTotalGames()}", 30, true),
+        SizedBox(height: 20),
+        expandedText(userStatsWidth, "Total pipes cleared: ", 24, false),
+        expandedText(userStatsWidth, "${settings.getTotalPipesCleared()}", 30, true),
+        SizedBox(height: 20),
+        expandedText(userStatsWidth, "Total wing flutters: ", 24, false),
+        expandedText(userStatsWidth, "${settings.getTotalFlutters()}", 30, true),
+      ],
+    );
+  }
+
+  Widget nobodyLoggedInMobile(double width, double fontSize) {
+    double widthAvatar = 300;
+    if (width < widthAvatar) {
+      widthAvatar = width;
+    }
+    return Column(
+        children: [
+          profileAvatar(widthAvatar, fontSize),
+          SizedBox(height: 20),
+          userStats(width),
+          SizedBox(height: 20),
+          expandedText(width, "Save your progress by logging in!", 24, false),
+          Container(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                LoginScreenChangeNotifier().setLoginScreenVisible(true);
+              },
+              style: buttonStyle(false, Colors.blue),
+              child: Container(
+                alignment: Alignment.center,
+                width: 200,
+                height: 50,
+                child: Text(
+                  'Log in',
+                  style: simpleTextStyle(fontSize),
+                ),
               ),
             ),
           ),
+          SizedBox(height: 10),
+          kIsWeb ? Text(
+              "Also try Flutterbird on Android or IOS!",
+              style: simpleTextStyle(fontSize)
+          ) : Text(
+              "Also try Flutterbird in your browser on flutterbird.eu",
+              style: simpleTextStyle(fontSize)
+          ),
+          SizedBox(height: 40),
+        ]
+    );
+  }
+
+  Widget nobodyLoggedInNormal(double width, double fontSize) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            profileAvatar(300, fontSize),
+            SizedBox(width: 20),
+            userStats(width - 300 - 20),
+          ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Text(
+                  "Save your progress by logging in!",
+                  textAlign: TextAlign.center,
+                  style: simpleTextStyle(fontSize)
+              ),
+            ),
+            SizedBox(width: 10),
+            Container(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
+                  LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                },
+                style: buttonStyle(false, Colors.blue),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 200,
+                  height: 50,
+                  child: Text(
+                    'Log in',
+                    style: simpleTextStyle(fontSize),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        kIsWeb ? Text(
+            "Also try Flutterbird on Android or IOS!",
+            style: simpleTextStyle(fontSize)
+        ) : Text(
+            "Also try Flutterbird in your browser on flutterbird.eu",
+            style: simpleTextStyle(fontSize)
+        ),
+        SizedBox(height: 40),
       ],
     );
   }
 
   Widget somebodyLoggedInNormal(double width, double fontSize) {
-    return Row(
+    return Column(
       children: [
-        profileAvatar(300, fontSize),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              profileAvatar(300, fontSize),
+              SizedBox(width: 20),
+              userStats(width - 300 - 20),
+            ]
+        ),
+        SizedBox(height: 10),
+        kIsWeb ? Text(
+            "Also try Flutterbird on Android or IOS!",
+            style: simpleTextStyle(fontSize)
+        ) : Text(
+            "Also try Flutterbird in your browser on flutterbird.eu",
+            style: simpleTextStyle(fontSize)
+        ),
+        SizedBox(height: 40),
       ]
     );
   }
@@ -439,40 +555,45 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
   }
 
   Widget profileAvatar(double avatarWidth, double fontSize) {
+    User? currentUser = settings.getUser();
+    String userName = "";
+    if (currentUser == null) {
+      userName = "Guest";
+    } else {
+      userName = currentUser.getUserName();
+    }
     return Container(
         width: avatarWidth,
         child: Column(
             children: [
-          settings.getAvatar() != null
-              ? avatarBox(avatarWidth, avatarWidth, settings.getAvatar()!)
-              : Container(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: RichText(
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    text: settings.getUser()!.getUserName(),
-                    style: TextStyle(color: Colors.white, fontSize: 34),
+              avatarBox(avatarWidth, avatarWidth, settings.getAvatar()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: userName,
+                        style: TextStyle(color: Colors.white, fontSize: 34),
+                      ),
+                    ),
                   ),
-                ),
+                  currentUser != null ? IconButton(
+                      key: settingsKey,
+                      iconSize: 40.0,
+                      icon: const Icon(Icons.settings),
+                      color: Colors.orangeAccent.shade200,
+                      tooltip: 'Settings',
+                      onPressed: _showPopupMenu
+                  ) : Container()
+                ],
               ),
-              IconButton(
-                  key: settingsKey,
-                  iconSize: 40.0,
-                  icon: const Icon(Icons.settings),
-                  color: Colors.orangeAccent.shade200,
-                  tooltip: 'Settings',
-                  onPressed: _showPopupMenu
-              )
-            ],
-          ),
-          changeUserName ? changeUserNameField(avatarWidth, fontSize) : Container(),
-          changePassword ? changePasswordField(avatarWidth, fontSize) : Container(),
-        ]
-      )
+              changeUserName ? changeUserNameField(avatarWidth, fontSize) : Container(),
+              changePassword ? changePasswordField(avatarWidth, fontSize) : Container(),
+            ]
+        )
     );
   }
 
@@ -484,6 +605,29 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     return Column(
       children: [
         profileAvatar(widthAvatar, fontSize),
+        SizedBox(height: 20),
+        userStats(width),
+        SizedBox(height: 20),
+        expandedText(width, "Save your progress by logging in!", 24, false),
+        Container(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: () {
+              LoginScreenChangeNotifier().setLoginScreenVisible(true);
+            },
+            style: buttonStyle(false, Colors.blue),
+            child: Container(
+              alignment: Alignment.center,
+              width: 200,
+              height: 50,
+              child: Text(
+                'Log in',
+                style: simpleTextStyle(fontSize),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 40),
       ],
     );
   }
@@ -492,7 +636,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     return Container(
         child: settings.getUser() != null
             ? somebodyLoggedInNormal(width, fontSize)
-            : nobodyLoggedIn(width, fontSize)
+            : nobodyLoggedInNormal(width, fontSize)
     );
   }
 
@@ -500,7 +644,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     return Container(
         child: settings.getUser() != null
             ? somebodyLoggedInMobile(width, fontSize)
-            : nobodyLoggedIn(width, fontSize)
+            : nobodyLoggedInMobile(width, fontSize)
     );
   }
 

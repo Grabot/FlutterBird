@@ -74,7 +74,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   }
 
   @override
-  onCollisionStart(_, __) {
+  onCollisionStart(_, __) async {
     // There can be multiple collisions after death, we only want to handle the first one
     if (!gameRef.gameEnded) {
       // For the death animation we set the velocity such that the bird flies up and then falls down

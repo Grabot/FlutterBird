@@ -52,6 +52,15 @@ successfulLogin(LoginResponse loginResponse) async {
   SecureStorage secureStorage = SecureStorage();
   Settings settings = Settings();
 
+  User? user = loginResponse.getUser();
+  if (user != null) {
+    settings.setUser(user);
+    if (user.getAvatar() != null) {
+      settings.setAvatar(user.getAvatar()!);
+    }
+    SocketServices().login(user.id);
+  }
+
   String? accessToken = loginResponse.getAccessToken();
   if (accessToken != null) {
     // the access token will be set in memory and local storage.
@@ -68,14 +77,12 @@ successfulLogin(LoginResponse loginResponse) async {
     await secureStorage.setRefreshToken(refreshToken);
   }
 
-  User? user = loginResponse.getUser();
-  if (user != null) {
-    settings.setUser(user);
-    if (user.getAvatar() != null) {
-      settings.setAvatar(user.getAvatar()!);
-    }
-    SocketServices().login(user.id);
-  }
+  int userPipesCleared = 0;
+  int userFlutters = 0;
+  int totalGames = 0;
+  settings.addTotalPipesCleared(userPipesCleared);
+  settings.addTotalFlutters(userFlutters);
+  settings.addTotalGames(totalGames);
   settings.setLoggingIn(false);
   ProfileChangeNotifier().notify();
 }
@@ -114,4 +121,24 @@ logoutUser(Settings settings, NavigationService navigationService) async {
   SecureStorage().logout().then((value) {
     navigationService.navigateTo(routes.HomeRoute, arguments: {'message': "Logged out"});
   });
+}
+
+Widget expandedText(double width, String text, double fontSize, bool bold) {
+  return Container(
+    width: width,
+    child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: fontSize,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
+        ]
+    ),
+  );
 }

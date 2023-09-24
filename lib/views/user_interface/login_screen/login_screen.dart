@@ -7,10 +7,12 @@ import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/rest/auth_service_login.dart';
 import 'package:flutter_bird/services/rest/models/login_request.dart';
 import 'package:flutter_bird/services/rest/models/register_request.dart';
+import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_overview/profile_overview.dart';
+import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/ui_util/clear_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -55,16 +57,59 @@ class LoginScreenState extends State<LoginScreen> {
   FocusNode _focusEmail = FocusNode();
   FocusNode _focusPassword = FocusNode();
 
+  ScrollController _controller = ScrollController();
+  bool showTopScoreScreen = true;
+  bool showBottomScoreScreen = true;
+
   @override
   void initState() {
     loginScreenChangeNotifier = LoginScreenChangeNotifier();
     loginScreenChangeNotifier.addListener(loginScreenChangeListener);
+    _controller.addListener(() {
+      checkTopBottomScroll();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
+  }
+
+  checkTopBottomScroll() {
+    if (_controller.hasClients) {
+      double distanceToBottom =
+          _controller.position.maxScrollExtent -
+              _controller.position.pixels;
+      double distanceToTop =
+          _controller.position.minScrollExtent -
+              _controller.position.pixels;
+      if (distanceToBottom != 0) {
+        setState(() {
+          showBottomScoreScreen = false;
+        });
+      } else {
+        setState(() {
+          showBottomScoreScreen = true;
+        });
+      }
+      if (distanceToTop != 0) {
+        setState(() {
+          showTopScoreScreen = false;
+        });
+      } else {
+        setState(() {
+          showTopScoreScreen = true;
+        });
+      }
+    }
+  }
+
+  goBack() {
+    setState(() {
+      LoginScreenChangeNotifier().setLoginScreenVisible(false);
+    });
   }
 
   signInFlutterBird() {
@@ -77,7 +122,8 @@ class LoginScreenState extends State<LoginScreen> {
       authServiceLogin.getLogin(LoginRequest(emailOrUserName, password)).then((loginResponse) {
         if (loginResponse.getResult()) {
           print("signing in");
-          ClearUI().clearUserInterfaces();
+          ScoreScreenChangeNotifier().notify();
+          goBack();
           setState(() {});
         } else if (!loginResponse.getResult()) {
           showToastMessage(loginResponse.getMessage());
@@ -100,8 +146,9 @@ class LoginScreenState extends State<LoginScreen> {
       AuthServiceLogin authService = AuthServiceLogin();
       authService.getRegister(RegisterRequest(email, userName, password)).then((loginResponse) {
         if (loginResponse.getResult()) {
-          print("signing up");
-          ClearUI().clearUserInterfaces();
+          print("signing in");
+          ScoreScreenChangeNotifier().notify();
+          goBack();
           setState(() {});
         } else if (!loginResponse.getResult()) {
           showToastMessage(loginResponse.getMessage());
@@ -181,7 +228,7 @@ class LoginScreenState extends State<LoginScreen> {
         ),
         ElevatedButton(
           onPressed: () {
-            LoginScreenChangeNotifier().setLoginScreenVisible(false);
+            goBack();
           },
           style: buttonStyle(false, Colors.blue),
           child: Container(
@@ -711,25 +758,32 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginScreen(double width, double loginBoxSize, double fontSize) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          children: [
-            Container(
-                alignment: Alignment.center,
-                child: Image.asset("assets/images/brocast_transparent.png")
+    return NotificationListener(
+        child: SingleChildScrollView(
+          controller: _controller,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                Container(
+                    alignment: Alignment.center,
+                    child: Image.asset("assets/images/brocast_transparent.png")
+                ),
+                signUpMode == 0 ? login(width - (30 * 2), fontSize) : Container(),
+                signUpMode == 1 ? register(width - (30 * 2), fontSize) : Container(),
+                signUpMode == 2 && !passwordResetSend ? resetPassword(width - (30 * 2), fontSize) : Container(),
+                signUpMode == 2 && passwordResetSend ? resetPasswordEmailSend(width - (30 * 2), fontSize) : Container(),
+                signUpMode != 2 ? loginAlternatives(loginBoxSize, fontSize) : Container(),
+                signUpMode != 2 ? justPlayGame(width, fontSize) : Container(),
+                const SizedBox(height: 40),
+              ],
             ),
-            signUpMode == 0 ? login(width - (30 * 2), fontSize) : Container(),
-            signUpMode == 1 ? register(width - (30 * 2), fontSize) : Container(),
-            signUpMode == 2 && !passwordResetSend ? resetPassword(width - (30 * 2), fontSize) : Container(),
-            signUpMode == 2 && passwordResetSend ? resetPasswordEmailSend(width - (30 * 2), fontSize) : Container(),
-            signUpMode != 2 ? loginAlternatives(loginBoxSize, fontSize) : Container(),
-            signUpMode != 2 ? justPlayGame(width, fontSize) : Container(),
-            const SizedBox(height: 40),
-          ],
+          ),
         ),
-      ),
+        onNotification: (t) {
+          checkTopBottomScroll();
+          return true;
+        }
     );
   }
 
@@ -751,8 +805,9 @@ class LoginScreenState extends State<LoginScreen> {
       child: showLoginScreen ? Container(
           width: width,
           height: height,
-          color: Colors.orange,
-          child: loginScreen(width, loginBoxSize, fontSize)
+          child: CustomPaint(
+              painter: BoxWindowPainter(showTop: showTopScoreScreen, showBottom: showBottomScoreScreen),
+              child: loginScreen(width, loginBoxSize, fontSize))
       ) : Container(),
     );
   }

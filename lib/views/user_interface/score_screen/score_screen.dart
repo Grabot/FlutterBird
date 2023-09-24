@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/util/box_window_painter.dart';
+import 'package:flutter_bird/util/util.dart';
+import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
 import 'score_screen_change_notifier.dart';
 
@@ -26,27 +30,33 @@ class ScoreScreenState extends State<ScoreScreen> {
   late Settings settings;
   final FocusNode _focusScoreScreen = FocusNode();
 
+  ScrollController _controller = ScrollController();
+  bool showTopScoreScreen = true;
+  bool showBottomScoreScreen = true;
+
   @override
   void initState() {
     _focusScoreScreen.addListener(_onFocusChange);
     scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
     scoreScreenChangeNotifier.addListener(chatWindowChangeListener);
     settings = Settings();
+
+    _controller.addListener(() {
+      checkTopBottomScroll();
+    });
     super.initState();
   }
 
   chatWindowChangeListener() {
     if (mounted) {
       if (!showScoreScreen && scoreScreenChangeNotifier.getScoreScreenVisible()) {
-        setState(() {
-          showScoreScreen = true;
-        });
+        showScoreScreen = true;
       }
       if (showScoreScreen && !scoreScreenChangeNotifier.getScoreScreenVisible()) {
-        setState(() {
-          showScoreScreen = false;
-        });
+        showScoreScreen = false;
       }
+      checkTopBottomScroll();
+      setState(() {});
     }
   }
 
@@ -56,14 +66,44 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
-  Widget medalHeader(double medalWidth, double fontSize) {
+  checkTopBottomScroll() {
+    if (_controller.hasClients) {
+      double distanceToBottom =
+          _controller.position.maxScrollExtent -
+              _controller.position.pixels;
+      double distanceToTop =
+          _controller.position.minScrollExtent -
+              _controller.position.pixels;
+      if (distanceToBottom != 0) {
+        setState(() {
+          showBottomScoreScreen = false;
+        });
+      } else {
+        setState(() {
+          showBottomScoreScreen = true;
+        });
+      }
+      if (distanceToTop != 0) {
+        setState(() {
+          showTopScoreScreen = false;
+        });
+      } else {
+        setState(() {
+          showTopScoreScreen = true;
+        });
+      }
+    }
+  }
+
+  Widget medalHeader(double medalWidth, double medalHeight, double fontSize) {
     return Container(
       alignment: Alignment.center,
       width: medalWidth,
-      height: medalWidth/6,
+      height: medalHeight,
       child: Text(
         "Achievements",
         style: TextStyle(
@@ -99,21 +139,21 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget medalImage(double medalWidth, double fontSize) {
+  Widget medalImage(double medalWidth, double medalHeight, double fontSize) {
     User? currentUser = settings.getUser();
     return Container(
       alignment: Alignment.center,
       width: medalWidth,
-      height: (medalWidth/6)*4,
+      height: medalHeight,
       child: currentUser == null ? achievementsNobodyLoggedIn(fontSize) : achievementsLoggedIn(currentUser),
     );
   }
 
-  Widget scoreNowHeader(double scoreWidth, double fontSize) {
+  Widget scoreNowHeader(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
       alignment: Alignment.centerRight,
       width: scoreWidth,
-      height: scoreWidth/6,
+      height: scoreHeight,
       child: Text(
         "Score",
         style: TextStyle(
@@ -125,11 +165,11 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreNow(double scoreWidth, double fontSize) {
+  Widget scoreNow(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
       alignment: Alignment.centerRight,
       width: scoreWidth,
-      height: (scoreWidth/12)*3,
+      height: scoreHeight,
       child: Stack(
         children: [
           Text(
@@ -154,11 +194,11 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreHighHeader(double scoreWidth, double fontSize) {
+  Widget scoreHighHeader(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
       alignment: Alignment.centerRight,
       width: scoreWidth,
-      height: scoreWidth/6,
+      height: scoreHeight,
       child: Text(
         "Best",
         style: TextStyle(
@@ -170,11 +210,11 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreHigh(double scoreWidth, double fontSize) {
+  Widget scoreHigh(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
       alignment: Alignment.centerRight,
       width: scoreWidth,
-      height: (scoreWidth/12)*3,
+      height: scoreHeight,
       child: Stack(
         children: [
           Text(
@@ -199,29 +239,83 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreScreenContent(double scoreWidth, double fontSize) {
+  Widget loginReminder(double width, double fontSize) {
+    return Column(
+      children: [
+        expandedText(width, "Save your progress by logging in!", 24, false),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            SizedBox(width: 20),
+            Container(
+              alignment: Alignment.topLeft,
+              child: ElevatedButton(
+                onPressed: () {
+                  _controller.jumpTo(0);
+                  LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                },
+                style: buttonStyle(false, Colors.blue),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 200,
+                  height: 50,
+                  child: Text(
+                    'Log in',
+                    style: simpleTextStyle(fontSize),
+                  ),
+                ),
+              ),
+            ),
+          ]
+        ),
+        SizedBox(height: 10),
+        kIsWeb ? Text(
+            "Also try Flutterbird on Android or IOS!",
+            style: simpleTextStyle(fontSize)
+        ) : Text(
+            "Also try Flutterbird in your browser on flutterbird.eu",
+            style: simpleTextStyle(fontSize)
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget scoreScreenContent(double scoreWidth, double fontSize, double heightScale) {
     double leftWidth = (scoreWidth/2) - 30;
     double rightWidth = (scoreWidth/2) - 30;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    double totalHeight = scoreWidth/2;
+    double medalHeaderHeight = leftWidth/6;
+    double achievementHeight = (leftWidth/6)*4;
+    User? currentUser = settings.getUser();
+    return Column(
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            medalHeader(leftWidth, fontSize),
-            medalImage(leftWidth, fontSize),
-          ],
+        Container(
+          height: totalHeight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  medalHeader(leftWidth, medalHeaderHeight, fontSize),
+                  medalImage(leftWidth, achievementHeight, fontSize),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  scoreNowHeader(rightWidth, rightWidth/6, fontSize),
+                  scoreNow(rightWidth, (rightWidth/12)*3, fontSize),
+                  scoreHighHeader(rightWidth, rightWidth/6, fontSize),
+                  scoreHigh(rightWidth, (rightWidth/12)*3, fontSize),
+                ],
+              )
+            ],
+          ),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            scoreNowHeader(rightWidth, fontSize),
-            scoreNow(rightWidth, fontSize),
-            scoreHighHeader(rightWidth, fontSize),
-            scoreHigh(rightWidth, fontSize),
-          ],
-        )
-      ],
+        currentUser == null ? loginReminder(scoreWidth-60, fontSize) : Container()
+      ]
     );
   }
 
@@ -249,19 +343,22 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreContent(double scoreWidth, double fontSize) {
+  Widget scoreContent(double scoreWidth, double fontSize, double heightScale) {
     return Container(
       width: scoreWidth,
       height: scoreWidth/2,
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 4,
-        ),
-      ),
       child: CustomPaint(
-          painter: ScoreScreenPainter(),
-          child: scoreScreenContent(scoreWidth, fontSize)
+          painter: BoxWindowPainter(showTop: showTopScoreScreen, showBottom: showBottomScoreScreen),
+          child: NotificationListener(
+              child: SingleChildScrollView(
+                  controller: _controller,
+                  child: scoreScreenContent(scoreWidth, fontSize, heightScale)
+              ),
+              onNotification: (t) {
+                checkTopBottomScroll();
+                return true;
+              }
+          )
       ),
     );
   }
@@ -279,13 +376,11 @@ class ScoreScreenState extends State<ScoreScreen> {
       fontSize = 20 * newHeightScaleFont;
     }
 
-    print("heightScale: $heightScale");
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         gameOverMessage(heightScale),
-        scoreContent(scoreWidth, fontSize),
+        scoreContent(scoreWidth, fontSize, heightScale),
         userInteractionButtons(),
       ]
     );
@@ -298,36 +393,4 @@ class ScoreScreenState extends State<ScoreScreen> {
         child: showScoreScreen ? scoreScreenWidget(context) : Container()
     );
   }
-
-}
-
-class ScoreScreenPainter extends CustomPainter {
-
-  ScoreScreenPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rectBorderOuter = Rect.fromLTWH(0, 0, size.width, size.height);
-    final rrectShadow = Rect.fromLTWH(5, 5, size.width-10, size.height-10);
-    final rectBorderInner = Rect.fromLTWH(7, 7, size.width-12, size.height-12);
-
-    final borderPaintOuter = Paint()
-      ..strokeWidth = 10
-      ..color = Color(0xFFece4a9)
-      ..style = PaintingStyle.stroke;
-    final borderPaintLine = Paint()
-      ..strokeWidth = 4
-      ..color = Color(0xFFd3aa33)
-      ..style = PaintingStyle.stroke;
-    final borderPaintInner = Paint()
-      ..color = Color(0xFFdcd587)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(rectBorderOuter, borderPaintOuter);
-    canvas.drawRect(rrectShadow, borderPaintLine);
-    canvas.drawRect(rectBorderInner, borderPaintInner);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

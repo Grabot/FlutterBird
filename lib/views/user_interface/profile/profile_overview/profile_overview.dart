@@ -27,7 +27,6 @@ class ProfileOverview extends StatefulWidget {
 class ProfileOverviewState extends State<ProfileOverview> with TickerProviderStateMixin {
 
   late ProfileChangeNotifier profileChangeNotifier;
-  SocketServices socket = SocketServices();
   Settings settings = Settings();
 
   int friendOverviewState = 0;
@@ -46,8 +45,6 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
     profileChangeNotifier = ProfileChangeNotifier();
     profileChangeNotifier.addListener(profileChangeListener);
     settings.addListener(profileChangeListener);
-
-    socket.addListener(socketListener);
   }
 
   @override
@@ -97,14 +94,6 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
         return alert;
       },
     );
-  }
-
-  socketListener() {
-    if (mounted) {
-      friendOverviewState = 0;
-      messageOverviewState = 0;
-      setState(() {});
-    }
   }
 
   profileChangeListener() {
@@ -202,8 +191,7 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
     );
   }
 
-  Widget profileOverviewMobile(double profileOverviewWidth, double profileOverviewHeight, double fontSize) {
-    double statusBarPadding = MediaQuery.of(context).viewPadding.top;
+  Widget profileOverviewMobile(double profileOverviewWidth, double profileOverviewHeight, double statusBarPadding, double fontSize) {
     return Container(
       child: Column(
         children: [
@@ -215,7 +203,6 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
                   profileWidget(profileOverviewWidth, profileOverviewHeight),
                 ],
               ),
-              SizedBox(width: 5),
             ]
           ),
         ]
@@ -231,21 +218,23 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
     // In NormalMode the height has the 2 buttons and some padding added.
     double profileOverviewHeight = 100;
     normalMode = true;
+    double statusBarPadding = 0;
     if (MediaQuery.of(context).size.width <= 800) {
       profileOverviewWidth = MediaQuery.of(context).size.width/2;
       profileOverviewWidth += 5;
       profileOverviewHeight = 50;
       normalMode = false;
+      statusBarPadding = MediaQuery.of(context).viewPadding.top;
     }
     return Align(
       alignment: FractionalOffset.topRight,
       child: SingleChildScrollView(
         child: SizedBox(
             width: profileOverviewWidth,
-            height: profileOverviewHeight,
+            height: profileOverviewHeight + statusBarPadding,
             child: normalMode
                 ? profileOverviewNormal(profileOverviewWidth, profileOverviewHeight, fontSize)
-                : profileOverviewMobile(profileOverviewWidth-5, profileOverviewHeight, fontSize)
+                : profileOverviewMobile(profileOverviewWidth, profileOverviewHeight, statusBarPadding, fontSize)
         ),
       )
     );

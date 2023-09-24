@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/constants/url_base.dart';
 import 'package:flutter_bird/models/friend.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/util/util.dart';
+import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'rest/auth_service_login.dart';
 import 'settings.dart';
 
 
@@ -37,6 +42,34 @@ class SocketServices extends ChangeNotifier {
       print("on disconnect");
       socket.emit('message_event', 'Disconnected!');
     });
+
+    socket.on('message_event', (data) {
+      checkMessageEvent(data);
+    });
+
+    socket.open();
+  }
+
+  retrieveAvatar() {
+    AuthServiceLogin().getAvatarUser().then((value) {
+      if (value != null) {
+        Uint8List avatar = base64Decode(value.replaceAll("\n", ""));
+        Settings().setAvatar(avatar);
+        if (Settings().getUser() != null) {
+          Settings().getUser()!.setAvatar(avatar);
+        }
+        ProfileChangeNotifier().notify();
+      }
+    }).onError((error, stackTrace) {
+      // TODO: What to do on an error? Reset?
+      print("error: $error");
+    });
+  }
+
+  void checkMessageEvent(data) {
+    if (data == "Avatar creation done!") {
+      retrieveAvatar();
+    }
   }
 
   login(int userId) {
