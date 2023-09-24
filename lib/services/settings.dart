@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
+import 'package:isolated_worker/js_isolated_worker.dart';
 
 
 class Settings extends ChangeNotifier {
@@ -15,7 +16,6 @@ class Settings extends ChangeNotifier {
 
   User? user;
 
-  // String? avatar;
   Uint8List? avatar;
 
   bool loggingIn = false;
@@ -24,7 +24,9 @@ class Settings extends ChangeNotifier {
 
   Settings._internal() {
     if (kIsWeb) {
-
+      JsIsolatedWorker().importScripts(['crop/crop_web.js']).then((value) {
+        print("importScripts");
+      });
     }
   }
 
@@ -35,7 +37,7 @@ class Settings extends ChangeNotifier {
   notify() {
     notifyListeners();
   }
-  
+
   setUser(User user) {
     this.user = user;
   }

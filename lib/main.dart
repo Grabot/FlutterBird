@@ -9,6 +9,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'services/navigation_service.dart';
 import 'services/settings.dart';
+import 'views/user_interface/change_avatar_box/change_avatar_box.dart';
 import 'views/user_interface/profile/profile_box/profile_box.dart';
 import 'views/user_interface/profile/profile_overview/profile_overview.dart';
 import 'views/user_interface/score_screen/score_screen.dart';
@@ -35,12 +36,14 @@ Future<void> main() async {
           'profileBox': _profileBoxBuilder,
           'profileOverview': _profileOverviewBuilder,
           'loginScreen': _loginScreenBuilder,
+          'changeAvatar': _changeAvatarBoxBuilder,
         },
         initialActiveOverlays: const [
           'scoreScreen',
           'profileBox',
           'profileOverview',
           'loginScreen',
+          'changeAvatar',
         ],
       )
   );
@@ -87,4 +90,8 @@ Widget _profileOverviewBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _loginScreenBuilder(BuildContext buildContext, FlutterBird game) {
   return LoginScreen(key: UniqueKey(), game: game);
+}
+
+Widget _changeAvatarBoxBuilder(BuildContext buildContext, FlutterBird game) {
+  return ChangeAvatarBox(key: UniqueKey(), game: game);
 }

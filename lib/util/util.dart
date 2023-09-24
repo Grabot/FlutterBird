@@ -77,7 +77,7 @@ successfulLogin(LoginResponse loginResponse) async {
     SocketServices().login(user.id);
   }
   settings.setLoggingIn(false);
-  // ProfileChangeNotifier().notify();
+  ProfileChangeNotifier().notify();
 }
 
 TextStyle simpleTextStyle(double fontSize) {

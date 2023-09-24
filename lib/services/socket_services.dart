@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bird/constants/url_base.dart';
 import 'package:flutter_bird/models/friend.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/util/util.dart';
@@ -20,7 +21,6 @@ class SocketServices extends ChangeNotifier {
   }
 
   startSockConnection() {
-    String baseUrlV1_0 = "";  // TODO: baseurl
     String socketUrl = baseUrlV1_0;
     socket = io.io(socketUrl, <String, dynamic>{
       'autoConnect': false,

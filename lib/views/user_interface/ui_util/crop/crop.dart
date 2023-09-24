@@ -354,7 +354,7 @@ class _CropEditorState extends State<_CropEditor> {
         ),
         IgnorePointer(
           child: ClipPath(
-            clipper: widget.hexCrop ? _CropAreaHexClipper(_rect) : _CropAreaCrestClipper(_rect),
+            clipper: _CropAreaRectClipper(_rect),
             child: Container(
               width: double.infinity,
               height: double.infinity,
@@ -465,8 +465,8 @@ class _CropEditorState extends State<_CropEditor> {
   }
 }
 
-class _CropAreaCrestClipper extends CustomClipper<Path> {
-  _CropAreaCrestClipper(this.rect);
+class _CropAreaRectClipper extends CustomClipper<Path> {
+  _CropAreaRectClipper(this.rect);
 
   final Rect rect;
 
@@ -474,98 +474,21 @@ class _CropAreaCrestClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
 
     final path = Path();
-    double width = rect.width;
-    double height = rect.height;
-
-    // Determined these points with some trial and error.
-    List point1 = [width/2 + rect.left, height/93.875 + rect.top];
-    List point2 = [width/4.90441 + rect.left, height/8.94047 + rect.top];
-    List point3 = [width/27.79166 + rect.left, height/11.734375 + rect.top];
-    List point4 = [width/83.375 + rect.left, height/1.61853 + rect.top];
-    List point5 = [width/5.05303 + rect.left, height/1.19586 + rect.top];
-    List point6 = [width/2.41666 + rect.left, height/1.03159 + rect.top];
-    List point7 = [(width/2)-2 + rect.left, height + rect.top];
-    List point8 = [(width/2)+2 + rect.left, height + rect.top];
-    List point9 = [width/1.70153 + rect.left, height/1.03159 + rect.top];
-    List point10 = [width/1.24440 + rect.left, height/1.19586 + rect.top];
-    List point11 = [width/1.010606 + rect.left, height/1.61853 + rect.top];
-    List point12 = [width/1.035714 + rect.left, height/11.734375 + rect.top];
-    List point13 = [width/1.253759 + rect.left, height/8.94047 + rect.top];
+    List point1 = [rect.left, rect.top];
+    List point2 = [rect.left, rect.bottom];
+    List point3 = [rect.right, rect.bottom];
+    List point4 = [rect.right, rect.top];
 
     path.moveTo(point1[0], point1[1]);
     path.lineTo(point2[0], point2[1]);
     path.lineTo(point3[0], point3[1]);
     path.lineTo(point4[0], point4[1]);
-    path.lineTo(point5[0], point5[1]);
-    path.lineTo(point6[0], point6[1]);
-    path.lineTo(point7[0], point7[1]);
-    path.lineTo(point8[0], point8[1]);
-    path.lineTo(point9[0], point9[1]);
-    path.lineTo(point10[0], point10[1]);
-    path.lineTo(point11[0], point11[1]);
-    path.lineTo(point12[0], point12[1]);
-    path.lineTo(point13[0], point13[1]);
     path.close();
 
     return Path()
       ..addPath(path, Offset.zero)
       ..addRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height))
       ..fillType = PathFillType.evenOdd;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
-}
-
-class _CropAreaHexClipper extends CustomClipper<Path> {
-  _CropAreaHexClipper(this.rect);
-
-  final Rect rect;
-
-  @override
-  Path getClip(Size size) {
-
-    final path = Path();
-    List point1 = getPointyHexCornerAvatar(rect, 0);
-    List point2 = getPointyHexCornerAvatar(rect, 1);
-    List point3 = getPointyHexCornerAvatar(rect, 2);
-    List point4 = getPointyHexCornerAvatar(rect, 3);
-    List point5 = getPointyHexCornerAvatar(rect, 4);
-    List point6 = getPointyHexCornerAvatar(rect, 5);
-
-    // 2,3 are the bottom 2 points and 5,6 are the top 2 points
-    // We move those to the bottom and the top of the image
-    point2[1] = rect.bottom;
-    point3[1] = rect.bottom;
-    point5[1] = rect.top;
-    point6[1] = rect.top;
-
-    path.moveTo(point1[0], point1[1]);
-    path.lineTo(point2[0], point2[1]);
-    path.lineTo(point3[0], point3[1]);
-    path.lineTo(point4[0], point4[1]);
-    path.lineTo(point5[0], point5[1]);
-    path.lineTo(point6[0], point6[1]);
-    path.close();
-
-    return Path()
-      ..addPath(path, Offset.zero)
-      ..addRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height))
-      ..fillType = PathFillType.evenOdd;
-  }
-
-  List getPointyHexCornerAvatar(Rect rect, double i) {
-    double angleDeg = 60 * i;
-
-    double startX = rect.left;
-    double startY = rect.top;
-    double xSize = rect.width / 2;
-    double ySize = rect.height / 2;
-
-    double angleRad = pi/180 * angleDeg;
-    double pointX = startX + (xSize * cos(angleRad)) + xSize;
-    double pointY = startY + (ySize * sin(angleRad)) + ySize;
-    return [pointX, pointY];
   }
 
   @override

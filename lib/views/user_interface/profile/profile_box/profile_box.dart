@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
 import 'package:flutter_bird/models/user.dart';
@@ -533,8 +536,15 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
 
   showChangeAvatar() {
     setState(() {
-      ChangeAvatarChangeNotifier().setAvatar(settings.getAvatar()!);
-      ChangeAvatarChangeNotifier().setChangeAvatarVisible(true);
+      if (settings.getAvatar() == null) {
+        rootBundle.load('assets/images/default_avatar.png').then((data) {
+          ChangeAvatarChangeNotifier().setAvatar(data.buffer.asUint8List());
+          ChangeAvatarChangeNotifier().setChangeAvatarVisible(true);
+        });
+      } else {
+        ChangeAvatarChangeNotifier().setAvatar(settings.getAvatar()!);
+        ChangeAvatarChangeNotifier().setChangeAvatarVisible(true);
+      }
       changePassword = false;
       changeUserName = false;
     });

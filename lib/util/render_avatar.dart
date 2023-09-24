@@ -7,8 +7,8 @@ Widget getAvatar(double avatarBoxWidth, double avatarBoxHeight, Uint8List? avata
   if (avatar != null) {
     return Image.memory(
       avatar,
-      width: avatarBoxWidth * 0.785,  // some scale that I determined by trial and error
-      height: avatarBoxHeight * 0.785,  // some scale that I determined by trial and error
+      width: avatarBoxWidth * 1,  // some scale that I determined by trial and error
+      height: avatarBoxHeight * 1,  // some scale that I determined by trial and error
       gaplessPlayback: true,
       fit: BoxFit.cover,
     );
@@ -30,23 +30,8 @@ Widget avatarBox(double avatarBoxWidth, double avatarBoxHeight, Uint8List? avata
         width: avatarBoxWidth,
         height: avatarBoxHeight,
         child: Center(
-            child: ClipPath(
-                clipper: HexagonClipper(),
-                child: getAvatar(avatarBoxWidth, avatarBoxHeight, avatar)
-            )
+          child: getAvatar(avatarBoxWidth, avatarBoxHeight, avatar)
         ),
-      ),
-      SizedBox(
-          width: avatarBoxWidth,
-          height: avatarBoxHeight,
-          child: Center(
-            child: Image.asset(
-              "assets/images/ui/hexagon_frame_small_fill.png",
-              width: avatarBoxWidth,
-              height: avatarBoxHeight,
-              fit: BoxFit.cover,
-            ),
-          )
       ),
     ],
   );

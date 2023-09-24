@@ -9,6 +9,9 @@ import 'package:flutter_bird/services/rest/models/login_request.dart';
 import 'package:flutter_bird/services/rest/models/register_request.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
+import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
+import 'package:flutter_bird/views/user_interface/profile/profile_overview/profile_overview.dart';
+import 'package:flutter_bird/views/user_interface/ui_util/clear_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -74,8 +77,8 @@ class LoginScreenState extends State<LoginScreen> {
       authServiceLogin.getLogin(LoginRequest(emailOrUserName, password)).then((loginResponse) {
         if (loginResponse.getResult()) {
           print("signing in");
-          // TODO: sign in
-          // goToGame(_navigationService, widget.game);
+          ClearUI().clearUserInterfaces();
+          setState(() {});
         } else if (!loginResponse.getResult()) {
           showToastMessage(loginResponse.getMessage());
           isLoading = false;
@@ -98,8 +101,8 @@ class LoginScreenState extends State<LoginScreen> {
       authService.getRegister(RegisterRequest(email, userName, password)).then((loginResponse) {
         if (loginResponse.getResult()) {
           print("signing up");
-          // TODO: register
-          // goToGame(_navigationService, widget.game);
+          ClearUI().clearUserInterfaces();
+          setState(() {});
         } else if (!loginResponse.getResult()) {
           showToastMessage(loginResponse.getMessage());
           isLoading = false;

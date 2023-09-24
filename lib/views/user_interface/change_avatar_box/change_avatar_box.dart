@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/services/rest/auth_service_setting.dart';
 import 'package:flutter_bird/services/settings.dart';
@@ -9,9 +8,10 @@ import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/change_avatar_box/change_avatar_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/loading_box/loading_box_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/ui_util/crop/controller.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bird/views/user_interface/ui_util/crop/crop.dart';
 import 'package:image/image.dart' as image;
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 
 
 class ChangeAvatarBox extends StatefulWidget {
@@ -53,8 +53,8 @@ class ChangeAvatarBoxState extends State<ChangeAvatarBox> with TickerProviderSta
         // set the correct image
         setState(() {
           showChangeAvatar = true;
-          imageMain = Settings().getAvatar()!;
-          imageCrop = Settings().getAvatar()!;
+          imageMain = changeAvatarChangeNotifier.getAvatar();
+          imageCrop = changeAvatarChangeNotifier.getAvatar();
         });
         // And check if it's the default avatar
         AuthServiceSetting().getIsAvatarDefault().then((result) {
