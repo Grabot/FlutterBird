@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
@@ -28,6 +29,7 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
   late Settings settings;
+  late UserScore userScore;
   final FocusNode _focusScoreScreen = FocusNode();
 
   ScrollController _controller = ScrollController();
@@ -40,6 +42,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
     scoreScreenChangeNotifier.addListener(chatWindowChangeListener);
     settings = Settings();
+    userScore = UserScore();
 
     _controller.addListener(() {
       checkTopBottomScroll();
@@ -194,7 +197,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreHighHeader(double scoreWidth, double scoreHeight, double fontSize) {
+  Widget scoreBestHeader(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
       alignment: Alignment.centerRight,
       width: scoreWidth,
@@ -210,7 +213,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreHigh(double scoreWidth, double scoreHeight, double fontSize) {
+  Widget scoreBest(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
       alignment: Alignment.centerRight,
       width: scoreWidth,
@@ -218,7 +221,7 @@ class ScoreScreenState extends State<ScoreScreen> {
       child: Stack(
         children: [
           Text(
-            "${settings.getHighScore()}",
+            "${userScore.getBestScore()}",
             style: TextStyle(
               fontSize: fontSize*3,
               foreground: Paint()
@@ -228,7 +231,7 @@ class ScoreScreenState extends State<ScoreScreen> {
             ),
           ),
           Text(
-            "${settings.getHighScore()}",
+            "${userScore.getBestScore()}",
             style: TextStyle(
               color: Colors.white,
               fontSize: fontSize*3,
@@ -242,13 +245,13 @@ class ScoreScreenState extends State<ScoreScreen> {
   Widget loginReminder(double width, double fontSize) {
     return Column(
       children: [
-        expandedText(width, "Save your progress by logging in!", 24, false),
+        expandedText(width, "Save your progress by logging in!", fontSize, false),
         SizedBox(height: 10),
         Row(
           children: [
             SizedBox(width: 20),
             Container(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
                   _controller.jumpTo(0);
@@ -257,8 +260,8 @@ class ScoreScreenState extends State<ScoreScreen> {
                 style: buttonStyle(false, Colors.blue),
                 child: Container(
                   alignment: Alignment.center,
-                  width: 200,
-                  height: 50,
+                  width: width/4,
+                  height: fontSize,
                   child: Text(
                     'Log in',
                     style: simpleTextStyle(fontSize),
@@ -269,12 +272,22 @@ class ScoreScreenState extends State<ScoreScreen> {
           ]
         ),
         SizedBox(height: 10),
-        kIsWeb ? Text(
-            "Also try Flutterbird on Android or IOS!",
-            style: simpleTextStyle(fontSize)
-        ) : Text(
-            "Also try Flutterbird in your browser on flutterbird.eu",
-            style: simpleTextStyle(fontSize)
+        Container(
+          width: width,
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text.rich(
+                      TextSpan(
+                          text: kIsWeb
+                              ? "Also try Flutterbird on Android or IOS!"
+                              : "Also try Flutterbird in your browser on flutterbird.eu",
+                          style: simpleTextStyle(fontSize)
+                      )
+                  )
+              ),
+            ],
+          ),
         ),
         SizedBox(height: 10),
       ],
@@ -307,8 +320,8 @@ class ScoreScreenState extends State<ScoreScreen> {
                 children: [
                   scoreNowHeader(rightWidth, rightWidth/6, fontSize),
                   scoreNow(rightWidth, (rightWidth/12)*3, fontSize),
-                  scoreHighHeader(rightWidth, rightWidth/6, fontSize),
-                  scoreHigh(rightWidth, (rightWidth/12)*3, fontSize),
+                  scoreBestHeader(rightWidth, rightWidth/6, fontSize),
+                  scoreBest(rightWidth, (rightWidth/12)*3, fontSize),
                 ],
               )
             ],

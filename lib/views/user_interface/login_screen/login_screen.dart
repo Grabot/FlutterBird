@@ -38,6 +38,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   final NavigationService _navigationService = locator<NavigationService>();
 
+  bool normalMode = true;
   bool isLoading = false;
 
   int signUpMode = 0;
@@ -788,18 +789,22 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Widget LoginOrRegisterBox(BuildContext context) {
-    double fontSize = 16;
+    double totalWidth = MediaQuery.of(context).size.width;
+    double totalHeight = MediaQuery.of(context).size.height;
+    double heightScale = totalHeight / 800;
+    double fontSize = 20 * heightScale;
+    normalMode = true;
     double loginBoxSize = 100;
     double width = 800;
     double height = (MediaQuery.of(context).size.height / 10) * 9;
     // When the width is smaller than this we assume it's mobile.
-    if (MediaQuery.of(context).size.width <= 800) {
+    if (totalWidth <= 800 || totalHeight > totalWidth) {
       width = MediaQuery.of(context).size.width - 50;
       height = MediaQuery.of(context).size.height - 150;
       loginBoxSize = 50;
-      fontSize = MediaQuery.of(context).size.width / 40;
+      double newHeightScaleFont = width / 800;
+      fontSize = 20 * newHeightScaleFont;
     }
-
     return Align(
       alignment: FractionalOffset.center,
       child: showLoginScreen ? Container(
@@ -818,7 +823,12 @@ class LoginScreenState extends State<LoginScreen> {
         height: MediaQuery.of(context).size.height,
         color: Colors.black.withOpacity(0.7),
         child: Center(
-            child: LoginOrRegisterBox(context)
+            child: TapRegion(
+                onTapOutside: (tap) {
+                  goBack();
+                },
+                child: LoginOrRegisterBox(context)
+            )
         )
     );
   }

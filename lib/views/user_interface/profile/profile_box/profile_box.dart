@@ -9,6 +9,7 @@ import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/rest/auth_service_setting.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/render_avatar.dart';
 import 'package:flutter_bird/util/util.dart';
@@ -42,6 +43,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
   final NavigationService _navigationService = locator<NavigationService>();
 
   Settings settings = Settings();
+  UserScore userScore = UserScore();
 
   User? currentUser;
 
@@ -153,16 +155,20 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
 
   Widget profile() {
     // normal mode is for desktop, mobile mode is for mobile.
+    double totalWidth = MediaQuery.of(context).size.width;
+    double totalHeight = MediaQuery.of(context).size.height;
     bool normalMode = true;
-    double fontSize = 16;
+    double heightScale = totalHeight / 800;
+    double fontSize = 20 * heightScale;
     double width = 800;
-    double height = (MediaQuery.of(context).size.height / 10) * 9;
+    double height = (totalHeight / 10) * 9;
     // When the width is smaller than this we assume it's mobile.
-    if (MediaQuery.of(context).size.width <= 800) {
-      width = MediaQuery.of(context).size.width - 50;
-      height = MediaQuery.of(context).size.height - 250;
-      fontSize = 10;
+    if (totalWidth <= 800 || totalHeight > totalWidth) {
+      width = totalWidth - 50;
+      height = totalHeight - 250;
       normalMode = false;
+      double newHeightScaleFont = width / 800;
+      fontSize = 20 * newHeightScaleFont;
     }
     double headerHeight = 40;
 
@@ -269,17 +275,20 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     );
   }
 
-  Widget userStats(double userStatsWidth) {
+  Widget userStats(double userStatsWidth, double fontSize) {
     return Column(
       children: [
-        expandedText(userStatsWidth, "Number of games played: ", 24, false),
-        expandedText(userStatsWidth, "${settings.getTotalGames()}", 30, true),
+        expandedText(userStatsWidth, "Best score: ", fontSize, false),
+        expandedText(userStatsWidth, "${userScore.getBestScore()}", fontSize+6, true),
         SizedBox(height: 20),
-        expandedText(userStatsWidth, "Total pipes cleared: ", 24, false),
-        expandedText(userStatsWidth, "${settings.getTotalPipesCleared()}", 30, true),
+        expandedText(userStatsWidth, "Number of games played: ", fontSize, false),
+        expandedText(userStatsWidth, "${userScore.getTotalGames()}", fontSize+6, true),
         SizedBox(height: 20),
-        expandedText(userStatsWidth, "Total wing flutters: ", 24, false),
-        expandedText(userStatsWidth, "${settings.getTotalFlutters()}", 30, true),
+        expandedText(userStatsWidth, "Total pipes cleared: ", fontSize, false),
+        expandedText(userStatsWidth, "${userScore.getTotalPipesCleared()}", fontSize+6, true),
+        SizedBox(height: 20),
+        expandedText(userStatsWidth, "Total wing flutters: ", fontSize, false),
+        expandedText(userStatsWidth, "${userScore.getTotalFlutters()}", fontSize+6, true),
       ],
     );
   }
@@ -293,9 +302,9 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
         children: [
           profileAvatar(widthAvatar, fontSize),
           SizedBox(height: 20),
-          userStats(width),
+          userStats(width, fontSize),
           SizedBox(height: 20),
-          expandedText(width, "Save your progress by logging in!", 24, false),
+          expandedText(width, "Save your progress by logging in!", fontSize, false),
           Container(
             alignment: Alignment.center,
             child: ElevatedButton(
@@ -305,8 +314,8 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
               style: buttonStyle(false, Colors.blue),
               child: Container(
                 alignment: Alignment.center,
-                width: 200,
-                height: 50,
+                width: width/2,
+                height: fontSize,
                 child: Text(
                   'Log in',
                   style: simpleTextStyle(fontSize),
@@ -315,12 +324,22 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
             ),
           ),
           SizedBox(height: 10),
-          kIsWeb ? Text(
-              "Also try Flutterbird on Android or IOS!",
-              style: simpleTextStyle(fontSize)
-          ) : Text(
-              "Also try Flutterbird in your browser on flutterbird.eu",
-              style: simpleTextStyle(fontSize)
+          Container(
+            width: width,
+            child: Row(
+              children: [
+                Expanded(
+                    child: Text.rich(
+                        TextSpan(
+                            text: kIsWeb
+                                ? "Also try Flutterbird on Android or IOS!"
+                                : "Also try Flutterbird in your browser on flutterbird.eu",
+                            style: simpleTextStyle(fontSize)
+                        )
+                    )
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 40),
         ]
@@ -335,7 +354,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
           children: [
             profileAvatar(300, fontSize),
             SizedBox(width: 20),
-            userStats(width - 300 - 20),
+            userStats((width - 300 - 20), fontSize),
           ],
         ),
         Row(
@@ -360,8 +379,8 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
                 style: buttonStyle(false, Colors.blue),
                 child: Container(
                   alignment: Alignment.center,
-                  width: 200,
-                  height: 50,
+                  width: width/4,
+                  height: fontSize,
                   child: Text(
                     'Log in',
                     style: simpleTextStyle(fontSize),
@@ -372,12 +391,22 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
           ],
         ),
         SizedBox(height: 10),
-        kIsWeb ? Text(
-            "Also try Flutterbird on Android or IOS!",
-            style: simpleTextStyle(fontSize)
-        ) : Text(
-            "Also try Flutterbird in your browser on flutterbird.eu",
-            style: simpleTextStyle(fontSize)
+        Container(
+          width: width,
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text.rich(
+                      TextSpan(
+                          text: kIsWeb
+                              ? "Also try Flutterbird on Android or IOS!"
+                              : "Also try Flutterbird in your browser on flutterbird.eu",
+                          style: simpleTextStyle(fontSize)
+                      )
+                  )
+              ),
+            ],
+          ),
         ),
         SizedBox(height: 40),
       ],
@@ -392,16 +421,26 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
             children: [
               profileAvatar(300, fontSize),
               SizedBox(width: 20),
-              userStats(width - 300 - 20),
+              userStats((width - 300 - 20), fontSize),
             ]
         ),
         SizedBox(height: 10),
-        kIsWeb ? Text(
-            "Also try Flutterbird on Android or IOS!",
-            style: simpleTextStyle(fontSize)
-        ) : Text(
-            "Also try Flutterbird in your browser on flutterbird.eu",
-            style: simpleTextStyle(fontSize)
+        Container(
+          width: width,
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text.rich(
+                      TextSpan(
+                          text: kIsWeb
+                              ? "Also try Flutterbird on Android or IOS!"
+                              : "Also try Flutterbird in your browser on flutterbird.eu",
+                          style: simpleTextStyle(fontSize)
+                      )
+                  )
+              ),
+            ],
+          ),
         ),
         SizedBox(height: 40),
       ]
@@ -571,12 +610,12 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: RichText(
+                    child: Text.rich(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
+                      TextSpan(
                         text: userName,
-                        style: TextStyle(color: Colors.white, fontSize: 34),
+                        style: TextStyle(color: Colors.white, fontSize: fontSize*2),
                       ),
                     ),
                   ),
@@ -606,25 +645,23 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
       children: [
         profileAvatar(widthAvatar, fontSize),
         SizedBox(height: 20),
-        userStats(width),
+        userStats(width, fontSize),
         SizedBox(height: 20),
-        expandedText(width, "Save your progress by logging in!", 24, false),
         Container(
-          alignment: Alignment.center,
-          child: ElevatedButton(
-            onPressed: () {
-              LoginScreenChangeNotifier().setLoginScreenVisible(true);
-            },
-            style: buttonStyle(false, Colors.blue),
-            child: Container(
-              alignment: Alignment.center,
-              width: 200,
-              height: 50,
-              child: Text(
-                'Log in',
-                style: simpleTextStyle(fontSize),
+          width: width,
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text.rich(
+                      TextSpan(
+                          text: kIsWeb
+                              ? "Also try Flutterbird on Android or IOS!"
+                              : "Also try Flutterbird in your browser on flutterbird.eu",
+                          style: simpleTextStyle(fontSize)
+                      )
+                  )
               ),
-            ),
+            ],
           ),
         ),
         SizedBox(height: 40),
@@ -656,11 +693,27 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     }
   }
 
+  Widget profileBoxScreen(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.black.withOpacity(0.7),
+        child: Center(
+            child: TapRegion(
+                onTapOutside: (tap) {
+                  goBack();
+                },
+                child: profile()
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: FractionalOffset.center,
-      child: showProfile ? profile() : Container(),
+      child: showProfile ? profileBoxScreen(context) : Container(),
     );
   }
 

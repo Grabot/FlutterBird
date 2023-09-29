@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
+import 'package:flutter_bird/services/rest/auth_service_flutter_bird.dart';
 import 'package:flutter_bird/services/rest/auth_service_login.dart';
 import 'package:flutter_bird/services/rest/models/login_response.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/socket_services.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
+import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -48,6 +50,47 @@ ButtonStyle buttonStyle(bool active, MaterialColor buttonColor) {
   );
 }
 
+getScore(LoginResponse loginResponse, int userId) {
+  UserScore userScore = UserScore();
+  Score? score = loginResponse.getScore();
+  if (score != null) {
+    bool updateScore = false;
+
+    if (score.getBestScore() > userScore.getBestScore()) {
+      userScore.setBestScore(score.getBestScore());
+    } else if (userScore.getBestScore() > score.getBestScore()){
+      score.setBestScore(userScore.getBestScore());
+      updateScore = true;
+    }
+    if (score.getTotalFlutters() > userScore.getTotalFlutters()) {
+      userScore.setTotalFlutters(score.getTotalFlutters());
+    } else if (userScore.getTotalFlutters() > score.getTotalFlutters()) {
+      score.setTotalFlutters(userScore.getTotalFlutters());
+      updateScore = true;
+    }
+    if (score.getTotalPipesCleared() > userScore.getTotalPipesCleared()) {
+      userScore.setTotalPipesCleared(score.getTotalPipesCleared());
+    } else if (userScore.getTotalPipesCleared() > score.getTotalPipesCleared()) {
+      score.setTotalPipesCleared(userScore.getTotalPipesCleared());
+      updateScore = true;
+    }
+    if (score.getTotalGames() > userScore.getTotalGames()) {
+      userScore.setTotalGames(score.getTotalGames());
+    } else if (userScore.getTotalGames() > score.getTotalGames()) {
+      score.setTotalGames(userScore.getTotalGames());
+      updateScore = true;
+    }
+
+    if (updateScore) {
+      AuthServiceFlutterBird().updateUserScore(score).then((result) {
+        if (result.getResult()) {
+          print("we have updated the score in the db");
+        }
+      });
+    }
+  }
+}
+
 successfulLogin(LoginResponse loginResponse) async {
   SecureStorage secureStorage = SecureStorage();
   Settings settings = Settings();
@@ -58,6 +101,7 @@ successfulLogin(LoginResponse loginResponse) async {
     if (user.getAvatar() != null) {
       settings.setAvatar(user.getAvatar()!);
     }
+    getScore(loginResponse, user.id);
     SocketServices().login(user.id);
   }
 
@@ -77,12 +121,6 @@ successfulLogin(LoginResponse loginResponse) async {
     await secureStorage.setRefreshToken(refreshToken);
   }
 
-  int userPipesCleared = 0;
-  int userFlutters = 0;
-  int totalGames = 0;
-  settings.addTotalPipesCleared(userPipesCleared);
-  settings.addTotalFlutters(userFlutters);
-  settings.addTotalGames(totalGames);
   settings.setLoggingIn(false);
   ProfileChangeNotifier().notify();
 }

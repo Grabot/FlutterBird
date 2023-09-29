@@ -8,7 +8,10 @@ import 'package:flutter_bird/game/floor.dart';
 import 'package:flutter_bird/game/help_message.dart';
 import 'package:flutter_bird/game/pipe_duo.dart';
 import 'package:flutter_bird/game/score_indicator.dart';
+import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/services/rest/auth_service_flutter_bird.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
 import 'sky.dart';
 
@@ -59,6 +62,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
   late Settings settings;
+  late UserScore userScore;
 
   int flutters = 0;
   int pipesCleared = 0;
@@ -107,6 +111,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
     scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
     settings = Settings();
+    userScore = UserScore();
     return super.onLoad();
   }
 
@@ -166,9 +171,17 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       death = true;
       gameStarted = false;
       gameEnded = true;
-      settings.addTotalFlutters(flutters);
-      settings.addTotalPipesCleared(pipesCleared);
-      settings.addTotalGames(1);
+      userScore.addTotalFlutters(flutters);
+      userScore.addTotalPipesCleared(pipesCleared);
+      userScore.addTotalGames(1);
+      User? currentUser = settings.getUser();
+      if (currentUser != null) {
+        AuthServiceFlutterBird().updateUserScore(userScore.getScore()).then((result) {
+          if (result.getResult()) {
+            print("we have updated the score in the db");
+          }
+        });
+      }
       sky.gameOver();
     }
   }
@@ -226,9 +239,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
       checkOutOfBounds();
     } else if (gameEnded) {
       bool isHighScore = false;
-      if (score > settings.getHighScore()) {
+      if (score > userScore.getBestScore()) {
         isHighScore = true;
-        settings.setHighScore(score);
+        userScore.setBestScore(score);
       }
       scoreScreenChangeNotifier.setScore(score, isHighScore);
       timeSinceEnded += dt;

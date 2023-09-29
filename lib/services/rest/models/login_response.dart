@@ -1,5 +1,6 @@
 
 import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/services/user_score.dart';
 
 class LoginResponse {
   late bool result;
@@ -7,6 +8,7 @@ class LoginResponse {
   String? accessToken;
   String? refreshToken;
   User? user;
+  Score? score;
 
   LoginResponse(this.result, this.message, this.accessToken, this.refreshToken, this.user);
 
@@ -30,6 +32,10 @@ class LoginResponse {
     return user;
   }
 
+  Score? getScore() {
+    return score;
+  }
+
   LoginResponse.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("result") &&
         json.containsKey("message")) {
@@ -41,6 +47,11 @@ class LoginResponse {
         if (json.containsKey("user")) {
           Map<String, dynamic> userJson = json["user"];
           user = User.fromJson(userJson);
+
+          if (userJson.containsKey("score")) {
+            Map<String, dynamic> scoreJson = userJson["score"];
+            score = Score.fromJson(scoreJson);
+          }
         }
       }
     }

@@ -212,19 +212,23 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
 
   bool normalMode = true;
   Widget tileBoxWidget() {
+    double totalWidth = MediaQuery.of(context).size.width;
+    double totalHeight = MediaQuery.of(context).size.height;
+    double heightScale = totalHeight / 800;
+    double fontSize = 20 * heightScale;
     double profileOverviewWidth = 350;
-    double fontSize = 16;
     // We use the total height to hide the chatbox below
     // In NormalMode the height has the 2 buttons and some padding added.
     double profileOverviewHeight = 100;
     normalMode = true;
-    double statusBarPadding = 0;
-    if (MediaQuery.of(context).size.width <= 800) {
-      profileOverviewWidth = MediaQuery.of(context).size.width/2;
+    double statusBarPadding = MediaQuery.of(context).viewPadding.top;
+    if (totalWidth <= 800 || totalHeight > totalWidth) {
+      profileOverviewWidth = totalWidth/2;
       profileOverviewWidth += 5;
       profileOverviewHeight = 50;
       normalMode = false;
-      statusBarPadding = MediaQuery.of(context).viewPadding.top;
+      double newHeightScaleFont = profileOverviewWidth / 800;
+      fontSize = 20 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.topRight,

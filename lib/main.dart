@@ -3,12 +3,14 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
+import 'package:flutter_bird/views/user_interface/game_settings/game_settings_button/game_settings_button.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'services/navigation_service.dart';
 import 'services/settings.dart';
+import 'services/user_score.dart';
 import 'views/user_interface/change_avatar_box/change_avatar_box.dart';
 import 'views/user_interface/profile/profile_box/profile_box.dart';
 import 'views/user_interface/profile/profile_overview/profile_overview.dart';
@@ -19,8 +21,9 @@ Future<void> main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
 
-  // initialize the settings singleton
+  // initialize the settings and users score singleton
   Settings();
+  UserScore();
   Flame.images.loadAll(<String>[]);
 
   FocusNode gameFocus = FocusNode();
@@ -37,6 +40,7 @@ Future<void> main() async {
           'profileOverview': _profileOverviewBuilder,
           'loginScreen': _loginScreenBuilder,
           'changeAvatar': _changeAvatarBoxBuilder,
+          'gameSettingsButton': _gameSettingsButtonBuilder,
         },
         initialActiveOverlays: const [
           'scoreScreen',
@@ -44,6 +48,7 @@ Future<void> main() async {
           'profileOverview',
           'loginScreen',
           'changeAvatar',
+          'gameSettingsButton',
         ],
       )
   );
@@ -94,4 +99,8 @@ Widget _loginScreenBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _changeAvatarBoxBuilder(BuildContext buildContext, FlutterBird game) {
   return ChangeAvatarBox(key: UniqueKey(), game: game);
+}
+
+Widget _gameSettingsButtonBuilder(BuildContext buildContext, FlutterBird game) {
+  return GameSettingsButton(key: UniqueKey(), game: game);
 }
