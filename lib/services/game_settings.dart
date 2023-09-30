@@ -1,10 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/util/web_storage.dart';
-import 'package:isolated_worker/js_isolated_worker.dart';
 
 
 class GameSettings extends ChangeNotifier {
@@ -13,6 +9,8 @@ class GameSettings extends ChangeNotifier {
   int birdType = 0;
   int backgroundType = 0;
   int pipeType = 0;
+
+  bool sound = true;
 
   SecureStorage secureStorage = SecureStorage();
 
@@ -80,5 +78,14 @@ class GameSettings extends ChangeNotifier {
 
   int getPipeType() {
     return pipeType;
+  }
+
+  setSound(bool sound) {
+    this.sound = sound;
+    // secureStorage.setSound(sound.toString());
+  }
+
+  bool getSound() {
+    return sound;
   }
 }

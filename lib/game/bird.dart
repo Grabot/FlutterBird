@@ -5,19 +5,33 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
+import 'package:flutter_bird/services/game_settings.dart';
 
 class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<FlutterBird> {
 
-  Bird() : super(size: Vector2(85, 60));
+  int birdType;
+  Vector2 initialPos;
+  Bird({
+    required this.birdType,
+    required this.initialPos,
+  }) : super(size: Vector2(85, 60));
 
   double heightScale = 1;
-  int birdType = 0;
 
   late AudioPool wingPool;
 
+  late GameSettings gameSettings;
+
   @override
   Future<void> onLoad() async {
-    await loadBird("flutter_yellow.png");
+    gameSettings = GameSettings();
+    if (birdType == 0) {
+      await loadBird("flutter_yellow.png");
+    } else if (birdType == 1) {
+      await loadBird("flutter_red.png");
+    } else if (birdType == 2) {
+      await loadBird("flutter_blue.png");
+    }
     return super.onLoad();
   }
 
@@ -41,9 +55,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
     anchor = Anchor.center;
 
-    double posY = (gameRef.size.y/3);
-    double posX = (gameRef.size.x/10);
-    position = Vector2(posX, posY);
+    position = Vector2(initialPos.x, initialPos.y);
 
     priority = 1;
 
@@ -69,9 +81,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   }
 
   reset() {
-    double posY = (gameRef.size.y/3);
-    double posX = (gameRef.size.x/10);
-    position = Vector2(posX, posY);
+    position = Vector2(initialPos.x, initialPos.y);
     flapSpeed = 600;
     velocityY = 0;
     accelerationY = 5000;
@@ -145,7 +155,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   fly() {
     velocityY = flapSpeed * -1;
-    if (gameRef.playSounds) {
+    if (gameSettings.getSound()) {
       wingPool.start(volume: gameRef.soundVolume);
     }
   }
@@ -158,9 +168,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     heightScale = gameSize.y / 800;
 
     if (!gameRef.gameStarted) {
-      double posY = (gameRef.size.y/3);
-      double posX = (gameRef.size.x/10);
-      position = Vector2(posX, posY);
+      position = Vector2(initialPos.x, initialPos.y);
     }
   }
 

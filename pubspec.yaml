@@ -110,6 +110,8 @@ flutter:
     - assets/images/score/9.png
     - assets/images/default_avatar.png
     - assets/images/ui/game_settings_button.png
+    - assets/images/ui/sound_on.png
+    - assets/images/ui/sound_off.png
     - assets/images/ui/game_settings/bird/bird_yellow.png
     - assets/images/ui/game_settings/bird/bird_red.png
     - assets/images/ui/game_settings/bird/bird_blue.png
