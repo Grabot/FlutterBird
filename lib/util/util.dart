@@ -180,3 +180,13 @@ Widget expandedText(double width, String text, double fontSize, bool bold) {
     ),
   );
 }
+
+Color overviewColour(int state, Color colour0, Color colour1, Color colour2) {
+  if (state == 0) {
+    return colour0;
+  } else if (state == 1) {
+    return colour1;
+  } else {
+    return colour2;
+  }
+}

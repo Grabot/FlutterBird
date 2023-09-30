@@ -9,6 +9,7 @@ import 'package:flutter_bird/game/help_message.dart';
 import 'package:flutter_bird/game/pipe_duo.dart';
 import 'package:flutter_bird/game/score_indicator.dart';
 import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/services/game_settings.dart';
 import 'package:flutter_bird/services/rest/auth_service_flutter_bird.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
@@ -62,10 +63,13 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
   late Settings settings;
+  late GameSettings gameSettings;
   late UserScore userScore;
 
   int flutters = 0;
   int pipesCleared = 0;
+
+  int pipeType = 0;
 
   @override
   Future<void> onLoad() async {
@@ -89,6 +93,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     double pipeX = -pipe_width-50;
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
+      pipeType: pipeType,
     );
     newPipeDuo.pipePassed();
     add(newPipeDuo);
@@ -111,6 +116,8 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
     scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
     settings = Settings();
+    gameSettings = GameSettings();
+    gameSettings.addListener(settingsChangeListener);
     userScore = UserScore();
     return super.onLoad();
   }
@@ -202,6 +209,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     double pipeX = pipeBuffer;
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
+      pipeType: pipeType,
     );
     add(newPipeDuo);
     lastPipeDuo = newPipeDuo;
@@ -214,6 +222,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     while(pipeX > birdPos + pipeInterval) {
       PipeDuo newPipeDuo = PipeDuo(
         position: Vector2(pipeX, 0),
+        pipeType: pipeType,
       );
       add(newPipeDuo);
       pipes.add(newPipeDuo);
@@ -229,6 +238,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
         if (lastPipeDuo!.position.x < pipeBuffer - pipeInterval) {
           PipeDuo newPipeDuo = PipeDuo(
             position: Vector2(pipeBuffer, 0),
+            pipeType: pipeType,
           );
           add(newPipeDuo);
           pipes.add(newPipeDuo);
@@ -313,6 +323,35 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
     super.onGameResize(gameSize);
   }
 
+  settingsChangeListener() {
+    if (gameSettings.getBirdType() != bird.getBirdType()) {
+      bird.changeBird(gameSettings.getBirdType());
+    }
+    if (gameSettings.getBackgroundType() != sky.getBackgroundType()) {
+      sky.changeBackground(gameSettings.getBackgroundType());
+    }
+    if (gameSettings.getPipeType() != pipeType) {
+      pipeType = gameSettings.getPipeType();
+      clearPipes();
+    }
+  }
+
+  changeBird(int birdType) async {
+    gameSettings.setBirdType(birdType);
+    bird.changeBird(birdType);
+  }
+
+  changeBackground(int backgroundType) async {
+    gameSettings.setBackgroundType(backgroundType);
+    sky.changeBackground(backgroundType);
+  }
+
+  changePipes(int pipeType) async {
+    gameSettings.setPipeType(pipeType);
+    this.pipeType = pipeType;
+    clearPipes();
+  }
+
   chatWindowFocus(bool chatWindowFocus) {
     playFieldFocus = !chatWindowFocus;
     if (playFieldFocus) {
@@ -343,6 +382,13 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection {
 
   loadingBoxFocus(bool loadingFocus) {
     playFieldFocus = !loadingFocus;
+    if (playFieldFocus) {
+      gameFocus.requestFocus();
+    }
+  }
+
+  gameSettingsFocus(bool gameSettingsFocus) {
+    playFieldFocus = !gameSettingsFocus;
     if (playFieldFocus) {
       gameFocus.requestFocus();
     }

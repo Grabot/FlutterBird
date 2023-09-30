@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +10,12 @@ import 'package:flutter_bird/views/user_interface/login_screen/login_screen.dart
 import 'package:oktoast/oktoast.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
+import 'services/game_settings.dart';
 import 'services/navigation_service.dart';
 import 'services/settings.dart';
 import 'services/user_score.dart';
 import 'views/user_interface/change_avatar_box/change_avatar_box.dart';
+import 'views/user_interface/game_settings/game_settings_box/game_settings_box.dart';
 import 'views/user_interface/profile/profile_box/profile_box.dart';
 import 'views/user_interface/profile/profile_overview/profile_overview.dart';
 import 'views/user_interface/score_screen/score_screen.dart';
@@ -23,6 +27,7 @@ Future<void> main() async {
 
   // initialize the settings and users score singleton
   Settings();
+  GameSettings();
   UserScore();
   Flame.images.loadAll(<String>[]);
 
@@ -41,6 +46,7 @@ Future<void> main() async {
           'loginScreen': _loginScreenBuilder,
           'changeAvatar': _changeAvatarBoxBuilder,
           'gameSettingsButton': _gameSettingsButtonBuilder,
+          'gameSettingsBox': _gameSettingsBoxBuilder,
         },
         initialActiveOverlays: const [
           'scoreScreen',
@@ -49,6 +55,7 @@ Future<void> main() async {
           'loginScreen',
           'changeAvatar',
           'gameSettingsButton',
+          'gameSettingsBox',
         ],
       )
   );
@@ -69,6 +76,7 @@ Future<void> main() async {
           routes: {
             routes.HomeRoute: (context) => gameWidget,
           },
+          scrollBehavior: MaterialScrollBehavior().copyWith( dragDevices: {PointerDeviceKind.mouse}, ),
           onGenerateRoute: (settings) {
             return MaterialPageRoute(
                 builder: (context) {
@@ -103,4 +111,8 @@ Widget _changeAvatarBoxBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _gameSettingsButtonBuilder(BuildContext buildContext, FlutterBird game) {
   return GameSettingsButton(key: UniqueKey(), game: game);
+}
+
+Widget _gameSettingsBoxBuilder(BuildContext buildContext, FlutterBird game) {
+  return GameSettingsBox(key: UniqueKey(), game: game);
 }

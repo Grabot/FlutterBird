@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
-import 'package:flutter_bird/util/web_storage.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
 
@@ -20,8 +19,6 @@ class Settings extends ChangeNotifier {
   Uint8List? avatar;
 
   bool loggingIn = false;
-
-  SecureStorage secureStorage = SecureStorage();
 
   Settings._internal() {
     if (kIsWeb) {

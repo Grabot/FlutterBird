@@ -380,7 +380,6 @@ class ChangeAvatarBoxState extends State<ChangeAvatarBox> with TickerProviderSta
             IconButton(
                 icon: const Icon(Icons.close),
                 color: Colors.orangeAccent.shade200,
-                tooltip: 'cancel',
                 onPressed: () {
                   goBack();
                 }

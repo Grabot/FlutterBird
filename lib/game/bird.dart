@@ -11,14 +11,20 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   Bird() : super(size: Vector2(85, 60));
 
   double heightScale = 1;
+  int birdType = 0;
 
   late AudioPool wingPool;
 
   @override
   Future<void> onLoad() async {
+    await loadBird("flutter_yellow.png");
+    return super.onLoad();
+  }
+
+  loadBird(String birdImageName) async {
     add(CircleHitbox());
-    // debugMode = true;
-    final image = await Flame.images.load('flutter_yellow.png');
+
+    final image = await Flame.images.load(birdImageName);
     animation = SpriteAnimation.fromFrameData(image, SpriteAnimationData.sequenced(
       amount: 3,
       stepTime: 0.10,
@@ -47,7 +53,6 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       maxPlayers: 4,
     );
 
-    return super.onLoad();
   }
 
   double flapSpeed = 600;
@@ -157,5 +162,22 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       double posX = (gameRef.size.x/10);
       position = Vector2(posX, posY);
     }
+  }
+
+  changeBird(int newBirdType) async {
+    if (newBirdType == 0 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("flutter_yellow.png");
+    } else if (newBirdType == 1 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("flutter_red.png");
+    } else if (newBirdType == 2 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("flutter_blue.png");
+    }
+  }
+
+  int getBirdType() {
+    return birdType;
   }
 }

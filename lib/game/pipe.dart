@@ -5,7 +5,12 @@ import 'package:flame/flame.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
-  Pipe({super.position});
+  int pipeType;
+
+  Pipe({
+    super.position,
+    required this.pipeType,
+  });
 
   double heightScale = 1;
 
@@ -15,8 +20,18 @@ class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
 
   @override
   Future<void> onLoad() async {
-    final image = await Flame.images.load('pipe-green_big.png');
-    sprite = Sprite(image);
+    await loadPipeDetails();
+    return super.onLoad();
+  }
+
+  loadPipeDetails() async {
+    if (pipeType == 0) {
+      final image = await Flame.images.load('pipe-green_big.png');
+      sprite = Sprite(image);
+    } else if (pipeType == 1) {
+      final image = await Flame.images.load('pipe-red_big.png');
+      sprite = Sprite(image);
+    }
     anchor = Anchor.center;
     add(RectangleHitbox());
     heightScale = gameRef.size.y / 800;
@@ -27,7 +42,6 @@ class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
     size.x *= heightScale;
     size.y *= heightScale;
     priority = 2;
-    return super.onLoad();
   }
 
   @override

@@ -264,7 +264,6 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
         IconButton(
           icon: const Icon(Icons.close),
           color: Colors.orangeAccent.shade200,
-          tooltip: 'cancel',
           onPressed: () {
             setState(() {
               goBack();
@@ -468,7 +467,6 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
                     child: IconButton(
                       icon: const Icon(Icons.close),
                       color: Colors.orangeAccent.shade200,
-                      tooltip: 'cancel',
                       onPressed: () {
                         setState(() {
                           changeUserName = false;
@@ -540,7 +538,6 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
                     child: IconButton(
                         icon: const Icon(Icons.close),
                         color: Colors.orangeAccent.shade200,
-                        tooltip: 'cancel',
                         onPressed: () {
                           setState(() {
                             changePassword = false;

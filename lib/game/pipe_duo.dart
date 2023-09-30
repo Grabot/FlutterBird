@@ -7,7 +7,12 @@ import 'package:flutter_bird/game/pipe.dart';
 
 class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
-  PipeDuo({super.position});
+  int pipeType;
+
+  PipeDuo({
+    super.position,
+    required this.pipeType,
+  });
 
   double pipe_gap = 300;
   double pipe_x = 0;
@@ -74,11 +79,13 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
     Pipe lower_pipe = Pipe(
       position: Vector2(0, uLower),
+      pipeType: pipeType,
     );
 
     double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
     Pipe upper_pipe = Pipe(
       position: Vector2(0, yUpper),
+      pipeType: pipeType,
     );
 
     upper = upper_pipe;
