@@ -111,6 +111,13 @@ class UserScore {
       totalGames,
     );
   }
+
+  logout() {
+    bestScore = 0;
+    totalFlutters = 0;
+    totalPipesCleared = 0;
+    totalGames = 0;
+  }
 }
 
 class Score {

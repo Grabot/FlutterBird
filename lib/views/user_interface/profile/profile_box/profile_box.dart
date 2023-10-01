@@ -201,6 +201,11 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
   }
 
   goBack() {
+    print("going back");
+    if (settingsPressed) {
+      settingsPressed = false;
+      return;
+    }
     setState(() {
       profileChangeNotifier.setProfileVisible(false);
     });
@@ -303,12 +308,15 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
           SizedBox(height: 20),
           userStats(width, fontSize),
           SizedBox(height: 20),
-          expandedText(width, "Save your progress by logging in!", fontSize, false),
+          expandedText(width, "Save your progress across multiple platforms by logging in!", fontSize, false),
           Container(
             alignment: Alignment.center,
             child: ElevatedButton(
               onPressed: () {
-                LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                setState(() {
+                  profileChangeNotifier.setProfileVisible(false);
+                  LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                });
               },
               style: buttonStyle(false, Colors.blue),
               child: Container(
@@ -373,7 +381,10 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                  LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                  setState(() {
+                    profileChangeNotifier.setProfileVisible(false);
+                    LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                  });
                 },
                 style: buttonStyle(false, Colors.blue),
                 child: Container(
@@ -493,7 +504,11 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
                   hintStyle: TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                 ),
-                style: TextStyle(color: Colors.white, fontSize: fontSize),
+                style: TextStyle(
+                    fontFamily: "Roboto",
+                    fontSize: fontSize,
+                    color: Colors.white
+                ),
               ),
             ),
             ElevatedButton(
@@ -746,7 +761,9 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
 
   Offset? _tapPosition;
 
+  bool settingsPressed = false;
   void _showPopupMenu() {
+    settingsPressed = true;
     _storePosition();
     _showChatDetailPopupMenu();
   }
@@ -761,6 +778,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
         position: RelativeRect.fromRect(
             _tapPosition! & const Size(40, 40), Offset.zero & overlay.size))
         .then((int? delta) {
+      settingsPressed = false;
       if (delta == 0) {
         // change avatar
         showChangeAvatar();

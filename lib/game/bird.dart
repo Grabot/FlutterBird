@@ -35,6 +35,10 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     return super.onLoad();
   }
 
+  setInitialPos(Vector2 initialPosition) {
+    initialPos = initialPosition;
+  }
+
   loadBird(String birdImageName) async {
     add(CircleHitbox());
 
@@ -76,11 +80,17 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY = 0;
     accelerationY = 5000;
     rotation = 0;
-
-    fly();
   }
 
-  reset() {
+  reset(double screenSizeY) {
+    heightScale = screenSizeY / 800;
+
+    size.y = (screenSizeY / 10000) * 466;
+    size.x = (size.y / 12) * 17;
+
+    size.y = (size.y * heightScale);
+    size.x = (size.x * heightScale);
+
     position = Vector2(initialPos.x, initialPos.y);
     flapSpeed = 600;
     velocityY = 0;

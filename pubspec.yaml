@@ -119,6 +119,8 @@ flutter:
     - assets/images/ui/game_settings/background/night.png
     - assets/images/ui/game_settings/pipes/green_pipe.png
     - assets/images/ui/game_settings/pipes/red_pipe.png
+    - assets/images/ui/game_settings/player/1_bird.png
+    - assets/images/ui/game_settings/player/2_birds.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

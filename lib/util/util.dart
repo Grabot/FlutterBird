@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/services/game_settings.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/rest/auth_service_flutter_bird.dart';
 import 'package:flutter_bird/services/rest/auth_service_login.dart';
@@ -156,9 +157,9 @@ logoutUser(Settings settings, NavigationService navigationService) async {
   }
   ProfileChangeNotifier().setProfileVisible(false);
   settings.logout();
-  SecureStorage().logout().then((value) {
-    navigationService.navigateTo(routes.HomeRoute, arguments: {'message': "Logged out"});
-  });
+  SecureStorage().logout();
+  UserScore().logout();
+  GameSettings().logout();
 }
 
 Widget expandedText(double width, String text, double fontSize, bool bold) {

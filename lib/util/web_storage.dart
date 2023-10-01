@@ -24,11 +24,6 @@ class SecureStorage {
     return await storage.read(key: _keyRefreshToken);
   }
 
-  Future logout() async {
-    await storage.write(key: _keyAccessToken, value: null);
-    await storage.write(key: _keyRefreshToken, value: null);
-  }
-
   final String _keyBestScore = 'bestScore';
   final String _keyTotalFluttersToken = 'totalFlutterToken';
   final String _keyTotalPipesToken = 'totalPipesToken';
@@ -66,16 +61,27 @@ class SecureStorage {
     return await storage.read(key: _keyBestScore);
   }
 
-  final String _keyBirdType = 'birdType';
+  final String _keyBirdType1 = 'birdType1';
+  final String _keyBirdType2 = 'birdType2';
   final String _keyBackgroundType = 'backgroundType';
   final String _keyPipeType = 'pipeType';
+  final String _keyPlayerType = 'playerType';
+  final String _keySound = 'sound';
 
-  Future setBirdType(String birdType) async {
-    await storage.write(key: _keyBirdType, value: birdType);
+  Future setBirdType1(String birdType1) async {
+    await storage.write(key: _keyBirdType1, value: birdType1);
   }
 
-  Future<String?> getBirdType() async {
-    return await storage.read(key: _keyBirdType);
+  Future<String?> getBirdType1() async {
+    return await storage.read(key: _keyBirdType1);
+  }
+
+  Future setBirdType2(String birdType2) async {
+    await storage.write(key: _keyBirdType2, value: birdType2);
+  }
+
+  Future<String?> getBirdType2() async {
+    return await storage.read(key: _keyBirdType2);
   }
 
   Future setBackgroundType(String backgroundType) async {
@@ -93,4 +99,38 @@ class SecureStorage {
   Future<String?> getPipeType() async {
     return await storage.read(key: _keyPipeType);
   }
+
+  Future setPlayerType(String playerType) async {
+    await storage.write(key: _keyPlayerType, value: playerType);
+  }
+
+  Future<String?> getPlayerType() async {
+    return await storage.read(key: _keyPlayerType);
+  }
+
+  Future setSound(String sound) async {
+    await storage.write(key: _keySound, value: sound);
+  }
+
+  Future<String?> getSound() async {
+    return await storage.read(key: _keySound);
+  }
+
+  Future logout() async {
+    await storage.write(key: _keyAccessToken, value: null);
+    await storage.write(key: _keyRefreshToken, value: null);
+
+    await storage.write(key: _keyBestScore, value: null);
+    await storage.write(key: _keyTotalFluttersToken, value: null);
+    await storage.write(key: _keyTotalPipesToken, value: null);
+    await storage.write(key: _keyTotalGamesToken, value: null);
+
+    await storage.write(key: _keyBirdType1, value: null);
+    await storage.write(key: _keyBirdType2, value: null);
+    await storage.write(key: _keyBackgroundType, value: null);
+    await storage.write(key: _keyPipeType, value: null);
+    await storage.write(key: _keyPlayerType, value: null);
+    await storage.write(key: _keySound, value: null);
+  }
+
 }

@@ -146,16 +146,39 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
     );
   }
 
-  pressedBirdChange(int birdType) {
-    widget.game.changeBird(birdType);
+  pressedPlayerChange(int playerType) {
+    if (gameSettings.getPlayerType() != playerType) {
+      gameSettings.setPlayerType(playerType);
+      widget.game.changePlayer(playerType);
+    }
+  }
+
+  pressedBird1Change(int birdType1) {
+    if (gameSettings.getBirdType1() != birdType1) {
+      gameSettings.setBirdType1(birdType1);
+      widget.game.changeBird1(birdType1);
+    }
+  }
+
+  pressedBird2Change(int birdType2) {
+    if (gameSettings.getBirdType2() != birdType2) {
+      gameSettings.setBirdType2(birdType2);
+      widget.game.changeBird2(birdType2);
+    }
   }
 
   pressedBackgroundChange(int backgroundType) {
-    widget.game.changeBackground(backgroundType);
+    if (gameSettings.getBackgroundType() != backgroundType) {
+      gameSettings.setBackgroundType(backgroundType);
+      widget.game.changeBackground(backgroundType);
+    }
   }
 
   pressedPipeChange(int pipeType) {
-    widget.game.changePipes(pipeType);
+    if (gameSettings.getPipeType() != pipeType) {
+      gameSettings.setPipeType(pipeType);
+      widget.game.changePipes(pipeType);
+    }
   }
 
   Widget selectionButton(String imagePath, double imageWidth, double imageHeight, int selectionType, int category, bool selected) {
@@ -172,10 +195,14 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
       onTap: () {
         setState(() {
           if (category == 0) {
-            pressedBirdChange(selectionType);
+            pressedPlayerChange(selectionType);
           } else if (category == 1) {
-            pressedBackgroundChange(selectionType);
+            pressedBird1Change(selectionType);
           } else if (category == 2) {
+            pressedBird2Change(selectionType);
+          } else if (category == 3) {
+            pressedBackgroundChange(selectionType);
+          } else if (category == 4) {
             pressedPipeChange(selectionType);
           }
         });
@@ -218,22 +245,57 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
     );
   }
 
+  List<String> playerImagePath = [
+    'assets/images/ui/game_settings/player/1_bird.png',
+    'assets/images/ui/game_settings/player/2_birds.png',
+  ];
+
+  Widget playerSelection(double gameSettingsWidth, double fontSize) {
+    return Container(
+      width: gameSettingsWidth,
+      height: 120,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: new List.generate(2, (int playerType) {
+          bool selected = gameSettings.getPlayerType() == playerType;
+          return selectionButton(playerImagePath[playerType], 100, 100, playerType, 0, selected);
+        }),
+      ),
+    );
+  }
+
+
+
   List<String> flutterBirdImagePath = [
     'assets/images/ui/game_settings/bird/bird_yellow.png',
     'assets/images/ui/game_settings/bird/bird_red.png',
     'assets/images/ui/game_settings/bird/bird_blue.png',
   ];
 
-  Widget birdSelection(double gameSettingsWidth, double fontSize) {
+  Widget birdSelection1(double gameSettingsWidth, double fontSize) {
     return Container(
       width: gameSettingsWidth,
       height: 120,
       child: ListView(
           scrollDirection: Axis.horizontal,
-          children: new List.generate(3, (int birdType) {
-            bool selected = gameSettings.getBirdType() == birdType;
-            return selectionButton(flutterBirdImagePath[birdType], 100, 71, birdType, 0, selected);
+          children: new List.generate(3, (int birdType1) {
+            bool selected = gameSettings.getBirdType1() == birdType1;
+            return selectionButton(flutterBirdImagePath[birdType1], 100, 71, birdType1, 1, selected);
           }),
+      ),
+    );
+  }
+
+  Widget birdSelection2(double gameSettingsWidth, double fontSize) {
+    return Container(
+      width: gameSettingsWidth,
+      height: 120,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: new List.generate(3, (int birdType2) {
+          bool selected = gameSettings.getBirdType2() == birdType2;
+          return selectionButton(flutterBirdImagePath[birdType2], 100, 71, birdType2, 2, selected);
+        }),
       ),
     );
   }
@@ -251,7 +313,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
         scrollDirection: Axis.horizontal,
         children: new List.generate(2, (int backgroundType) {
           bool selected = gameSettings.getBackgroundType() == backgroundType;
-          return selectionButton(backgroundImagePath[backgroundType], 100, 100, backgroundType, 1, selected);
+          return selectionButton(backgroundImagePath[backgroundType], 100, 100, backgroundType, 3, selected);
         }),
       ),
     );
@@ -270,27 +332,76 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
         scrollDirection: Axis.horizontal,
         children: new List.generate(2, (int pipeType) {
           bool selected = gameSettings.getPipeType() == pipeType;
-          return selectionButton(pipeImagePath[pipeType], 61, 100, pipeType, 2, selected);
+          return selectionButton(pipeImagePath[pipeType], 61, 100, pipeType, 4, selected);
         }),
       ),
     );
   }
 
-  Widget gameSettingContent(double gameSettingsWidth, double fontSize) {
+  Widget playerSelectionRow(double gameSettingsWidth, double fontSize) {
     return Column(
       children: [
         Row(
-          children: [
-            SizedBox(width: 20),
-            Text(
-                "Flutter bird",
-                style: simpleTextStyle(fontSize)
-            ),
-          ]
+            children: [
+              SizedBox(width: 20),
+              Text(
+                  "Player selection",
+                  style: simpleTextStyle(fontSize)
+              ),
+            ]
         ),
         SizedBox(height: 20),
-        birdSelection(gameSettingsWidth, fontSize),
+        playerSelection(gameSettingsWidth, fontSize),
         SizedBox(height: 40),
+      ],
+    );
+  }
+
+  Widget flutterBird1SelectionRow(double gameSettingsWidth, double fontSize) {
+    String flutterBirdText = "Flutter bird";
+    if (gameSettings.getPlayerType() == 1) {
+      flutterBirdText = "Flutter bird 1";
+    }
+    return Column(
+        children: [
+          Row(
+              children: [
+                SizedBox(width: 20),
+                Text(
+                    flutterBirdText,
+                    style: simpleTextStyle(fontSize)
+                ),
+              ]
+          ),
+          SizedBox(height: 20),
+          birdSelection1(gameSettingsWidth, fontSize),
+          SizedBox(height: 40),
+        ],
+    );
+  }
+
+  Widget flutterBird2SelectionRow(double gameSettingsWidth, double fontSize) {
+    return Column(
+      children: [
+        Row(
+            children: [
+              SizedBox(width: 20),
+              Text(
+                  "Flutter bird 2",
+                  style: simpleTextStyle(fontSize)
+              ),
+            ]
+        ),
+        SizedBox(height: 20),
+        birdSelection2(gameSettingsWidth, fontSize),
+        SizedBox(height: 40),
+      ],
+    );
+  }
+
+  Widget backgroundSelectionRow(double gameSettingsWidth, double fontSize) {
+    return Column(
+      children: [
         Row(
             children: [
               SizedBox(width: 20),
@@ -303,6 +414,13 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
         SizedBox(height: 20),
         backgroundSelection(gameSettingsWidth, fontSize),
         SizedBox(height: 40),
+      ],
+    );
+  }
+
+  Widget pipeSelectionRow(double gameSettingsWidth, double fontSize) {
+    return Column(
+      children: [
         Row(
             children: [
               SizedBox(width: 20),
@@ -314,6 +432,21 @@ class GameSettingsBoxState extends State<GameSettingsBox> with TickerProviderSta
         ),
         SizedBox(height: 20),
         pipeSelection(gameSettingsWidth, fontSize),
+        SizedBox(height: 40),
+      ],
+    );
+  }
+
+  Widget gameSettingContent(double gameSettingsWidth, double fontSize) {
+
+    return Column(
+      children: [
+        playerSelectionRow(gameSettingsWidth, fontSize),
+        flutterBird1SelectionRow(gameSettingsWidth, fontSize),
+        gameSettings.getPlayerType() == 1
+            ? flutterBird2SelectionRow(gameSettingsWidth, fontSize) : Container(),
+        backgroundSelectionRow(gameSettingsWidth, fontSize),
+        pipeSelectionRow(gameSettingsWidth, fontSize),
       ]
     );
   }

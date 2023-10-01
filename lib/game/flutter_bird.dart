@@ -24,7 +24,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
 
   bool playFieldFocus = true;
 
-  bool twoPlayers = true;
+  bool twoPlayers = false;
   late final Bird bird1;
   late final Bird bird2;
 
@@ -78,21 +78,16 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
     sky = Sky();
     bird1 = Bird(
         birdType: 0,
-        initialPos: Vector2((size.x/10), (size.y/3))
+        initialPos: Vector2((size.x/6), (size.y/3))
     );
-    if (twoPlayers) {
-      bird2 = Bird(
-          birdType: 1,
-          initialPos: Vector2((size.x/10) + 100, (size.y/3))
-      );
-    }
+    bird2 = Bird(
+        birdType: 1,
+        initialPos: Vector2((size.x/6), (size.y/3))
+    );
     helpMessage = HelpMessage();
     scoreIndicator = ScoreIndicator();
     add(sky);
     add(bird1);
-    if (twoPlayers) {
-      add(bird2);
-    }
     add(Floor());
     add(helpMessage);
     add(ScreenHitbox());
@@ -109,7 +104,8 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
       position: Vector2(pipeX, 0),
       pipeType: pipeType,
     );
-    newPipeDuo.pipePassed();
+    newPipeDuo.pipePassedBird1();
+    newPipeDuo.pipePassedBird2();
     add(newPipeDuo);
 
     pointPool = await FlameAudio.createPool(
@@ -133,6 +129,7 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
     gameSettings = GameSettings();
     gameSettings.addListener(settingsChangeListener);
     userScore = UserScore();
+    settingsChangeListener();
     return super.onLoad();
   }
 
@@ -147,9 +144,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
     }
     scoreRemoved = true;
     clearPipes();
-    bird1.reset();
+    bird1.reset(size.y);
     if (twoPlayers) {
-      bird2.reset();
+      bird2.reset(size.y);
     }
     sky.reset();
     if (scoreScreenChangeNotifier.getScoreScreenVisible()) {
@@ -163,11 +160,15 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
       gameStarted = true;
       death = false;
       deathTimer = 1;
-      bird.gameStarted();
+      bird1.gameStarted();
+      if (twoPlayers) {
+        bird2.gameStarted();
+      }
       remove(helpMessage);
       add(scoreIndicator);
       scoreRemoved = false;
       spawnInitialPipes();
+      bird.fly();
     } else if (!gameStarted && gameEnded) {
       // go to the main screen with help message
       if (timeSinceEnded < 0.4) {
@@ -185,9 +186,18 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
   }
 
   @override
-  Future<void> onTap() async {
-    birdInteraction(bird1);
-    super.onTap();
+  Future<void> onTapUp(TapUpInfo tapUpInfo) async {
+    Vector2 screenPos = tapUpInfo.eventPosition.global;
+    if (twoPlayers) {
+      if (screenPos.x > size.x / 2) {
+        birdInteraction(bird1);
+      } else {
+        birdInteraction(bird2);
+      }
+    } else {
+      birdInteraction(bird1);
+    }
+    super.onTapUp(tapUpInfo);
   }
 
   @override
@@ -201,7 +211,9 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
       return KeyEventResult.ignored;
     } else {
       if (event.logicalKey == LogicalKeyboardKey.space && isKeyDown) {
-        birdInteraction(bird2);
+        if (twoPlayers) {
+          birdInteraction(bird2);
+        }
       }
       return KeyEventResult.handled;
     }
@@ -323,28 +335,34 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
 
   checkPipePassed() {
     for (PipeDuo pipe in pipes) {
-      if (pipe.passed) {
-        continue;
+      if (twoPlayers) {
+        if (pipe.passedBird1 && pipe.passedBird2) {
+          continue;
+        }
+      } else {
+        if (pipe.passedBird1) {
+          continue;
+        }
       }
-      // bird.position.x will always be 100 in this case.
-      if (pipe.position.x < bird1.position.x) {
-        pipe.pipePassed();
+
+      if ((pipe.position.x < bird1.position.x) && !pipe.passedBird1) {
+        pipe.pipePassedBird1();
         score += 1;
         scoreIndicator.scoreChange(score);
         pipesCleared += 1;
         if (gameSettings.getSound()) {
-          // FlameAudio.play("point.wav", volume: soundVolume);
           pointPool.start(volume: soundVolume);
         }
       }
-      if (pipe.position.x < bird2.position.x) {
-        pipe.pipePassed();
-        score += 1;
-        scoreIndicator.scoreChange(score);
-        pipesCleared += 1;
-        if (gameSettings.getSound()) {
-          // FlameAudio.play("point.wav", volume: soundVolume);
-          pointPool.start(volume: soundVolume);
+      if (twoPlayers) {
+        if (pipe.position.x < bird2.position.x) {
+          pipe.pipePassedBird2();
+          score += 1;
+          scoreIndicator.scoreChange(score);
+          pipesCleared += 1;
+          if (gameSettings.getSound()) {
+            pointPool.start(volume: soundVolume);
+          }
         }
       }
     }
@@ -379,8 +397,23 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
   }
 
   settingsChangeListener() {
-    if (gameSettings.getBirdType() != bird1.getBirdType()) {
-      bird1.changeBird(gameSettings.getBirdType());
+    if (gameSettings.getPlayerType() != 0 && !twoPlayers) {
+      twoPlayers = true;
+      double sizeXBird1 = bird1.size.x;
+      Vector2 initialPosition = Vector2((size.x/6) - sizeXBird1 - 20, (size.y/3));
+      bird2.setInitialPos(initialPosition);
+      bird2.reset(size.y);
+      add(bird2);
+    }
+    if (gameSettings.getPlayerType() != 1 && twoPlayers) {
+      twoPlayers = false;
+      remove(bird2);
+    }
+    if (gameSettings.getBirdType1() != bird1.getBirdType()) {
+      bird1.changeBird(gameSettings.getBirdType1());
+    }
+    if (gameSettings.getBirdType2() != bird2.getBirdType()) {
+      bird2.changeBird(gameSettings.getBirdType2());
     }
     if (gameSettings.getBackgroundType() != sky.getBackgroundType()) {
       sky.changeBackground(gameSettings.getBackgroundType());
@@ -391,18 +424,32 @@ class FlutterBird extends FlameGame with TapDetector, HasCollisionDetection, Key
     }
   }
 
-  changeBird(int birdType) async {
-    gameSettings.setBirdType(birdType);
-    bird1.changeBird(birdType);
+  changePlayer(int playerType) async {
+    if (playerType == 0) {
+      twoPlayers = false;
+      remove(bird2);
+    } else {
+      twoPlayers = true;
+      double sizeXBird1 = bird1.size.x;
+      Vector2 initialPosition = Vector2((size.x/6) - sizeXBird1 - 20, (size.y/3));
+      bird2.setInitialPos(initialPosition);
+      bird2.reset(size.y);
+      add(bird2);
+    }
+  }
+
+  changeBird1(int birdType1) async {
+    bird1.changeBird(birdType1);
+  }
+  changeBird2(int birdType2) async {
+    bird2.changeBird(birdType2);
   }
 
   changeBackground(int backgroundType) async {
-    gameSettings.setBackgroundType(backgroundType);
     sky.changeBackground(backgroundType);
   }
 
   changePipes(int pipeType) async {
-    gameSettings.setPipeType(pipeType);
     this.pipeType = pipeType;
     clearPipes();
   }

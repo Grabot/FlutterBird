@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
+import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_box.dart';
 import 'package:flutter_bird/views/user_interface/game_settings/game_settings_button/game_settings_button.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen.dart';
 import 'package:oktoast/oktoast.dart';
@@ -47,6 +48,7 @@ Future<void> main() async {
           'changeAvatar': _changeAvatarBoxBuilder,
           'gameSettingsButton': _gameSettingsButtonBuilder,
           'gameSettingsBox': _gameSettingsBoxBuilder,
+          'areYouSureBox': _areYouSureBoxBuilder,
         },
         initialActiveOverlays: const [
           'scoreScreen',
@@ -56,6 +58,7 @@ Future<void> main() async {
           'changeAvatar',
           'gameSettingsButton',
           'gameSettingsBox',
+          'areYouSureBox',
         ],
       )
   );
@@ -115,4 +118,8 @@ Widget _gameSettingsButtonBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _gameSettingsBoxBuilder(BuildContext buildContext, FlutterBird game) {
   return GameSettingsBox(key: UniqueKey(), game: game);
+}
+
+Widget _areYouSureBoxBuilder(BuildContext buildContext, FlutterBird game) {
+  return AreYouSureBox(key: UniqueKey(), game: game);
 }

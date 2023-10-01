@@ -68,8 +68,8 @@ class AreYouSureBoxState extends State<AreYouSureBox> {
   }
 
   logoutAction() {
-    Settings settings = Settings();
-    logoutUser(settings, _navigationService);
+    logoutUser(Settings(), _navigationService);
+    areYouSureBoxChangeNotifier.setAreYouSureBoxVisible(false);
   }
 
   Widget areYouSureLogout() {

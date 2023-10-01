@@ -125,6 +125,7 @@ class LoginScreenState extends State<LoginScreen> {
           print("signing in");
           ScoreScreenChangeNotifier().notify();
           goBack();
+          isLoading = false;
           setState(() {});
         } else if (!loginResponse.getResult()) {
           showToastMessage(loginResponse.getMessage());
@@ -150,6 +151,7 @@ class LoginScreenState extends State<LoginScreen> {
           print("signing in");
           ScoreScreenChangeNotifier().notify();
           goBack();
+          isLoading = false;
           setState(() {});
         } else if (!loginResponse.getResult()) {
           showToastMessage(loginResponse.getMessage());
@@ -174,16 +176,16 @@ class LoginScreenState extends State<LoginScreen> {
           setState(() {
             passwordResetSend = true;
           });
-          isLoading = true;
+          isLoading = false;
         } else if (!passwordResetResponse.getResult()) {
           showToastMessage(passwordResetResponse.getMessage());
           resetEmail = "";
-          isLoading = true;
+          isLoading = false;
         }
       }).onError((error, stackTrace) {
         showToastMessage(error.toString());
         resetEmail = "";
-        isLoading = true;
+        isLoading = false;
       });
     }
   }

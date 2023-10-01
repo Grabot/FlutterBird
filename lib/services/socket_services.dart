@@ -99,59 +99,59 @@ class SocketServices extends ChangeNotifier {
     }
   }
 
-  bool joinedFriendRooms = false;
-  checkFriends() {
-    if (joinedFriendRooms) {
-      return;
-    }
-    joinedFriendRooms = true;
-    socket.on('received_friend_request', (data) {
-      Map<String, dynamic> from = data["from"];
-      receivedFriendRequest(from);
-      notifyListeners();
-    });
-    socket.on('denied_friend', (data) {
-      int friendId = data["friend_id"];
-      deniedFriendRequest(friendId);
-      notifyListeners();
-    });
-    socket.on('accept_friend_request', (data) {
-      print("accept friend request $data");
-      Map<String, dynamic> from = data["from"];
-      acceptFriendRequest(from);
-      notifyListeners();
-    });
-  }
-
-  receivedFriendRequest(Map<String, dynamic> from) {
-    User? currentUser = Settings().getUser();
-    if (currentUser != null) {
-      int id = from["id"];
-      String username = from["username"];
-      Friend friend = Friend(id, false, false, 0, username);
-      currentUser.addFriend(friend);
-      showToastMessage("received a friend request from $username");
-      // FriendWindowChangeNotifier().notify();
-    }
-  }
-
-  deniedFriendRequest(int friendId) {
-    User? currentUser = Settings().getUser();
-    if (currentUser != null) {
-      currentUser.removeFriend(friendId);
-      // FriendWindowChangeNotifier().notify();
-    }
-  }
-
-  acceptFriendRequest(Map<String, dynamic> from) {
-    User? currentUser = Settings().getUser();
-    if (currentUser != null) {
-      User newFriend = User.fromJson(from);
-      Friend friend = Friend(newFriend.getId(), true, false, 0, newFriend.getUserName());
-      currentUser.addFriend(friend);
-      showToastMessage("${newFriend.userName} accepted your friend request");
-      // FriendWindowChangeNotifier().notify();
-    }
-  }
+  // bool joinedFriendRooms = false;
+  // checkFriends() {
+  //   if (joinedFriendRooms) {
+  //     return;
+  //   }
+  //   joinedFriendRooms = true;
+  //   socket.on('received_friend_request', (data) {
+  //     Map<String, dynamic> from = data["from"];
+  //     receivedFriendRequest(from);
+  //     notifyListeners();
+  //   });
+  //   socket.on('denied_friend', (data) {
+  //     int friendId = data["friend_id"];
+  //     deniedFriendRequest(friendId);
+  //     notifyListeners();
+  //   });
+  //   socket.on('accept_friend_request', (data) {
+  //     print("accept friend request $data");
+  //     Map<String, dynamic> from = data["from"];
+  //     acceptFriendRequest(from);
+  //     notifyListeners();
+  //   });
+  // }
+  //
+  // receivedFriendRequest(Map<String, dynamic> from) {
+  //   User? currentUser = Settings().getUser();
+  //   if (currentUser != null) {
+  //     int id = from["id"];
+  //     String username = from["username"];
+  //     Friend friend = Friend(id, false, false, 0, username);
+  //     currentUser.addFriend(friend);
+  //     showToastMessage("received a friend request from $username");
+  //     // FriendWindowChangeNotifier().notify();
+  //   }
+  // }
+  //
+  // deniedFriendRequest(int friendId) {
+  //   User? currentUser = Settings().getUser();
+  //   if (currentUser != null) {
+  //     currentUser.removeFriend(friendId);
+  //     // FriendWindowChangeNotifier().notify();
+  //   }
+  // }
+  //
+  // acceptFriendRequest(Map<String, dynamic> from) {
+  //   User? currentUser = Settings().getUser();
+  //   if (currentUser != null) {
+  //     User newFriend = User.fromJson(from);
+  //     Friend friend = Friend(newFriend.getId(), true, false, 0, newFriend.getUserName());
+  //     currentUser.addFriend(friend);
+  //     showToastMessage("${newFriend.userName} accepted your friend request");
+  //     // FriendWindowChangeNotifier().notify();
+  //   }
+  // }
 
 }
