@@ -39,6 +39,10 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     initialPos = initialPosition;
   }
 
+  setSize(Vector2 newSize) {
+    size = newSize;
+  }
+
   loadBird(String birdImageName) async {
     add(CircleHitbox());
 
@@ -49,15 +53,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       textureSize: Vector2(17, 12),
     ));
 
+    anchor = Anchor.center;
+
     heightScale = gameRef.size.y / 800;
 
     size.y = (gameRef.size.y / 10000) * 466;
     size.x = (size.y / 12) * 17;
-
-    size.y = (size.y * heightScale);
-    size.x = (size.x * heightScale);
-
-    anchor = Anchor.center;
 
     position = Vector2(initialPos.x, initialPos.y);
 
@@ -87,9 +88,6 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
     size.y = (screenSizeY / 10000) * 466;
     size.x = (size.y / 12) * 17;
-
-    size.y = (size.y * heightScale);
-    size.x = (size.x * heightScale);
 
     position = Vector2(initialPos.x, initialPos.y);
     flapSpeed = 600;
@@ -173,10 +171,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   @override
   void onGameResize(Vector2 gameSize) {
     super.onGameResize(gameSize);
-    size.y = (gameSize.y / 10000) * 466;
-    size.x = (size.y / 12) * 17;
     heightScale = gameSize.y / 800;
-
     if (!gameRef.gameStarted) {
       position = Vector2(initialPos.x, initialPos.y);
     }
