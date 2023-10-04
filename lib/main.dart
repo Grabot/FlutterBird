@@ -79,7 +79,7 @@ Future<void> main() async {
           routes: {
             routes.HomeRoute: (context) => gameWidget,
           },
-          scrollBehavior: MaterialScrollBehavior().copyWith( dragDevices: {PointerDeviceKind.mouse}, ),
+          scrollBehavior: MaterialScrollBehavior().copyWith( dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch}, ),
           onGenerateRoute: (settings) {
             return MaterialPageRoute(
                 builder: (context) {

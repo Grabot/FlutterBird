@@ -74,6 +74,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   int pipeType = 0;
 
   bool dataLoaded = false;
+  late Vector2 initialPosBird1;
 
   @override
   Future<void> onLoad() async {
@@ -85,7 +86,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     birdSize.x = (birdSize.y / 12) * 17;
 
     // position the birds next to each other, with a little gap
-    Vector2 initialPosBird1 = Vector2(birdSize.x * 3 + 20, (size.y/3));
+    initialPosBird1 = Vector2(birdSize.x * 3 + 20, (size.y/3));
     Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (size.y/3));
     bird1 = Bird(
         birdType: 0,
@@ -292,8 +293,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     pipes.add(newPipeDuo);
 
     pipeX -= pipeInterval;
-    double birdPos = (size.x / 10);
-    while(pipeX > birdPos + pipeInterval) {
+    while(pipeX > initialPosBird1.x + pipeInterval) {
       PipeDuo newPipeDuo = PipeDuo(
         position: Vector2(pipeX, 0),
         pipeType: pipeType,
@@ -421,7 +421,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     birdSize.y = (gameSize.y / 10000) * 466;
     birdSize.x = (birdSize.y / 12) * 17;
 
-    Vector2 initialPosBird1 = Vector2(birdSize.x * 3 + 20, (gameSize.y/3));
+    initialPosBird1 = Vector2(birdSize.x * 3 + 20, (gameSize.y/3));
     Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (gameSize.y/3));
     if (dataLoaded) {
       bird1.setInitialPos(initialPosBird1);
