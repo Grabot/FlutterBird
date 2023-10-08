@@ -15,11 +15,13 @@ import 'services/game_settings.dart';
 import 'services/navigation_service.dart';
 import 'services/settings.dart';
 import 'services/user_score.dart';
+import 'views/password_reset_page.dart';
 import 'views/user_interface/change_avatar_box/change_avatar_box.dart';
 import 'views/user_interface/game_settings/game_settings_box/game_settings_box.dart';
 import 'views/user_interface/profile/profile_box/profile_box.dart';
 import 'views/user_interface/profile/profile_overview/profile_overview.dart';
 import 'views/user_interface/score_screen/score_screen.dart';
+import 'views/bird_access_page.dart';
 
 Future<void> main() async {
   setPathUrlStrategy();
@@ -63,6 +65,9 @@ Future<void> main() async {
       )
   );
 
+  Widget birdAccess = BirdAccess(key: UniqueKey(), game: game);
+  Widget passwordReset = PasswordReset(key: UniqueKey(), game: game);
+
   runApp(
       OKToast(
         child: MaterialApp(
@@ -78,15 +83,31 @@ Future<void> main() async {
           initialRoute: '/',
           routes: {
             routes.HomeRoute: (context) => gameWidget,
+            routes.BirdAccessRoute: (context) => birdAccess,
+            routes.PasswordResetRoute: (context) => passwordReset,
           },
-          scrollBehavior: MaterialScrollBehavior().copyWith( dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch}, ),
-          onGenerateRoute: (settings) {
-            return MaterialPageRoute(
-                builder: (context) {
-                  return gameWidget;
-                }
-            );
-          },
+          scrollBehavior: MyCustomScrollBehavior(),
+            onGenerateRoute: (settings) {
+              if (settings.name != null && settings.name!.startsWith(routes.BirdAccessRoute)) {
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return birdAccess;
+                    }
+                );
+              } else if (settings.name!.startsWith(routes.PasswordResetRoute)) {
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return passwordReset;
+                    }
+                );
+              } else {
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return gameWidget;
+                    }
+                );
+              }
+            },
         ),
       )
   );
@@ -122,4 +143,13 @@ Widget _gameSettingsBoxBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _areYouSureBoxBuilder(BuildContext buildContext, FlutterBird game) {
   return AreYouSureBox(key: UniqueKey(), game: game);
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+  };
 }
