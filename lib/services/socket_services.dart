@@ -6,6 +6,7 @@ import 'package:flutter_bird/constants/url_base.dart';
 import 'package:flutter_bird/models/friend.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/util/util.dart';
+import 'package:flutter_bird/views/leader_board/Rank.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'rest/auth_service_login.dart';
@@ -14,6 +15,7 @@ import 'settings.dart';
 
 class SocketServices extends ChangeNotifier {
   late io.Socket socket;
+  late Settings settings;
 
   static final SocketServices _instance = SocketServices._internal();
 
@@ -45,6 +47,11 @@ class SocketServices extends ChangeNotifier {
 
     socket.on('message_event', (data) {
       checkMessageEvent(data);
+    });
+
+    socket.on('update_leaderboard', (data) {
+      updatingLeaderboard(data);
+      notifyListeners();
     });
 
     socket.open();
@@ -99,59 +106,14 @@ class SocketServices extends ChangeNotifier {
     }
   }
 
-  // bool joinedFriendRooms = false;
-  // checkFriends() {
-  //   if (joinedFriendRooms) {
-  //     return;
-  //   }
-  //   joinedFriendRooms = true;
-  //   socket.on('received_friend_request', (data) {
-  //     Map<String, dynamic> from = data["from"];
-  //     receivedFriendRequest(from);
-  //     notifyListeners();
-  //   });
-  //   socket.on('denied_friend', (data) {
-  //     int friendId = data["friend_id"];
-  //     deniedFriendRequest(friendId);
-  //     notifyListeners();
-  //   });
-  //   socket.on('accept_friend_request', (data) {
-  //     print("accept friend request $data");
-  //     Map<String, dynamic> from = data["from"];
-  //     acceptFriendRequest(from);
-  //     notifyListeners();
-  //   });
-  // }
-  //
-  // receivedFriendRequest(Map<String, dynamic> from) {
-  //   User? currentUser = Settings().getUser();
-  //   if (currentUser != null) {
-  //     int id = from["id"];
-  //     String username = from["username"];
-  //     Friend friend = Friend(id, false, false, 0, username);
-  //     currentUser.addFriend(friend);
-  //     showToastMessage("received a friend request from $username");
-  //     // FriendWindowChangeNotifier().notify();
-  //   }
-  // }
-  //
-  // deniedFriendRequest(int friendId) {
-  //   User? currentUser = Settings().getUser();
-  //   if (currentUser != null) {
-  //     currentUser.removeFriend(friendId);
-  //     // FriendWindowChangeNotifier().notify();
-  //   }
-  // }
-  //
-  // acceptFriendRequest(Map<String, dynamic> from) {
-  //   User? currentUser = Settings().getUser();
-  //   if (currentUser != null) {
-  //     User newFriend = User.fromJson(from);
-  //     Friend friend = Friend(newFriend.getId(), true, false, 0, newFriend.getUserName());
-  //     currentUser.addFriend(friend);
-  //     showToastMessage("${newFriend.userName} accepted your friend request");
-  //     // FriendWindowChangeNotifier().notify();
-  //   }
-  // }
+  setSettings(Settings settings) {
+    this.settings = settings;
+  }
+
+  updatingLeaderboard(Map<String, dynamic> data) {
+    print("updating leaderboard");
+    Rank newRank = Rank.fromJson(data);
+    settings.updateLeaderboard(newRank);
+  }
 
 }

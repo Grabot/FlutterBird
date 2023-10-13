@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
+import 'package:flutter_bird/views/leader_board/leader_board.dart';
 import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_box.dart';
 import 'package:flutter_bird/views/user_interface/game_settings/game_settings_button/game_settings_button.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'services/game_settings.dart';
 import 'services/navigation_service.dart';
 import 'services/settings.dart';
+import 'services/socket_services.dart';
 import 'services/user_score.dart';
 import 'views/password_reset_page.dart';
 import 'views/user_interface/change_avatar_box/change_avatar_box.dart';
@@ -29,9 +31,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // initialize the settings and users score singleton
-  Settings();
+  Settings settings = Settings();
   GameSettings();
   UserScore();
+  // We also initialize the socket services singleton, so we can receive leaderboard updates.
+  SocketServices socketServices = SocketServices();
+  socketServices.setSettings(settings);
   Flame.images.loadAll(<String>[]);
 
   FocusNode gameFocus = FocusNode();
@@ -44,6 +49,7 @@ Future<void> main() async {
         game: game,
         overlayBuilderMap: const {
           'scoreScreen': _scoreScreenBuilder,
+          'leaderBoard': _leaderBoardBuilder,
           'profileBox': _profileBoxBuilder,
           'profileOverview': _profileOverviewBuilder,
           'loginScreen': _loginScreenBuilder,
@@ -61,6 +67,7 @@ Future<void> main() async {
           'gameSettingsButton',
           'gameSettingsBox',
           'areYouSureBox',
+          'leaderBoard',
         ],
       )
   );
@@ -115,6 +122,10 @@ Future<void> main() async {
 
 Widget _scoreScreenBuilder(BuildContext buildContext, FlutterBird game) {
   return ScoreScreen(key: UniqueKey(), game: game);
+}
+
+Widget _leaderBoardBuilder(BuildContext buildContext, FlutterBird game) {
+  return LeaderBoard(key: UniqueKey(), game: game);
 }
 
 Widget _profileBoxBuilder(BuildContext buildContext, FlutterBird game) {

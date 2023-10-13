@@ -215,7 +215,7 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
     double totalWidth = MediaQuery.of(context).size.width;
     double totalHeight = MediaQuery.of(context).size.height;
     double heightScale = totalHeight / 800;
-    double fontSize = 20 * heightScale;
+    double fontSize = 16 * heightScale;
     double profileOverviewWidth = 350;
     // We use the total height to hide the chatbox below
     // In NormalMode the height has the 2 buttons and some padding added.
@@ -228,7 +228,7 @@ class ProfileOverviewState extends State<ProfileOverview> with TickerProviderSta
       profileOverviewHeight = 50;
       normalMode = false;
       double newHeightScaleFont = profileOverviewWidth / 800;
-      fontSize = 20 * newHeightScaleFont;
+      fontSize = 16 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.topRight,

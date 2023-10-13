@@ -46,6 +46,7 @@ dependencies:
   file_picker: ^5.2.7
   back_button_interceptor: ^6.0.2
   url_launcher: ^6.1.6
+  linked_scroll_controller: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -94,6 +95,7 @@ flutter:
     - assets/images/message_phone.png
     - assets/images/message_web.png
     - assets/images/gameover.png
+    - assets/images/leaderboard_image.png
     - assets/images/brocast_transparent.png
     - assets/images/reddit_button.png
     - assets/images/google_button.png

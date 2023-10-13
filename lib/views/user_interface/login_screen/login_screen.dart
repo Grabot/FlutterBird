@@ -794,7 +794,7 @@ class LoginScreenState extends State<LoginScreen> {
     double totalWidth = MediaQuery.of(context).size.width;
     double totalHeight = MediaQuery.of(context).size.height;
     double heightScale = totalHeight / 800;
-    double fontSize = 20 * heightScale;
+    double fontSize = 16 * heightScale;
     normalMode = true;
     double loginBoxSize = 100;
     double width = 800;
@@ -805,7 +805,7 @@ class LoginScreenState extends State<LoginScreen> {
       height = MediaQuery.of(context).size.height - 150;
       loginBoxSize = 50;
       double newHeightScaleFont = width / 800;
-      fontSize = 20 * newHeightScaleFont;
+      fontSize = 16 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.center,

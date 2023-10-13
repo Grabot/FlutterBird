@@ -159,7 +159,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     double totalHeight = MediaQuery.of(context).size.height;
     bool normalMode = true;
     double heightScale = totalHeight / 800;
-    double fontSize = 20 * heightScale;
+    double fontSize = 16 * heightScale;
     double width = 800;
     double height = (totalHeight / 10) * 9;
     // When the width is smaller than this we assume it's mobile.
@@ -168,7 +168,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
       height = totalHeight - 250;
       normalMode = false;
       double newHeightScaleFont = width / 800;
-      fontSize = 20 * newHeightScaleFont;
+      fontSize = 16 * newHeightScaleFont;
     }
     double headerHeight = 40;
 

@@ -59,7 +59,7 @@ getScore(LoginResponse loginResponse, int userId) {
 
     if (score.getBestScore() > userScore.getBestScore()) {
       userScore.setBestScore(score.getBestScore());
-    } else if (userScore.getBestScore() > score.getBestScore()){
+    } else if (userScore.getBestScore() > score.getBestScore()) {
       score.setBestScore(userScore.getBestScore());
       updateScore = true;
     }
@@ -124,6 +124,8 @@ successfulLogin(LoginResponse loginResponse) async {
 
   settings.setLoggingIn(false);
   ProfileChangeNotifier().notify();
+
+  // TODO: update leaderboard, find the scores that belong to me?
 }
 
 TextStyle simpleTextStyle(double fontSize) {

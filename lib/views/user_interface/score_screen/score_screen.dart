@@ -6,6 +6,7 @@ import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
+import 'package:flutter_bird/views/leader_board/leader_board_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
 import 'score_screen_change_notifier.dart';
@@ -376,6 +377,13 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
+  nextScreen() {
+    setState(() {
+      scoreScreenChangeNotifier.setScoreScreenVisible(false);
+      LeaderBoardChangeNotifier().setLeaderBoardVisible(true);
+    });
+  }
+
   Widget scoreScreenWidget(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -399,11 +407,27 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
+  Widget scoreScreenOverlay(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.black.withOpacity(0.7),
+        child: Center(
+            child: TapRegion(
+                onTapOutside: (tap) {
+                  nextScreen();
+                },
+                child: scoreScreenWidget(context)
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Align(
         alignment: FractionalOffset.center,
-        child: showScoreScreen ? scoreScreenWidget(context) : Container()
+        child: showScoreScreen ? scoreScreenOverlay(context) : Container()
     );
   }
 }

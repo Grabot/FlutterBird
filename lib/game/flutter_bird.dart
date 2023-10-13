@@ -12,8 +12,10 @@ import 'package:flutter_bird/game/score_indicator.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/game_settings.dart';
 import 'package:flutter_bird/services/rest/auth_service_flutter_bird.dart';
+import 'package:flutter_bird/services/rest/auth_service_leaderboard.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
+import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
 import 'sky.dart';
 
@@ -54,6 +56,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   double deathTimer = 1;
   bool death = false;
+  bool deathTimeEnded = false;
   bool scoreRemoved = false;
 
   double frameTimes = 0.0;
@@ -155,15 +158,13 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       remove(scoreIndicator);
     }
     scoreRemoved = true;
+    deathTimeEnded = false;
     clearPipes();
     bird1.reset(size.y);
     if (twoPlayers) {
       bird2.reset(size.y);
     }
     sky.reset();
-    if (scoreScreenChangeNotifier.getScoreScreenVisible()) {
-      scoreScreenChangeNotifier.setScoreScreenVisible(false);
-    }
   }
 
   birdInteraction(Bird bird) {
@@ -321,7 +322,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       }
       checkPipePassed();
       checkOutOfBounds();
-    } else if (gameEnded) {
+    } else if (gameEnded && !deathTimeEnded) {
       bool isHighScore = false;
       if (score > userScore.getBestScore()) {
         isHighScore = true;
@@ -338,7 +339,19 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         scoreRemoved = true;
         if (!scoreScreenChangeNotifier.getScoreScreenVisible()) {
           scoreScreenChangeNotifier.setScoreScreenVisible(true);
+          // update leaderboard score
+          User? currentUser = Settings().getUser();
+          if (currentUser != null) {
+            // TODO: the user should have leaderboard content so we can already check if the user should be on it.
+            print("going to update the leaderboard");
+            AuthServiceLeaderboard().updateLeaderboardOnePlayer(score).then((value) {
+              if (value.getResult()) {
+                showToastMessage(value.getMessage());
+              }
+            });
+          }
         }
+        deathTimeEnded = true;
       }
       deathTimer -= dt;
     }
@@ -533,6 +546,13 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   gameSettingsFocus(bool gameSettingsFocus) {
     playFieldFocus = !gameSettingsFocus;
+    if (playFieldFocus) {
+      gameFocus.requestFocus();
+    }
+  }
+
+  leaderBoardFocus(bool leaderBoardFocus) {
+    playFieldFocus = !leaderBoardFocus;
     if (playFieldFocus) {
       gameFocus.requestFocus();
     }
