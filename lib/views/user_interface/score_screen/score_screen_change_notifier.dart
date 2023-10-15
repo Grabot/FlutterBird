@@ -7,6 +7,7 @@ class ScoreScreenChangeNotifier extends ChangeNotifier {
 
   int currentScore = 0;
   bool isHighScore = false;
+  bool twoPlayer = false;
 
   static final ScoreScreenChangeNotifier _instance = ScoreScreenChangeNotifier._internal();
 
@@ -33,6 +34,14 @@ class ScoreScreenChangeNotifier extends ChangeNotifier {
 
   int getScore() {
     return currentScore;
+  }
+
+  bool isTwoPlayer() {
+    return twoPlayer;
+  }
+
+  setTwoPlayer(bool twoPlayer) {
+    this.twoPlayer = twoPlayer;
   }
 
   notify() {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
 
 
 class LeaderBoardChangeNotifier extends ChangeNotifier {
 
   bool showLeaderBoard = false;
+  int rankingSelection = 4;
 
   static final LeaderBoardChangeNotifier _instance = LeaderBoardChangeNotifier._internal();
 
@@ -20,6 +22,14 @@ class LeaderBoardChangeNotifier extends ChangeNotifier {
 
   getLeaderBoardVisible() {
     return showLeaderBoard;
+  }
+
+  setRankingSelection(int selection) {
+    rankingSelection = selection;
+  }
+
+  getRankingSelection() {
+    return rankingSelection;
   }
 
   notify() {

@@ -3,8 +3,9 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
-import 'package:flutter_bird/views/leader_board/Rank.dart';
-import 'package:flutter_bird/views/leader_board/leader_board_change_notifier.dart';
+import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
+import 'package:flutter_bird/views/user_interface/leader_board/leader_board_change_notifier.dart';
+import 'package:intl/intl.dart';
 
 
 class LeaderBoard extends StatefulWidget {
@@ -33,12 +34,16 @@ class LeaderBoardState extends State<LeaderBoard> {
   bool showTopLeaderBoard = true;
   bool showBottomLeaderBoard = true;
 
+  int selectedTimeRanking = 4;
+  bool singleBirdSelected = true;
+
   @override
   void initState() {
     _focusLeaderBoard.addListener(_onFocusChange);
     leaderBoardChangeNotifier = LeaderBoardChangeNotifier();
     leaderBoardChangeNotifier.addListener(chatWindowChangeListener);
     settings = Settings();
+    settings.addListener(settingsChangeListener);
     userScore = UserScore();
 
     _controller.addListener(() {
@@ -47,9 +52,16 @@ class LeaderBoardState extends State<LeaderBoard> {
     super.initState();
   }
 
+  settingsChangeListener() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   chatWindowChangeListener() {
     if (mounted) {
       if (!showLeaderBoard && leaderBoardChangeNotifier.getLeaderBoardVisible()) {
+        selectedTimeRanking = leaderBoardChangeNotifier.getRankingSelection();
         showLeaderBoard = true;
       }
       if (showLeaderBoard && !leaderBoardChangeNotifier.getLeaderBoardVisible()) {
@@ -116,7 +128,14 @@ class LeaderBoardState extends State<LeaderBoard> {
     );
   }
 
-  int selectedTimeRanking = 0;
+  retrieveLeaderBoard(bool onePlayer) {
+    if (onePlayer) {
+      settings.getLeaderBoardsOnePlayer();
+    } else {
+      settings.getLeaderBoardsTwoPlayer();
+    }
+  }
+
   Widget leaderBoardTimeRanking(double leaderBoardWidth, double timeRankingHeight, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double dayRowWidth = totalHeaderWidth/5;
@@ -142,7 +161,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               alignment: Alignment.center,
               width: dayRowWidth,
               height: timeRankingHeight-10,
-              color: selectedTimeRanking == 0 ? Colors.blue[200] : Colors.transparent,
+              color: selectedTimeRanking == 0 ? Colors.green[200] : Colors.transparent,
               child: Text("Day", style: TextStyle(fontSize: fontSize)),
             ),
           ),
@@ -158,7 +177,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               alignment: Alignment.center,
               width: weekRowWidth,
               height: timeRankingHeight-10,
-              color: selectedTimeRanking == 1 ? Colors.blue[200] : Colors.transparent,
+              color: selectedTimeRanking == 1 ? Colors.green[200] : Colors.transparent,
               child: Text("Week", style: TextStyle(fontSize: fontSize)),
             ),
           ),
@@ -174,7 +193,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               alignment: Alignment.center,
               width: monthRowWidth,
               height: timeRankingHeight-10,
-              color: selectedTimeRanking == 2 ? Colors.blue[200] : Colors.transparent,
+              color: selectedTimeRanking == 2 ? Colors.green[200] : Colors.transparent,
               child: Text("Month", style: TextStyle(fontSize: fontSize)),
             ),
           ),
@@ -190,7 +209,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               alignment: Alignment.center,
               width: yearRowWidth,
               height: timeRankingHeight-10,
-              color: selectedTimeRanking == 3 ? Colors.blue[200] : Colors.transparent,
+              color: selectedTimeRanking == 3 ? Colors.green[200] : Colors.transparent,
               child: Text("Year", style: TextStyle(fontSize: fontSize)),
             ),
           ),
@@ -206,7 +225,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               alignment: Alignment.center,
               width: allTimeRowWidth,
               height: timeRankingHeight-10,
-              color: selectedTimeRanking == 4 ? Colors.blue[200] : Colors.transparent,
+              color: selectedTimeRanking == 4 ? Colors.green[200] : Colors.transparent,
               child: Text("All Time", style: TextStyle(fontSize: fontSize)),
             ),
           ),
@@ -218,8 +237,9 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardHeaderRow(double leaderBoardWidth, double headerRowHeight, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
-    double nameRowWidth = (totalHeaderWidth/3)*2;
+    double nameRowWidth = (totalHeaderWidth/6)*3;
     double scoreRowWidth = totalHeaderWidth/6;
+    double achievedAtWidth = totalHeaderWidth/6;
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       width: leaderBoardWidth-20,
@@ -230,22 +250,29 @@ class LeaderBoardState extends State<LeaderBoard> {
             alignment: Alignment.center,
             width: rankRowWidth,
             height: headerRowHeight-10,
-            color: Colors.red[200],
+            color: Colors.blue[200],
             child: Text("Rank", style: TextStyle(fontSize: fontSize)),
           ),
           Container(
             alignment: Alignment.center,
             width: nameRowWidth,
             height: headerRowHeight-10,
-            color: Colors.red[200],
+            color: Colors.blue[200],
             child: Text("Name", style: TextStyle(fontSize: fontSize)),
           ),
           Container(
             alignment: Alignment.center,
             width: scoreRowWidth,
             height: headerRowHeight-10,
-            color: Colors.red[200],
+            color: Colors.blue[200],
             child: Text("Score", style: TextStyle(fontSize: fontSize)),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: achievedAtWidth,
+            height: headerRowHeight-10,
+            color: Colors.blue[200],
+            child: Text("Achieved at", style: TextStyle(fontSize: fontSize)),
           ),
         ],
       ),
@@ -255,20 +282,27 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardTableRow(double leaderBoardWidth, Rank userRank, int index, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
-    double nameRowWidth = (totalHeaderWidth/3)*2;
+    double nameRowWidth = (totalHeaderWidth/6)*3;
     double scoreRowWidth = totalHeaderWidth/6;
+    double achievedAtWidth = totalHeaderWidth/6;
     return Container(
       height: 100,
-      color: Colors.black12,
+      color: userRank.getMe() ? Colors.green.withOpacity(0.3) : Colors.black12,
       child: Row(
         children: [
           Container(
             alignment: Alignment.center,
             width: rankRowWidth,
-            height: 40,
+            height: 30,
             child: Text(
                 "${index + 1}",
-                style: TextStyle(fontSize: fontSize)),
+                style: userRank.getMe()
+                    ? TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                )
+                    : TextStyle(fontSize: fontSize),
+            )
           ),
           Expanded(
             child: Container(
@@ -279,17 +313,42 @@ class LeaderBoardState extends State<LeaderBoard> {
                 overflow: TextOverflow.ellipsis,
                 TextSpan(
                   text: userRank.getUserName(),
-                    style: TextStyle(fontSize: fontSize)),
+                    style: userRank.getMe()
+                        ? TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                    )
+                        : TextStyle(fontSize: fontSize),
+                )
                 )
             ),
           ),
           Container(
             alignment: Alignment.center,
             width: scoreRowWidth,
-            height: 40,
+            height: 30,
             child: Text(
                 "${userRank.getScore()}",
-                style: TextStyle(fontSize: fontSize)
+                style: userRank.getMe()
+                    ? TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                )
+                    : TextStyle(fontSize: fontSize),
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: achievedAtWidth,
+            height: 30,
+            child: Text(
+                DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
+                style: userRank.getMe()
+                    ? TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                )
+                    : TextStyle(fontSize: fontSize),
             ),
           ),
         ],
@@ -298,20 +357,35 @@ class LeaderBoardState extends State<LeaderBoard> {
   }
 
   Widget leaderBoardTable(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
-    List temp = settings.rankingsOnePlayerAll;
-    if (selectedTimeRanking == 0) {
-      temp = settings.rankingsOnePlayerDay;
-    } else if (selectedTimeRanking == 1) {
-      temp = settings.rankingsOnePlayerWeek;
-    } else if (selectedTimeRanking == 2) {
-      temp = settings.rankingsOnePlayerMonth;
-    } else if (selectedTimeRanking == 3) {
-      temp = settings.rankingsOnePlayerYear;
+    List rankingList = [];
+    if (singleBirdSelected) {
+      rankingList = settings.rankingsOnePlayerAll;
+      if (selectedTimeRanking == 0) {
+        rankingList = settings.rankingsOnePlayerDay;
+      } else if (selectedTimeRanking == 1) {
+        rankingList = settings.rankingsOnePlayerWeek;
+      } else if (selectedTimeRanking == 2) {
+        rankingList = settings.rankingsOnePlayerMonth;
+      } else if (selectedTimeRanking == 3) {
+        rankingList = settings.rankingsOnePlayerYear;
+      }
+    } else {
+      rankingList = settings.rankingsTwoPlayerAll;
+      if (selectedTimeRanking == 0) {
+        rankingList = settings.rankingsTwoPlayerDay;
+      } else if (selectedTimeRanking == 1) {
+        rankingList = settings.rankingsTwoPlayerWeek;
+      } else if (selectedTimeRanking == 2) {
+        rankingList = settings.rankingsTwoPlayerMonth;
+      } else if (selectedTimeRanking == 3) {
+        rankingList = settings.rankingsTwoPlayerYear;
+      }
     }
+
     // Only show the top 10 users, even if you have more to show
     int itemCount = 10;
-    if (temp.length < 10) {
-      itemCount = temp.length;
+    if (rankingList.length < 10) {
+      itemCount = rankingList.length;
     }
     return Container(
       width: leaderBoardWidth-20,
@@ -324,7 +398,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               controller: _controller,
               itemCount: itemCount,
               itemBuilder: (BuildContext context, int index) {
-                return leaderBoardTableRow(leaderBoardWidth, temp[index], index, fontSize);
+                return leaderBoardTableRow(leaderBoardWidth, rankingList[index], index, fontSize);
               }),
         ),
         onNotification: (t) {
@@ -350,12 +424,18 @@ class LeaderBoardState extends State<LeaderBoard> {
 
   Widget leaderContent(double leaderBoardWidth, double fontSize) {
     double leaderBoardHeight = (leaderBoardWidth/4) * 3;
+    double onePlayerTwoPlayerOptionWidth = leaderBoardWidth/10;
     return Container(
-      width: leaderBoardWidth,
+      width: leaderBoardWidth+onePlayerTwoPlayerOptionWidth,
       height: leaderBoardHeight,
-      child: CustomPaint(
-          painter: BoxWindowPainter(showTop: true, showBottom: showBottomLeaderBoard),
-          child: leaderBoardContent(leaderBoardWidth, leaderBoardHeight, fontSize)
+      child: Row(
+        children: [
+          CustomPaint(
+            painter: BoxWindowPainter(showTop: true, showBottom: showBottomLeaderBoard),
+            child: leaderBoardContent(leaderBoardWidth, leaderBoardHeight, fontSize)
+          ),
+          onePlayerTwoPlayerSelectionWidget(onePlayerTwoPlayerOptionWidth)
+        ]
       ),
     );
   }
@@ -367,24 +447,82 @@ class LeaderBoardState extends State<LeaderBoard> {
     });
   }
 
+  Widget onePlayerTwoPlayerSelectionWidget(double onePlayerTwoPlayerOptionWidth) {
+    double onePlayerTwoPlayerOptionMargin = onePlayerTwoPlayerOptionWidth/10;
+    return Column(
+      children: [
+        CustomPaint(
+          painter: BoxWindowPainter(showTop: true, showBottom: true),
+          child: Container(
+            width: onePlayerTwoPlayerOptionWidth,
+            height: onePlayerTwoPlayerOptionWidth*2,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    if (!singleBirdSelected) {
+                      retrieveLeaderBoard(true);
+                      setState(() {
+                        singleBirdSelected = true;
+                      });
+                    }
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(onePlayerTwoPlayerOptionMargin),
+                    color: singleBirdSelected ? Colors.green : Color(0xFFdcd587),
+                    width: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
+                    height: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
+                    child: Image.asset(
+                      "assets/images/ui/game_settings/player/1_bird.png",
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    if (singleBirdSelected) {
+                      retrieveLeaderBoard(false);
+                      setState(() {
+                        singleBirdSelected = false;
+                      });
+                    }
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(onePlayerTwoPlayerOptionMargin),
+                    color: !singleBirdSelected ? Colors.green : Color(0xFFdcd587),
+                    width: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
+                    height: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
+                    child: Image.asset(
+                      "assets/images/ui/game_settings/player/2_birds.png",
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              ]
+            ),
+          ),
+        ),
+      ]
+    );
+  }
+
   Widget leaderBoardScreenWidget(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     double heightScale = height / 800;
     double leaderBoardWidth = 800 * heightScale;
-    double fontSize = 20 * heightScale;
-    if (width < leaderBoardWidth) {
-      leaderBoardWidth = width-100;
+    double fontSize = 18 * heightScale;
+    if (width < (leaderBoardWidth + (leaderBoardWidth/10))) {
+      leaderBoardWidth = width-(leaderBoardWidth/10);
       double newHeightScaleFont = width / 800;
-      fontSize = 20 * newHeightScaleFont;
+      fontSize = 18 * newHeightScaleFont;
     }
-
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           leaderBoardMessage(heightScale),
-          leaderContent(leaderBoardWidth, fontSize),
+          leaderContent(leaderBoardWidth, fontSize)
         ]
     );
   }

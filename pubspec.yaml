@@ -123,6 +123,8 @@ flutter:
     - assets/images/ui/game_settings/pipes/red_pipe.png
     - assets/images/ui/game_settings/player/1_bird.png
     - assets/images/ui/game_settings/player/2_birds.png
+    - assets/images/achievements/bird_1.png
+    - assets/images/achievements/guest/bird_1_guest.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

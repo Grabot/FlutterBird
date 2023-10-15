@@ -4,7 +4,7 @@ class Rank {
   late String userName;
   late int userId;
   late int score;
-  late bool me;
+  bool me = false;
   late DateTime timestamp;
 
   Rank({
@@ -31,8 +31,16 @@ class Rank {
     return me;
   }
 
+  setMe(bool me) {
+    this.me = me;
+  }
+
   DateTime getTimestamp() {
     return timestamp;
+  }
+
+  int getUserId() {
+    return userId;
   }
 
   bool equals(Rank other) {
@@ -47,6 +55,9 @@ class Rank {
     rank = -1;
     if (json.containsKey("user_name")) {
       userName = json["user_name"];
+    }
+    if (json.containsKey("user_id")) {
+      userId = json["user_id"];
     }
     if (json.containsKey("score")) {
       score = json["score"];

@@ -219,7 +219,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       Set<LogicalKeyboardKey> keysPressed,
       ) {
     final isKeyDown = event is RawKeyDownEvent;
-
+    print("on key event");
     if (!playFieldFocus && isKeyDown) {
       return KeyEventResult.ignored;
     } else {
@@ -339,16 +339,25 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         scoreRemoved = true;
         if (!scoreScreenChangeNotifier.getScoreScreenVisible()) {
           scoreScreenChangeNotifier.setScoreScreenVisible(true);
+          scoreScreenChangeNotifier.setTwoPlayer(twoPlayers);
           // update leaderboard score
           User? currentUser = Settings().getUser();
           if (currentUser != null) {
             // TODO: the user should have leaderboard content so we can already check if the user should be on it.
             print("going to update the leaderboard");
-            AuthServiceLeaderboard().updateLeaderboardOnePlayer(score).then((value) {
-              if (value.getResult()) {
-                showToastMessage(value.getMessage());
-              }
-            });
+            if (!twoPlayers) {
+              AuthServiceLeaderboard().updateLeaderboardOnePlayer(score).then((value) {
+                if (value.getResult()) {
+                  showToastMessage("${value.getMessage()} for one player");
+                }
+              });
+            } else {
+              AuthServiceLeaderboard().updateLeaderboardTwoPlayers(score).then((value) {
+                if (value.getResult()) {
+                  showToastMessage("${value.getMessage()} for two players");
+                }
+              });
+            }
           }
         }
         deathTimeEnded = true;

@@ -124,8 +124,7 @@ successfulLogin(LoginResponse loginResponse) async {
 
   settings.setLoggingIn(false);
   ProfileChangeNotifier().notify();
-
-  // TODO: update leaderboard, find the scores that belong to me?
+  settings.updateRanks();
 }
 
 TextStyle simpleTextStyle(double fontSize) {
@@ -192,4 +191,84 @@ Color overviewColour(int state, Color colour0, Color colour1, Color colour2) {
   } else {
     return colour2;
   }
+}
+
+int getRankingSelection(bool onePlayer, int currentScore, Settings settings) {
+  if (onePlayer) {
+    if (settings.rankingsOnePlayerAll.length >= 10) {
+      // If the user has a larger score than what is currently in the top 10
+      // then they are in the top 10. We return "4" to indicate the all leaderboard.
+      if (currentScore > settings.rankingsOnePlayerAll[9].getScore()) {
+        return 4;
+      }
+    } else {
+      // If there aren't 10 scores in the leaderboard than the user has made it into the top 10.
+      return 4;
+    }
+    if (settings.rankingsOnePlayerYear.length >= 10) {
+      if (currentScore > settings.rankingsOnePlayerYear[9].getScore()) {
+        return 3;
+      }
+    } else {
+      return 3;
+    }
+    if (settings.rankingsOnePlayerMonth.length >= 10) {
+      if (currentScore > settings.rankingsOnePlayerMonth[9].getScore()) {
+        return 2;
+      }
+    } else {
+      return 2;
+    }
+    if (settings.rankingsOnePlayerWeek.length >= 10) {
+      if (currentScore > settings.rankingsOnePlayerWeek[9].getScore()) {
+        return 1;
+      }
+    } else {
+      return 1;
+    }
+    if (settings.rankingsOnePlayerDay.length >= 10) {
+      if (currentScore > settings.rankingsOnePlayerDay[9].getScore()) {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  } else {
+    if (settings.rankingsTwoPlayerAll.length >= 10) {
+      if (currentScore > settings.rankingsTwoPlayerAll[9].getScore()) {
+        return 4;
+      }
+    } else {
+      return 4;
+    }
+    if (settings.rankingsTwoPlayerYear.length >= 10) {
+      if (currentScore > settings.rankingsTwoPlayerYear[9].getScore()) {
+        return 3;
+      }
+    } else {
+      return 3;
+    }
+    if (settings.rankingsTwoPlayerMonth.length >= 10) {
+      if (currentScore > settings.rankingsTwoPlayerMonth[9].getScore()) {
+        return 2;
+      }
+    } else {
+      return 2;
+    }
+    if (settings.rankingsTwoPlayerWeek.length >= 10) {
+      if (currentScore > settings.rankingsTwoPlayerWeek[9].getScore()) {
+        return 1;
+      }
+    } else {
+      return 1;
+    }
+    if (settings.rankingsTwoPlayerDay.length >= 10) {
+      if (currentScore > settings.rankingsTwoPlayerDay[9].getScore()) {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
+  return -1;
 }

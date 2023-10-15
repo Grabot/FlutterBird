@@ -6,7 +6,8 @@ import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
-import 'package:flutter_bird/views/leader_board/leader_board_change_notifier.dart';
+import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
+import 'package:flutter_bird/views/user_interface/leader_board/leader_board_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
 import 'score_screen_change_notifier.dart';
@@ -349,11 +350,73 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget userInteractionButtons() {
+  Widget userInteractionButtons(double scoreWidth, double fontSize) {
     return Container(
-      width: 400,
+      width: scoreWidth,
       height: 100,
-      // color: Colors.green,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: TextButton(
+                onPressed: () {
+                  nextScreen(false);
+                },
+                child: Container(
+                  width: scoreWidth/4,
+                  height: scoreWidth/20,
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                        'Ok',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: fontSize),
+                      ),
+                  ),
+                )
+            ),
+          ),
+          Container(
+            child: TextButton(
+                onPressed: () {
+                  getLeaderBoardSettings();
+                  nextScreen(true);
+                },
+                child: Container(
+                  width: scoreWidth/4,
+                  height: scoreWidth/20,
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                      'Leaderboard',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: fontSize),
+                    ),
+                  ),
+                )
+            ),
+          ),
+          Container(
+            child: TextButton(
+                onPressed: () {
+                  print("pressed share button");
+                },
+                child: Container(
+                  width: scoreWidth/4,
+                  height: scoreWidth/20,
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                      'Share',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: fontSize),
+                    ),
+                  ),
+                )
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -377,10 +440,15 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  nextScreen() {
+  nextScreen(bool goToLeaderboard) {
     setState(() {
-      scoreScreenChangeNotifier.setScoreScreenVisible(false);
-      LeaderBoardChangeNotifier().setLeaderBoardVisible(true);
+      if (goToLeaderboard) {
+        scoreScreenChangeNotifier.setScoreScreenVisible(false);
+        LeaderBoardChangeNotifier().setLeaderBoardVisible(true);
+      } else {
+        scoreScreenChangeNotifier.setScoreScreenVisible(false);
+        widget.game.startGame();
+      }
     });
   }
 
@@ -402,9 +470,46 @@ class ScoreScreenState extends State<ScoreScreen> {
       children: [
         gameOverMessage(heightScale),
         scoreContent(scoreWidth, fontSize, heightScale),
-        userInteractionButtons(),
+        userInteractionButtons(scoreWidth, fontSize),
       ]
     );
+  }
+
+  getLeaderBoardSettings() {
+    // Check if the user made the leaderboard of the week or month or even of all time.
+    // If this is the case we want to automatically open on that selection.
+    User? currentUser = settings.getUser();
+    if (currentUser != null) {
+      int currentScore = scoreScreenChangeNotifier.getScore();
+      int rankingSelection = 4;
+      if (!scoreScreenChangeNotifier.isTwoPlayer()) {
+        rankingSelection = getRankingSelection(true, currentScore, settings);
+      } else {
+        rankingSelection = getRankingSelection(false, currentScore, settings);
+      }
+      LeaderBoardChangeNotifier().setRankingSelection(rankingSelection);
+    }
+  }
+
+  tappedOutside() {
+    User? currentUser = settings.getUser();
+    if (currentUser != null) {
+      int tenthPosDayScore = -1;
+      // If there aren't 10 scores yet, we will just set it to -1
+      // so the current score is always higher. The user will have made the leaderboard
+      if (settings.rankingsOnePlayerDay.length >= 10) {
+        tenthPosDayScore = settings.rankingsOnePlayerDay[9].getScore();
+        getLeaderBoardSettings();
+      }
+      if (scoreScreenChangeNotifier.getScore() > tenthPosDayScore) {
+        // The user is now on the leaderboard so we will show it.
+        nextScreen(true);
+      } else {
+        nextScreen(false);
+      }
+    } else {
+      nextScreen(false);
+    }
   }
 
   Widget scoreScreenOverlay(BuildContext context) {
@@ -415,7 +520,7 @@ class ScoreScreenState extends State<ScoreScreen> {
         child: Center(
             child: TapRegion(
                 onTapOutside: (tap) {
-                  nextScreen();
+                  tappedOutside();
                 },
                 child: scoreScreenWidget(context)
             )
