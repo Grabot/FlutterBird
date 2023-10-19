@@ -6,7 +6,8 @@ import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
-import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
+import 'package:flutter_bird/views/user_interface/models/achievement.dart';
+import 'package:flutter_bird/views/user_interface/models/rank.dart';
 import 'package:flutter_bird/views/user_interface/leader_board/leader_board_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
@@ -120,7 +121,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget achievementsNobodyLoggedIn(double fontSize) {
+  Widget achievementsNobodyLoggedIn(double fontSize, double medalWidth, double medalHeight) {
     return Text(
         "TODO:",
         style: TextStyle(
@@ -131,14 +132,47 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget achievementsLoggedIn(User currentUser) {
-    // TODO: Test this
+  // TODO: Remove this dummy data
+  List<Achievement> achievementsGot = [
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+  ];
+  Widget achievementsLoggedIn(User currentUser, double medalWidth, double medalHeight) {
+    double achievementGridHeight = medalHeight;
     return SingleChildScrollView(
         child: Container(
-          child: Column(
-            children: [
-              Text("TODO: ${currentUser.getUserName()}")
-            ],
+          width: medalWidth,
+          height: achievementGridHeight,
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+            ),
+            itemCount: achievementsGot.length,
+            itemBuilder: (context, index) {
+              return achievementTile(achievementsGot[index], medalWidth/4);
+            },
           ),
         )
     );
@@ -149,8 +183,10 @@ class ScoreScreenState extends State<ScoreScreen> {
     return Container(
       alignment: Alignment.center,
       width: medalWidth,
-      height: medalHeight,
-      child: currentUser == null ? achievementsNobodyLoggedIn(fontSize) : achievementsLoggedIn(currentUser),
+      height: medalHeight-10, // subtract the margin for the outer line.
+      child: currentUser == null
+          ? achievementsNobodyLoggedIn(fontSize, medalWidth, medalHeight)
+          : achievementsLoggedIn(currentUser, medalWidth, medalHeight),
     );
   }
 
@@ -300,8 +336,8 @@ class ScoreScreenState extends State<ScoreScreen> {
     double leftWidth = (scoreWidth/2) - 30;
     double rightWidth = (scoreWidth/2) - 30;
     double totalHeight = scoreWidth/2;
-    double medalHeaderHeight = leftWidth/6;
-    double achievementHeight = (leftWidth/6)*4;
+    double medalHeaderHeight = totalHeight/6;
+    double achievementHeight = (totalHeight/6)*5;
     User? currentUser = settings.getUser();
     return Column(
       children: [

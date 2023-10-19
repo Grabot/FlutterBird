@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
+import 'package:flutter_bird/views/user_interface/models/rank.dart';
 
 
 class LeaderBoardChangeNotifier extends ChangeNotifier {

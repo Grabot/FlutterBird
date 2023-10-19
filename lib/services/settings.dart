@@ -6,7 +6,7 @@ import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/rest/auth_service_leaderboard.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/util/web_storage.dart';
-import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
+import 'package:flutter_bird/views/user_interface/models/rank.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'package:jwt_decode/jwt_decode.dart';

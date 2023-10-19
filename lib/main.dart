@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
+import 'package:flutter_bird/views/user_interface/achievement_box/achievement_box.dart';
 import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_box.dart';
 import 'package:flutter_bird/views/user_interface/game_settings/game_settings_button/game_settings_button.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen.dart';
@@ -57,6 +58,7 @@ Future<void> main() async {
           'gameSettingsButton': _gameSettingsButtonBuilder,
           'gameSettingsBox': _gameSettingsBoxBuilder,
           'areYouSureBox': _areYouSureBoxBuilder,
+          'achievementBox': _achievementBoxBuilder,
         },
         initialActiveOverlays: const [
           'scoreScreen',
@@ -68,6 +70,7 @@ Future<void> main() async {
           'gameSettingsBox',
           'areYouSureBox',
           'leaderBoard',
+          'achievementBox',
         ],
       )
   );
@@ -154,6 +157,10 @@ Widget _gameSettingsBoxBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _areYouSureBoxBuilder(BuildContext buildContext, FlutterBird game) {
   return AreYouSureBox(key: UniqueKey(), game: game);
+}
+
+Widget _achievementBoxBuilder(BuildContext buildContext, FlutterBird game) {
+  return AchievementBox(key: UniqueKey(), game: game);
 }
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {

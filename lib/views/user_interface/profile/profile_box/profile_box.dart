@@ -14,9 +14,11 @@ import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/render_avatar.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
+import 'package:flutter_bird/views/user_interface/achievement_box/achievement_box_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/change_avatar_box/change_avatar_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
+import 'package:flutter_bird/views/user_interface/models/achievement.dart';
 
 import 'profile_change_notifier.dart';
 
@@ -250,6 +252,10 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     }
   }
 
+  openAchievementBox() {
+    AchievementBoxChangeNotifier().setAchievementBoxVisible(true);
+  }
+
   Widget profileHeader(double headerWidth, double headerHeight, double fontSize) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,6 +303,165 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     );
   }
 
+  // TODO: Remove this dummy data
+  List<Achievement> achievementsGot = [
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+    Achievement(
+        imagePath: "assets/images/achievements/bird_1.png",
+        tooltip: "You got this achievement by doing something"
+    ),
+  ];
+  Widget achievementsWidget(double achievementWidth, double fontSize) {
+    // If the length of achievementsGot is bigger than 8, 16, 24 or 32, add another row to the height
+    int multiplesOf8 = (achievementsGot.length/8).ceil();
+    double achievementHeight = (achievementWidth/8) * multiplesOf8;
+    return Column(
+      children: [
+        Container(
+          width: achievementWidth,
+          child: Text(
+            "Achievements:",
+            style: simpleTextStyle(fontSize),
+          ),
+        ),
+        Container(
+          width: achievementWidth,
+          height: achievementHeight,
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 8,
+            ),
+            itemCount: achievementsGot.length,
+            itemBuilder: (context, index) {
+              return achievementTile(achievementsGot[index], (achievementWidth/8));
+            },
+          ),
+        ),
+        SizedBox(height: 10),
+        checkAllAchievements(achievementWidth, fontSize),
+        SizedBox(height: 20),
+      ]
+    );
+  }
+
+  Widget checkAllAchievements(double width, double fontSize) {
+    return Container(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () {
+          setState(() {
+            openAchievementBox();
+          });
+        },
+        style: buttonStyle(false, Colors.blue),
+        child: Container(
+          alignment: Alignment.center,
+          width: width/2,
+          height: fontSize,
+          child: Text(
+            'Check all available achievements',
+            style: simpleTextStyle(fontSize),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget nobodyLoggedInMobile(double width, double fontSize) {
     double widthAvatar = 300;
     if (width < widthAvatar) {
@@ -330,7 +495,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Container(
             width: width,
             child: Row(
@@ -348,6 +513,8 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
               ],
             ),
           ),
+          SizedBox(height: 10),
+          achievementsWidget(width, fontSize),
           SizedBox(height: 40),
         ]
     );
@@ -400,7 +567,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 40),
         Container(
           width: width,
           child: Row(
@@ -419,6 +586,8 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
           ),
         ),
         SizedBox(height: 40),
+        achievementsWidget(width, fontSize),
+        SizedBox(height: 40),
       ],
     );
   }
@@ -435,6 +604,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
             ]
         ),
         SizedBox(height: 10),
+        achievementsWidget(width, fontSize),
         Container(
           width: width,
           child: Row(

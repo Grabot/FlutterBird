@@ -3,7 +3,7 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
-import 'package:flutter_bird/views/user_interface/leader_board/Rank.dart';
+import 'package:flutter_bird/views/user_interface/models/rank.dart';
 import 'package:flutter_bird/views/user_interface/leader_board/leader_board_change_notifier.dart';
 import 'package:intl/intl.dart';
 
@@ -345,10 +345,10 @@ class LeaderBoardState extends State<LeaderBoard> {
                 DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
                 style: userRank.getMe()
                     ? TextStyle(
-                  fontSize: fontSize,
+                  fontSize: (fontSize/4)*3,
                   fontWeight: FontWeight.bold,
                 )
-                    : TextStyle(fontSize: fontSize),
+                    : TextStyle(fontSize: (fontSize/4)*3),
             ),
           ),
         ],

@@ -546,6 +546,13 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     }
   }
 
+  achievementBoxFocus(bool achievementBoxFocus) {
+    playFieldFocus = !achievementBoxFocus;
+    if (playFieldFocus) {
+      gameFocus.requestFocus();
+    }
+  }
+
   loadingBoxFocus(bool loadingFocus) {
     playFieldFocus = !loadingFocus;
     if (playFieldFocus) {

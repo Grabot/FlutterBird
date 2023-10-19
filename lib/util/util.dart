@@ -9,6 +9,7 @@ import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/socket_services.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'package:flutter_bird/services/user_score.dart';
+import 'package:flutter_bird/views/user_interface/models/achievement.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -271,4 +272,24 @@ int getRankingSelection(bool onePlayer, int currentScore, Settings settings) {
     }
   }
   return -1;
+}
+
+Widget achievementTile(Achievement achievement, double achievementSize) {
+  return Tooltip(
+      message: achievement.getTooltip(),
+      child: InkWell(
+        onTap: () {
+          print("pressed the achievement");
+        },
+        child: Container(
+            child: Image.asset(
+              achievement.getImagePath(),
+              width: achievementSize,
+              height: achievementSize,
+              gaplessPlayback: true,
+              fit: BoxFit.fill,
+            )
+        ),
+      )
+  );
 }
