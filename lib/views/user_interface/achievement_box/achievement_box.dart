@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
+import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
+import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
+import 'package:themed/themed.dart';
 
 import 'achievement_box_change_notifier.dart';
 
@@ -30,7 +34,7 @@ class AchievementBoxState extends State<AchievementBox> with TickerProviderState
   late AchievementBoxChangeNotifier achievementBoxChangeNotifier;
 
   Settings settings = Settings();
-  UserScore userScore = UserScore();
+  UserAchievements userAchievements = UserAchievements();
 
   User? currentUser;
 
@@ -57,110 +61,6 @@ class AchievementBoxState extends State<AchievementBox> with TickerProviderState
     });
     super.initState();
   }
-
-  // TODO: Remove this dummy data
-  List<Achievement> achievementsGot = [
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-  ];
 
   @override
   void dispose() {
@@ -213,26 +113,118 @@ class AchievementBoxState extends State<AchievementBox> with TickerProviderState
     widget.game.achievementBoxFocus(_focusAchievementBox.hasFocus);
   }
 
-  Widget achievementItem(Achievement achievement, double achievementWindowWidth, double fontSize) {
+  Widget achievementItem(Achievement achievement, double achievementWindowWidth, double achievementSize, double fontSize) {
+    double marginWidth = 20;
     return Container(
       width: achievementWindowWidth,
-      height: 100,
-      color: Colors.red,
-      child: Text(achievement.getTooltip())
+      height: achievementSize,
+      child: Row(
+        children: [
+          ChangeColors(
+            saturation: achievement.achieved ? 0 : -1,
+            child: Image.asset(
+              achievement.getImagePath(),
+              width: achievementSize,
+              height: achievementSize,
+              gaplessPlayback: true,
+              fit: BoxFit.fill,
+            ),
+          ),
+          SizedBox(width: 10),
+          Container(
+              width: achievementWindowWidth - achievementSize - marginWidth - 10,
+              child: Text.rich(
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  TextSpan(
+                    text: achievement.getTooltip(),
+                    style: simpleTextStyle(fontSize),
+                  ),
+              )
+          ),
+        ],
+      )
+    );
+  }
+
+  int numberOfAchievementsAchieved = 0;
+  int totalOfAchievements = 0;
+  Widget achievementTableHeader(double achievementWindowWidth, double fontSize) {
+    return Row(
+      children: [
+        SizedBox(width: 10),
+        Container(
+            width: achievementWindowWidth - 20,
+            height: 50,
+            child:Text.rich(
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              TextSpan(
+                text: "Total achievements achieved ${numberOfAchievementsAchieved}/${totalOfAchievements}",
+                style: simpleTextStyle(fontSize),
+              ),
+            )
+        ),
+        SizedBox(width: 10),
+      ],
     );
   }
 
   Widget achievementList(double achievementWindowWidth, double fontSize) {
+    double achievementSize = 100;
+    int itemCount = userAchievements.getAchievementsAvailable().length;
     return Container(
       margin: EdgeInsets.all(10),
       width: achievementWindowWidth,
-      height: 2000,
+      height: achievementSize * itemCount,
       child: ListView.builder(
-        itemCount: achievementsGot.length,
+        physics: NeverScrollableScrollPhysics(),  // scrolling done in SingleScrollView
+        itemCount: itemCount,
         itemBuilder: (context, index) {
-          return achievementItem(achievementsGot[index], achievementWindowWidth, fontSize);
+          return achievementItem(userAchievements.getAchievementsAvailable()[index], achievementWindowWidth, achievementSize, fontSize);
         },
       ),
+    );
+  }
+
+  Widget logInToGetAchievements(double achievementWindowWidth, double fontSize) {
+    return Column(
+      children: [
+        Row(
+            children:
+            [
+              SizedBox(width: 10),
+              expandedText(achievementWindowWidth-20, "Save your achievements by creating an account!", fontSize, false),
+              SizedBox(width: 10),
+            ]
+        ),
+        SizedBox(height: 10),
+        Row(
+            children: [
+              SizedBox(width: 20),
+              Container(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    achievementBoxChangeNotifier.setAchievementBoxVisible(false);
+                    LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                  },
+                  style: buttonStyle(false, Colors.blue),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: achievementWindowWidth/4,
+                    height: fontSize,
+                    child: Text(
+                      'Log in',
+                      style: simpleTextStyle(fontSize),
+                    ),
+                  ),
+                ),
+              ),
+            ]
+        ),
+        SizedBox(height: 40),
+      ],
     );
   }
 
@@ -255,6 +247,8 @@ class AchievementBoxState extends State<AchievementBox> with TickerProviderState
     }
     double headerHeight = 40;
 
+    User? currentUser = settings.getUser();
+
     return Container(
       width: width,
       height: height,
@@ -269,7 +263,10 @@ class AchievementBoxState extends State<AchievementBox> with TickerProviderState
                     [
                       achievementWindowHeader(width-80, headerHeight, fontSize),
                       SizedBox(height: 20),
+                      currentUser == null ? logInToGetAchievements(width, fontSize) : Container(),
+                      achievementTableHeader(width, fontSize),
                       achievementList(width, fontSize),
+                      SizedBox(height: 20),
                     ]
                 ),
               )
@@ -284,9 +281,12 @@ class AchievementBoxState extends State<AchievementBox> with TickerProviderState
   }
 
   goBack() {
-    print("going back");
+    // If you go back from this screen you should go back to the profile screen.
+    // This is because you can only open the achievement screen from the profile screen.
+    // So going back means you should go back to the profile screen.
     setState(() {
       achievementBoxChangeNotifier.setAchievementBoxVisible(false);
+      ProfileChangeNotifier().setProfileVisible(true);
     });
   }
 

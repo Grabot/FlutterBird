@@ -133,4 +133,52 @@ class SecureStorage {
     await storage.write(key: _keySound, value: null);
   }
 
+  final String _keyBronzeSingle = 'bronzeSingle';
+  final String _keySilverSingle = 'silverSingle';
+  final String _keyGoldSingle = 'goldSingle';
+  final String _keyBronzeDouble = 'bronzeDouble';
+  final String _keySilverDouble = 'silverDouble';
+  final String _keyGoldDouble = 'goldDouble';
+
+  Future setBronzeSingle(String bronzeSingle) async {
+    await storage.write(key: _keyBronzeSingle, value: bronzeSingle);
+  }
+  Future<String?> getBronzeSingle() async {
+    return await storage.read(key: _keyBronzeSingle);
+  }
+
+  Future setSilverSingle(String silverSingle) async {
+    await storage.write(key: _keySilverSingle, value: silverSingle);
+  }
+  Future<String?> getSilverSingle() async {
+    return await storage.read(key: _keySilverSingle);
+  }
+
+  Future setGoldSingle(String goldSingle) async {
+    await storage.write(key: _keyGoldSingle, value: goldSingle);
+  }
+  Future<String?> getGoldSingle() async {
+    return await storage.read(key: _keyGoldSingle);
+  }
+
+  Future setBronzeDouble(String bronzeDouble) async {
+    await storage.write(key: _keyBronzeDouble, value: bronzeDouble);
+  }
+  Future<String?> getBronzeDouble() async {
+    return await storage.read(key: _keyBronzeDouble);
+  }
+
+  Future setSilverDouble(String silverDouble) async {
+    await storage.write(key: _keySilverDouble, value: silverDouble);
+  }
+  Future<String?> getSilverDouble() async {
+    return await storage.read(key: _keySilverDouble);
+  }
+
+  Future setGoldDouble(String goldDouble) async {
+    await storage.write(key: _keyGoldDouble, value: goldDouble);
+  }
+  Future<String?> getGoldDouble() async {
+    return await storage.read(key: _keyGoldDouble);
+  }
 }

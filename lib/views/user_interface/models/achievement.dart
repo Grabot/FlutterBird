@@ -1,24 +1,34 @@
 
 class Achievement {
 
-  late String imagePath;
+  late String imageName;
   late String tooltip;
+  bool achieved = false;
 
   Achievement({
-    required this.imagePath,
-    required this.tooltip
+    required this.imageName,
+    required this.tooltip,
+    required this.achieved,
   });
 
   bool equals(Achievement other) {
-    return this.imagePath == other.getImagePath()
-        && this.tooltip == other.getTooltip();
+    return this.imageName == other.getImagePath()
+        && this.tooltip == other.getTooltip()
+        && this.achieved == other.getAchieved();
   }
 
   getImagePath() {
+    String imagePath = "assets/images/achievements/";
+    imagePath += imageName;
+    imagePath += ".png";
     return imagePath;
   }
 
   getTooltip() {
     return tooltip;
+  }
+
+  getAchieved() {
+    return achieved;
   }
 }

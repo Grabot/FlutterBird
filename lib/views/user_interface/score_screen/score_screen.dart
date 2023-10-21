@@ -132,34 +132,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  // TODO: Remove this dummy data
-  List<Achievement> achievementsGot = [
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-  ];
-  Widget achievementsLoggedIn(User currentUser, double medalWidth, double medalHeight) {
+  Widget achievementsList(double medalWidth, double medalHeight) {
     double achievementGridHeight = medalHeight;
     return SingleChildScrollView(
         child: Container(
@@ -169,9 +142,9 @@ class ScoreScreenState extends State<ScoreScreen> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
             ),
-            itemCount: achievementsGot.length,
+            itemCount: scoreScreenChangeNotifier.getAchievementGotten().length,
             itemBuilder: (context, index) {
-              return achievementTile(achievementsGot[index], medalWidth/4);
+              return achievementTile(scoreScreenChangeNotifier.getAchievementGotten()[index], medalWidth/4);
             },
           ),
         )
@@ -179,14 +152,11 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   Widget medalImage(double medalWidth, double medalHeight, double fontSize) {
-    User? currentUser = settings.getUser();
     return Container(
       alignment: Alignment.center,
       width: medalWidth,
       height: medalHeight-10, // subtract the margin for the outer line.
-      child: currentUser == null
-          ? achievementsNobodyLoggedIn(fontSize, medalWidth, medalHeight)
-          : achievementsLoggedIn(currentUser, medalWidth, medalHeight),
+      child: achievementsList(medalWidth, medalHeight),
     );
   }
 

@@ -7,7 +7,7 @@ import 'package:flutter_bird/services/rest/auth_service_login.dart';
 import 'package:flutter_bird/services/rest/models/login_response.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/socket_services.dart';
-import 'package:flutter_bird/constants/route_paths.dart' as routes;
+import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
@@ -93,6 +93,58 @@ getScore(LoginResponse loginResponse, int userId) {
   }
 }
 
+getAchievements(LoginResponse loginResponse, int userId) {
+  UserAchievements userAchievements = UserAchievements();
+  Achievements? achievements = loginResponse.getAchievements();
+  if (achievements != null) {
+    bool updateAchievements = false;
+    if (achievements.getBronzeSingle() && !userAchievements.getBronzeSingle()) {
+      userAchievements.achievedBronzeSingle();
+    } else if (!achievements.getBronzeSingle() && userAchievements.getBronzeSingle()) {
+      achievements.setBronzeSingle(userAchievements.getBronzeSingle());
+      updateAchievements = true;
+    }
+    if (achievements.getSilverSingle() && !userAchievements.getSilverSingle()) {
+      userAchievements.achievedSilverSingle();
+    } else if (!achievements.getSilverSingle() && userAchievements.getSilverSingle()) {
+      achievements.setSilverSingle(userAchievements.getSilverSingle());
+      updateAchievements = true;
+    }
+    if (achievements.getGoldSingle() && !userAchievements.getGoldSingle()) {
+      userAchievements.achievedGoldSingle();
+    } else if (!achievements.getGoldSingle() && userAchievements.getGoldSingle()) {
+      achievements.setGoldSingle(userAchievements.getGoldSingle());
+      updateAchievements = true;
+    }
+    if (achievements.getBronzeDouble() && !userAchievements.getBronzeDouble()) {
+      userAchievements.achievedBronzeDouble();
+    } else if (!achievements.getBronzeDouble() && userAchievements.getBronzeDouble()) {
+      achievements.setBronzeDouble(userAchievements.getBronzeDouble());
+      updateAchievements = true;
+    }
+    if (achievements.getSilverDouble() && !userAchievements.getSilverDouble()) {
+      userAchievements.achievedSilverDouble();
+    } else if (!achievements.getSilverDouble() && userAchievements.getSilverDouble()) {
+      achievements.setSilverDouble(userAchievements.getSilverDouble());
+      updateAchievements = true;
+    }
+    if (achievements.getGoldDouble() && !userAchievements.getGoldDouble()) {
+      userAchievements.achievedGoldDouble();
+    } else if (!achievements.getGoldDouble() && userAchievements.getGoldDouble()) {
+      achievements.setGoldDouble(userAchievements.getGoldDouble());
+      updateAchievements = true;
+    }
+
+    if (updateAchievements) {
+      AuthServiceFlutterBird().updateAchievements(achievements).then((result) {
+        if (result.getResult()) {
+          print("we have updated the score in the db");
+        }
+      });
+    }
+  }
+}
+
 successfulLogin(LoginResponse loginResponse) async {
   SecureStorage secureStorage = SecureStorage();
   Settings settings = Settings();
@@ -104,6 +156,7 @@ successfulLogin(LoginResponse loginResponse) async {
       settings.setAvatar(user.getAvatar()!);
     }
     getScore(loginResponse, user.id);
+    getAchievements(loginResponse, user.id);
     SocketServices().login(user.id);
   }
 
@@ -161,6 +214,7 @@ logoutUser(Settings settings, NavigationService navigationService) async {
   settings.logout();
   SecureStorage().logout();
   UserScore().logout();
+  UserAchievements().logout();
   GameSettings().logout();
 }
 
@@ -275,21 +329,13 @@ int getRankingSelection(bool onePlayer, int currentScore, Settings settings) {
 }
 
 Widget achievementTile(Achievement achievement, double achievementSize) {
-  return Tooltip(
-      message: achievement.getTooltip(),
-      child: InkWell(
-        onTap: () {
-          print("pressed the achievement");
-        },
-        child: Container(
-            child: Image.asset(
-              achievement.getImagePath(),
-              width: achievementSize,
-              height: achievementSize,
-              gaplessPlayback: true,
-              fit: BoxFit.fill,
-            )
-        ),
+  return Container(
+      child: Image.asset(
+        achievement.getImagePath(),
+        width: achievementSize,
+        height: achievementSize,
+        gaplessPlayback: true,
+        fit: BoxFit.fill,
       )
   );
 }

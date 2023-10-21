@@ -1,5 +1,5 @@
-
 import 'package:flutter_bird/models/user.dart';
+import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 
 class LoginResponse {
@@ -9,6 +9,7 @@ class LoginResponse {
   String? refreshToken;
   User? user;
   Score? score;
+  Achievements? achievement;
 
   LoginResponse(this.result, this.message, this.accessToken, this.refreshToken, this.user);
 
@@ -36,6 +37,10 @@ class LoginResponse {
     return score;
   }
 
+  Achievements? getAchievements() {
+    return achievement;
+  }
+
   LoginResponse.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("result") &&
         json.containsKey("message")) {
@@ -51,6 +56,10 @@ class LoginResponse {
           if (userJson.containsKey("score")) {
             Map<String, dynamic> scoreJson = userJson["score"];
             score = Score.fromJson(scoreJson);
+          }
+          if (userJson.containsKey("achievements")) {
+            Map<String, dynamic> achievementJson = userJson["achievements"];
+            achievement = Achievements.fromJson(achievementJson);
           }
         }
       }

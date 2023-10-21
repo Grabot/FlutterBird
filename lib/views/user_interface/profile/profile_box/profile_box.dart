@@ -9,6 +9,7 @@ import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/rest/auth_service_setting.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/render_avatar.dart';
@@ -46,6 +47,7 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
 
   Settings settings = Settings();
   UserScore userScore = UserScore();
+  UserAchievements userAchievements = UserAchievements();
 
   User? currentUser;
 
@@ -253,7 +255,10 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
   }
 
   openAchievementBox() {
-    AchievementBoxChangeNotifier().setAchievementBoxVisible(true);
+    setState(() {
+      profileChangeNotifier.setProfileVisible(false);
+      AchievementBoxChangeNotifier().setAchievementBoxVisible(true);
+    });
   }
 
   Widget profileHeader(double headerWidth, double headerHeight, double fontSize) {
@@ -303,113 +308,11 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
     );
   }
 
-  // TODO: Remove this dummy data
-  List<Achievement> achievementsGot = [
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-    Achievement(
-        imagePath: "assets/images/achievements/bird_1.png",
-        tooltip: "You got this achievement by doing something"
-    ),
-  ];
   Widget achievementsWidget(double achievementWidth, double fontSize) {
+    List<Achievement> achievedAchievements = userAchievements.achievedAchievementList();
     // If the length of achievementsGot is bigger than 8, 16, 24 or 32, add another row to the height
-    int multiplesOf8 = (achievementsGot.length/8).ceil();
-    double achievementHeight = (achievementWidth/8) * multiplesOf8;
+    int multiplesOfEight = (achievedAchievements.length/8).ceil();
+    double achievementHeight = (achievementWidth/8) * multiplesOfEight;
     return Column(
       children: [
         Container(
@@ -426,9 +329,9 @@ class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 8,
             ),
-            itemCount: achievementsGot.length,
+            itemCount: achievedAchievements.length,
             itemBuilder: (context, index) {
-              return achievementTile(achievementsGot[index], (achievementWidth/8));
+              return achievementTile(achievedAchievements[index], (achievementWidth/8));
             },
           ),
         ),

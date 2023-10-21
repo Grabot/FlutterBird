@@ -112,11 +112,15 @@ class UserScore {
     );
   }
 
-  logout() {
+  logout() async {
     bestScore = 0;
     totalFlutters = 0;
     totalPipesCleared = 0;
     totalGames = 0;
+    await secureStorage.setTotalGames("0");
+    await secureStorage.setTotalPipes("0");
+    await secureStorage.setTotalFlutters("0");
+    await secureStorage.setBestScore("0");
   }
 }
 
