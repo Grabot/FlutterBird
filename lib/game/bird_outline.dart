@@ -22,7 +22,6 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     gameSettings = GameSettings();
     loadBird("bird_outline_animation.png");
 
-    priority = 3;
     return super.onLoad();
   }
 
@@ -94,6 +93,8 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     }
     if (!gameRef.gameStarted && !gameRef.gameEnded) {
       super.update(dt);
+    } else if (gameRef.gameEnded) {
+      return;
     } else {
       super.update(dt);
     }
@@ -105,7 +106,6 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
 
   changeBird() {
     loadBird("bird_outline_animation.png");
-    priority = 3;
   }
 
   @override

@@ -41,7 +41,6 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       await loadBird("flutter_blue.png");
     }
 
-    priority = 0;
     return super.onLoad();
   }
 
@@ -116,7 +115,6 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
         // Otherwise the bird flies behind or in front of it.
         return;
       }
-      return;
     }
     if (!gameRef.gameEnded) {
       // For the death animation we set the velocity such that the bird flies up and then falls down

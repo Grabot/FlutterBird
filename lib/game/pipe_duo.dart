@@ -84,13 +84,13 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
     Pipe lower_pipe = Pipe(
       position: Vector2(0, uLower),
       birdType: birdType,
-    );
+    )..priority = priority;
 
     double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
     Pipe upper_pipe = Pipe(
       position: Vector2(0, yUpper),
       birdType: birdType,
-    );
+    )..priority = priority;
 
     upper = upper_pipe;
     lower = lower_pipe;

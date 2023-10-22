@@ -23,7 +23,7 @@ class ScoreIndicator extends PositionComponent with HasGameRef<FlutterBird> {
     scoreNumbers.add(scoreNumber2);
     add(scoreNumber2);
 
-    priority = 1;
+    priority = 10;
     return super.onLoad();
   }
 
@@ -84,7 +84,7 @@ class ScoreNumber extends SpriteComponent with HasGameRef<FlutterBird> {
 
     var image = await Flame.images.load(numberImage);
     sprite = Sprite(image);
-    priority = 1;
+    priority = 10;
 
     return super.onLoad();
   }

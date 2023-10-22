@@ -46,7 +46,6 @@ class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
     size.y *= 1.5;
     size.x *= heightScale;
     size.y *= heightScale;
-    priority = 2;
   }
 
   @override
