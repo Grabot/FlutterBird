@@ -16,7 +16,6 @@ class Floor extends RectangleComponent with HasGameRef<FlutterBird> {
     position = Vector2(0, floorHeight);
     size = Vector2(gameRef.size.x, restHeight);
     add(RectangleHitbox());
-    priority = 3;
     return super.onLoad();
   }
 

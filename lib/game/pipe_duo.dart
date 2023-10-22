@@ -7,11 +7,11 @@ import 'package:flutter_bird/game/pipe.dart';
 
 class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
-  int pipeType;
+  int birdType;
 
   PipeDuo({
     super.position,
-    required this.pipeType,
+    required this.birdType,
   });
 
   double pipe_gap = 300;
@@ -83,20 +83,19 @@ class PipeDuo extends PositionComponent with HasGameRef<FlutterBird> {
 
     Pipe lower_pipe = Pipe(
       position: Vector2(0, uLower),
-      pipeType: pipeType,
+      birdType: birdType,
     );
 
     double yUpper = uLower - (pipe_gap * heightScale) - pipe_height;
     Pipe upper_pipe = Pipe(
       position: Vector2(0, yUpper),
-      pipeType: pipeType,
+      birdType: birdType,
     );
 
     upper = upper_pipe;
     lower = lower_pipe;
     return [lower!, upper!];
   }
-
 
   @override
   void onGameResize(Vector2 gameSize) {

@@ -1,15 +1,14 @@
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
-  int pipeType;
+  int birdType;
 
   Pipe({
     super.position,
-    required this.pipeType,
+    required this.birdType,
   });
 
   double heightScale = 1;
@@ -25,11 +24,17 @@ class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
   }
 
   loadPipeDetails() async {
-    if (pipeType == 0) {
+    if (birdType == 0) {
       final image = await Flame.images.load('pipe-green_big.png');
       sprite = Sprite(image);
-    } else if (pipeType == 1) {
+    } else if (birdType == 1) {
+      final image = await Flame.images.load('pipe-yellow_big.png');
+      sprite = Sprite(image);
+    } else if (birdType == 2) {
       final image = await Flame.images.load('pipe-red_big.png');
+      sprite = Sprite(image);
+    } else if (birdType == 3) {
+      final image = await Flame.images.load('pipe-blue_big.png');
       sprite = Sprite(image);
     }
     anchor = Anchor.center;

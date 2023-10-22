@@ -4,16 +4,21 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter_bird/game/bird_outline.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
+import 'package:flutter_bird/game/pipe.dart';
 import 'package:flutter_bird/services/game_settings.dart';
 
 class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<FlutterBird> {
 
   int birdType;
   Vector2 initialPos;
+  BirdOutline birdOutline2;
+
   Bird({
     required this.birdType,
     required this.initialPos,
+    required this.birdOutline2,
   }) : super(size: Vector2(85, 60));
 
   double heightScale = 1;
@@ -22,25 +27,32 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   late GameSettings gameSettings;
 
+
   @override
   Future<void> onLoad() async {
     gameSettings = GameSettings();
     if (birdType == 0) {
-      await loadBird("flutter_yellow.png");
+      await loadBird("flutter_green.png");
     } else if (birdType == 1) {
-      await loadBird("flutter_red.png");
+      await loadBird("flutter_yellow.png");
     } else if (birdType == 2) {
+      await loadBird("flutter_red.png");
+    } else if (birdType == 3) {
       await loadBird("flutter_blue.png");
     }
+
+    priority = 0;
     return super.onLoad();
   }
 
   setInitialPos(Vector2 initialPosition) {
     initialPos = initialPosition;
+    birdOutline2.setInitialPos(initialPosition);
   }
 
   setSize(Vector2 newSize) {
     size = newSize;
+    birdOutline2.setSize(newSize);
   }
 
   loadBird(String birdImageName) async {
@@ -62,14 +74,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
     position = Vector2(initialPos.x, initialPos.y);
 
-    priority = 1;
-
     wingPool = await FlameAudio.createPool(
       "wing.wav",
       minPlayers: 0,
       maxPlayers: 4,
     );
-
+    birdOutline2.loadBird("bird_outline_animation.png");
   }
 
   double flapSpeed = 600;
@@ -81,6 +91,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY = 0;
     accelerationY = 5000;
     rotation = 0;
+    birdOutline2.gameStarted();
   }
 
   reset(double screenSizeY) {
@@ -94,23 +105,33 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY = 0;
     accelerationY = 5000;
     rotation = 0;
+    birdOutline2.reset(screenSizeY);
   }
 
   @override
-  onCollisionStart(_, __) async {
-    // There can be multiple collisions after death, we only want to handle the first one
+  onCollisionStart(_, PositionComponent other) async {
+    if (other is Pipe) {
+      if (other.birdType != birdType) {
+        // We only want a collision with pipes that are the same colour.
+        // Otherwise the bird flies behind or in front of it.
+        return;
+      }
+      return;
+    }
     if (!gameRef.gameEnded) {
       // For the death animation we set the velocity such that the bird flies up and then falls down
       velocityY = -1000;
+      birdOutline2.velocityY = -1000;
       gameRef.gameOver();
     }
-    super.onCollisionStart(_, __);
+    super.onCollisionStart(_, other);
   }
 
   _updatePositionDeath(double dt) {
     double floorHeight = gameRef.size.y * 0.785;
     if (position.y >= floorHeight) {
       velocityY = 0;
+      birdOutline2.velocityY = 0;
       return;
     }
     velocityY -= (((accelerationY * dt) / 2) * -1);
@@ -118,6 +139,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
     rotation = ((velocityY * -1) / 12).clamp(-90, 90);
     angle = radians(rotation * -1);
+
+    // There were issues syncing the position and rotation of the bird and the outline.
+    // So we will decide these values here and set it on the outline.
+    birdOutline2.angle = angle;
+    birdOutline2.rotation = rotation;
+    birdOutline2.position.y -= ((velocityY * dt) * heightScale) * -1;
   }
 
   _updatePositionGame(double dt) {
@@ -126,6 +153,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
     rotation = ((velocityY * -1) / 12).clamp(-90, 20);
     angle = radians(rotation * -1);
+
+    // There were issues syncing the position and rotation of the bird and the outline.
+    // So we will decide these values here and set it on the outline.
+    birdOutline2.angle = angle;
+    birdOutline2.rotation = rotation;
+    birdOutline2.position.y -= ((velocityY * dt) * heightScale) * -1;
   }
 
   _updatePositionMenu(double dt) {
@@ -141,6 +174,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
     rotation = ((velocityY * -1) / 12).clamp(-90, 90);
     angle = radians(rotation * -1);
+
+    // There were issues syncing the position and rotation of the bird and the outline.
+    // So we will decide these values here and set it on the outline.
+    birdOutline2.angle = angle;
+    birdOutline2.rotation = rotation;
+    birdOutline2.position.y -= ((velocityY * dt) * heightScale) * -1;
   }
 
   double startupTimer = 0.5;
@@ -163,6 +202,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   fly() {
     velocityY = flapSpeed * -1;
+    birdOutline2.velocityY = flapSpeed * -1;
     if (gameSettings.getSound()) {
       wingPool.start(volume: gameRef.soundVolume);
     }
@@ -180,14 +220,18 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   changeBird(int newBirdType) async {
     if (newBirdType == 0 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_yellow.png");
+      await loadBird("flutter_green.png");
     } else if (newBirdType == 1 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_red.png");
+      await loadBird("flutter_yellow.png");
     } else if (newBirdType == 2 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("flutter_red.png");
+    } else if (newBirdType == 3 && newBirdType != birdType) {
       birdType = newBirdType;
       await loadBird("flutter_blue.png");
     }
+    birdOutline2.changeBird();
   }
 
   int getBirdType() {

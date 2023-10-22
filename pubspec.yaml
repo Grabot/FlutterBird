@@ -78,12 +78,11 @@ flutter:
         - asset: assets/fonts/visitor/visitor2.ttf
           weight: 700
 
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/pipe-green.png
     - assets/images/pipe-green_big.png
-    - assets/images/pipe-red.png
     - assets/images/pipe-red_big.png
+    - assets/images/pipe-yellow_big.png
+    - assets/images/pipe-blue_big.png
     - assets/images/parallax/city_night/city_bg_night_1.png
     - assets/images/parallax/city_night/city_bg_night_2.png
     - assets/images/parallax/city_day/city_bg_day_1.png
@@ -93,6 +92,9 @@ flutter:
     - assets/images/flutter_yellow.png
     - assets/images/flutter_blue.png
     - assets/images/flutter_red.png
+    - assets/images/flutter_green.png
+    - assets/images/bird_outline.png
+    - assets/images/bird_outline_animation.png
     - assets/images/message_phone.png
     - assets/images/message_web.png
     - assets/images/gameover.png
@@ -118,6 +120,7 @@ flutter:
     - assets/images/ui/game_settings/bird/bird_yellow.png
     - assets/images/ui/game_settings/bird/bird_red.png
     - assets/images/ui/game_settings/bird/bird_blue.png
+    - assets/images/ui/game_settings/bird/bird_green.png
     - assets/images/ui/game_settings/background/day.png
     - assets/images/ui/game_settings/background/night.png
     - assets/images/ui/game_settings/pipes/green_pipe.png

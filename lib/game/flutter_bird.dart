@@ -5,6 +5,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bird/game/bird.dart';
+import 'package:flutter_bird/game/bird_outline.dart';
 import 'package:flutter_bird/game/floor.dart';
 import 'package:flutter_bird/game/help_message.dart';
 import 'package:flutter_bird/game/pipe_duo.dart';
@@ -30,13 +31,16 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   bool twoPlayers = false;
   late final Bird bird1;
   late final Bird bird2;
+  late final BirdOutline birdOutlineBird1;
+  late final BirdOutline birdOutlineBird2;
 
   bool gameStarted = false;
   bool gameEnded = false;
   double speed = 160;
   double heightScale = 1;
 
-  PipeDuo? lastPipeDuo;
+  PipeDuo? lastPipeDuoBird1;
+  PipeDuo? lastPipeDuoBird2;
   double pipeBuffer = 1000;
   double pipeGap = 300;
   double pipeInterval = 0;
@@ -65,7 +69,8 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   int fps = 0;
   int variant = 0;
 
-  List<PipeDuo> pipes = [];
+  List<PipeDuo> pipesBird1 = [];
+  List<PipeDuo> pipesBird2 = [];
 
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
   late Settings settings;
@@ -75,8 +80,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   int flutters = 0;
   int pipesCleared = 0;
-
-  int pipeType = 0;
 
   bool dataLoaded = false;
   late Vector2 initialPosBird1;
@@ -93,18 +96,29 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     // position the birds next to each other, with a little gap
     initialPosBird1 = Vector2(birdSize.x * 3 + 20, (size.y/3));
     Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (size.y/3));
+
+    birdOutlineBird1 = BirdOutline(
+        initialPos: initialPosBird1
+    );
+    birdOutlineBird2 = BirdOutline(
+        initialPos: initialPosBird2
+    );
     bird1 = Bird(
         birdType: 0,
-        initialPos: initialPosBird1
+        initialPos: initialPosBird1,
+        birdOutline2: birdOutlineBird1
     );
     bird2 = Bird(
         birdType: 1,
-        initialPos: initialPosBird2
+        initialPos: initialPosBird2,
+        birdOutline2: birdOutlineBird2
     );
+
     helpMessage = HelpMessage();
     scoreIndicator = ScoreIndicator();
     add(sky);
     add(bird1);
+    add(birdOutlineBird1);
     add(Floor());
     add(helpMessage);
     add(ScreenHitbox());
@@ -118,7 +132,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     double pipeX = -pipe_width-50;
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
-      pipeType: pipeType,
+      birdType: bird1.getBirdType(),
     );
     newPipeDuo.pipePassedBird1();
     newPipeDuo.pipePassedBird2();
@@ -223,7 +237,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       Set<LogicalKeyboardKey> keysPressed,
       ) {
     final isKeyDown = event is RawKeyDownEvent;
-    print("on key event");
     if (!playFieldFocus && isKeyDown) {
       return KeyEventResult.ignored;
     } else {
@@ -305,10 +318,16 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   }
 
   Future<void> clearPipes() async {
-    for (PipeDuo pipeDuo in pipes) {
+    for (PipeDuo pipeDuo in pipesBird1) {
       remove(pipeDuo);
     }
-    pipes.clear();
+    pipesBird1.clear();
+    for (PipeDuo pipeDuo in pipesBird2) {
+      remove(pipeDuo);
+    }
+    pipesBird2.clear();
+    lastPipeDuoBird1 = null;
+    lastPipeDuoBird2 = null;
 
     double pipe_width = (52 * heightScale) * 1.5;
     pipeInterval = (pipeGap * heightScale) + pipe_width;
@@ -318,37 +337,66 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     double pipeX = -pipe_width-50;
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
-      pipeType: pipeType,
+      birdType: bird1.getBirdType(),
     );
     newPipeDuo.pipePassedBird1();
     newPipeDuo.pipePassedBird2();
     add(newPipeDuo);
+    if (twoPlayers) {
+      PipeDuo newPipeDuo2 = PipeDuo(
+        position: Vector2(pipeX, 0),
+        birdType: bird2.getBirdType(),
+      );
+      newPipeDuo2.pipePassedBird1();
+      newPipeDuo2.pipePassedBird2();
+      add(newPipeDuo2);
+    }
   }
 
   removePipe(PipeDuo pipeDuo) {
-    pipes.remove(pipeDuo);
-    remove(pipeDuo);
+    // TODO: fix it for finding it in the right list (birdtype check on the pipeduo)
+    // pipesBird1.remove(pipeDuo);
+    // remove(pipeDuo);
   }
 
   Future<void> spawnInitialPipes() async {
-    print("spawnInitialPipes");
     double pipeX = pipeBuffer;
-    PipeDuo newPipeDuo = PipeDuo(
+    PipeDuo newPipeDuo1 = PipeDuo(
       position: Vector2(pipeX, 0),
-      pipeType: pipeType,
+      birdType: bird1.getBirdType(),
     );
-    add(newPipeDuo);
-    lastPipeDuo = newPipeDuo;
-    pipes.add(newPipeDuo);
+    add(newPipeDuo1);
+    lastPipeDuoBird1 = newPipeDuo1;
+    pipesBird1.add(newPipeDuo1);
+    if (twoPlayers) {
+      print("adding pipes for two players");
+      PipeDuo newPipeDuo2 = PipeDuo(
+        position: Vector2(pipeX + 50, 0),
+        birdType: bird2.getBirdType(),
+      );
+      add(newPipeDuo2);
+      lastPipeDuoBird2 = newPipeDuo2;
+      pipesBird2.add(newPipeDuo2);
+    }
 
     pipeX -= pipeInterval;
     while(pipeX > initialPosBird1.x + pipeInterval) {
-      PipeDuo newPipeDuo = PipeDuo(
+      PipeDuo newPipeDuo1 = PipeDuo(
         position: Vector2(pipeX, 0),
-        pipeType: pipeType,
+        birdType: bird1.getBirdType(),
       );
-      add(newPipeDuo);
-      pipes.add(newPipeDuo);
+      add(newPipeDuo1);
+      pipesBird1.add(newPipeDuo1);
+      if (twoPlayers) {
+        print("adding pipes for two players");
+        PipeDuo newPipeDuo2 = PipeDuo(
+          position: Vector2(pipeX + 50, 0),
+          birdType: bird2.getBirdType(),
+        );
+        add(newPipeDuo2);
+        lastPipeDuoBird2 = newPipeDuo2;
+        pipesBird2.add(newPipeDuo2);
+      }
       pipeX -= pipeInterval;
     }
   }
@@ -357,15 +405,24 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   Future<void> update(double dt) async {
     super.update(dt);
     if (gameStarted) {
-      if (lastPipeDuo != null) {
-        if (lastPipeDuo!.position.x < pipeBuffer - pipeInterval) {
+      if (lastPipeDuoBird1 != null) {
+        if (lastPipeDuoBird1!.position.x < pipeBuffer - pipeInterval) {
           PipeDuo newPipeDuo = PipeDuo(
             position: Vector2(pipeBuffer, 0),
-            pipeType: pipeType,
+            birdType: bird1.getBirdType(),
           );
           add(newPipeDuo);
-          pipes.add(newPipeDuo);
-          lastPipeDuo = newPipeDuo;
+          pipesBird1.add(newPipeDuo);
+          lastPipeDuoBird1 = newPipeDuo;
+          if (twoPlayers) {
+            PipeDuo newPipeDuo2 = PipeDuo(
+              position: Vector2(pipeBuffer + 50, 0),
+              birdType: bird2.getBirdType(),
+            );
+            add(newPipeDuo2);
+            lastPipeDuoBird2 = newPipeDuo2;
+            pipesBird2.add(newPipeDuo2);
+          }
         }
       }
       checkPipePassed();
@@ -391,8 +448,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
           // update leaderboard score
           User? currentUser = Settings().getUser();
           if (currentUser != null) {
-            // TODO: the user should have leaderboard content so we can already check if the user should be on it.
-            print("going to update the leaderboard");
             if (!twoPlayers) {
               AuthServiceLeaderboard().updateLeaderboardOnePlayer(score).then((value) {
                 if (value.getResult()) {
@@ -428,7 +483,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   }
 
   checkPipePassed() {
-    for (PipeDuo pipe in pipes) {
+    for (PipeDuo pipe in pipesBird1) {
       if (twoPlayers) {
         if (pipe.passedBird1 && pipe.passedBird2) {
           continue;
@@ -513,23 +568,25 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       bird2.setInitialPos(initialPosBird2);
       bird2.reset(size.y);
       add(bird2);
+      add(birdOutlineBird2);
+      clearPipes();
     }
     if (gameSettings.getPlayerType() != 1 && twoPlayers) {
       twoPlayers = false;
       remove(bird2);
+      remove(birdOutlineBird2);
+      clearPipes();
     }
     if (gameSettings.getBirdType1() != bird1.getBirdType()) {
       bird1.changeBird(gameSettings.getBirdType1());
+      clearPipes();
     }
     if (gameSettings.getBirdType2() != bird2.getBirdType()) {
       bird2.changeBird(gameSettings.getBirdType2());
+      clearPipes();
     }
     if (gameSettings.getBackgroundType() != sky.getBackgroundType()) {
       sky.changeBackground(gameSettings.getBackgroundType());
-    }
-    if (gameSettings.getPipeType() != pipeType) {
-      pipeType = gameSettings.getPipeType();
-      clearPipes();
     }
   }
 
@@ -537,6 +594,8 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     if (playerType == 0) {
       twoPlayers = false;
       remove(bird2);
+      remove(birdOutlineBird2);
+      clearPipes();
     } else {
       twoPlayers = true;
       Vector2 birdSize = Vector2(85, 60);
@@ -547,23 +606,22 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       bird2.setInitialPos(initialPosBird2);
       bird2.reset(size.y);
       add(bird2);
+      add(birdOutlineBird2);
+      clearPipes();
     }
   }
 
   changeBird1(int birdType1) async {
     bird1.changeBird(birdType1);
+    clearPipes();
   }
   changeBird2(int birdType2) async {
     bird2.changeBird(birdType2);
+    clearPipes();
   }
 
   changeBackground(int backgroundType) async {
     sky.changeBackground(backgroundType);
-  }
-
-  changePipes(int pipeType) async {
-    this.pipeType = pipeType;
-    clearPipes();
   }
 
   chatWindowFocus(bool chatWindowFocus) {
