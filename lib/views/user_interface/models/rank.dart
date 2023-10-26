@@ -1,6 +1,5 @@
 
 class Rank {
-  int rank = -1;
   late String userName;
   late int userId;
   late int score;
@@ -14,10 +13,6 @@ class Rank {
     required this.me,
     required this.timestamp
   });
-
-  int getRank() {
-    return rank;
-  }
 
   String getUserName() {
     return userName;
@@ -36,7 +31,7 @@ class Rank {
   }
 
   DateTime getTimestamp() {
-    return timestamp;
+    return timestamp.toLocal();
   }
 
   int getUserId() {
@@ -44,15 +39,13 @@ class Rank {
   }
 
   bool equals(Rank other) {
-    return this.rank == other.getRank()
-        && this.userName == other.getUserName()
+    return this.userName == other.getUserName()
         && this.score == other.getScore()
         && this.me == other.getMe()
         && this.timestamp == other.getTimestamp();
   }
 
   Rank.fromJson(Map<String, dynamic> json) {
-    rank = -1;
     if (json.containsKey("user_name")) {
       userName = json["user_name"];
     }
@@ -63,7 +56,12 @@ class Rank {
       score = json["score"];
     }
     if (json.containsKey("timestamp")) {
-      timestamp = DateTime.parse(json["timestamp"]);
+      String timestampString = json["timestamp"];
+      if (!timestampString.endsWith("Z")) {
+        // The server has utc timestamp, but it's not formatted with the 'Z'.
+        timestampString += "Z";
+      }
+      timestamp = DateTime.parse(timestampString);
     }
   }
 }

@@ -46,12 +46,11 @@ class Settings extends ChangeNotifier {
   Settings._internal() {
     if (kIsWeb) {
       JsIsolatedWorker().importScripts(['crop/crop_web.js']).then((value) {
-        print("importScripts");
+        // script imported
       });
     }
     // check for stored tokens to automatically log in.
     String path = Uri.base.path;
-    print("path check: $path");
     if (path != routes.BirdAccessRoute || path != routes.PasswordResetRoute) {
       WidgetsFlutterBinding.ensureInitialized();
       WidgetsBinding.instance.addPostFrameCallback((_){
@@ -64,10 +63,10 @@ class Settings extends ChangeNotifier {
     try {
       LoginResponse loginResponse = await AuthServiceLogin().getTokenLogin(accessToken);
       if (loginResponse.getResult()) {
-        print("access token still valid!");
         return true;
       } else if (!loginResponse.getResult()) {
-        print("access token NOT valid!");
+        // access token NOT valid!
+        return false;
       }
     } catch(error) {
       showToastMessage(error.toString());
@@ -79,10 +78,10 @@ class Settings extends ChangeNotifier {
     try {
       LoginResponse loginResponse = await AuthServiceLogin().getRefresh(accessToken, refreshToken);
       if (loginResponse.getResult()) {
-        print("refresh token still valid!");
         return true;
       } else if (!loginResponse.getResult()) {
-        print("refresh token NOT valid!");
+        // refresh token NOT valid!
+        return false;
       }
     } catch(error) {
       showToastMessage(error.toString());
@@ -160,7 +159,6 @@ class Settings extends ChangeNotifier {
   }
 
   getLeaderBoardsTwoPlayer() {
-    print("getting two player leaderboard");
     if (rankingTwoPlayerRetrieved) {
       return;
     }
@@ -211,6 +209,11 @@ class Settings extends ChangeNotifier {
   }
 
   updateLeaderboard(Rank newRank, bool onePlayer) {
+    if (user != null) {
+      if (newRank.getUserId() == user!.getId()) {
+        newRank.setMe(true);
+      }
+    }
     if (onePlayer) {
       // The new rank will be just achieved, so add it to all the lists.
       rankingsOnePlayerDay.add(newRank);
@@ -225,7 +228,6 @@ class Settings extends ChangeNotifier {
       sortList(rankingsOnePlayerAll);
       notifyListeners();
     } else {
-      print("updating two playersr?!?!?");
       rankingsTwoPlayerDay.add(newRank);
       rankingsTwoPlayerWeek.add(newRank);
       rankingsTwoPlayerMonth.add(newRank);

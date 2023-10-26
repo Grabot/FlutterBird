@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bird/views/user_interface/models/rank.dart';
 
 
 class LeaderBoardChangeNotifier extends ChangeNotifier {
 
   bool showLeaderBoard = false;
   int rankingSelection = 4;
+  bool twoPlayer = false;
 
   static final LeaderBoardChangeNotifier _instance = LeaderBoardChangeNotifier._internal();
 
@@ -30,6 +30,14 @@ class LeaderBoardChangeNotifier extends ChangeNotifier {
 
   getRankingSelection() {
     return rankingSelection;
+  }
+
+  setTwoPlayer(bool twoPlayer) {
+    this.twoPlayer = twoPlayer;
+  }
+
+  bool isTwoPlayer() {
+    return twoPlayer;
   }
 
   notify() {

@@ -7,22 +7,11 @@ class User {
 
   late int id;
   late String userName;
-  late DateTime tileLock;
   bool verified = false;
   late List<Friend> friends;
   Uint8List? avatar;
 
-  User(this.id, this.userName, this.verified, this.friends, String? timeLock) {
-    if (timeLock != null) {
-      if (!timeLock.endsWith("Z")) {
-        // The server has utc timestamp, but it's not formatted with the 'Z'.
-        timeLock += "Z";
-      }
-      tileLock = DateTime.parse(timeLock).toLocal();
-    } else {
-      tileLock = DateTime.now();
-    }
-  }
+  User(this.id, this.userName, this.verified, this.friends);
 
   int getId() {
     return id;
@@ -36,10 +25,6 @@ class User {
     userName = username;
   }
 
-  DateTime getTileLock() {
-    return tileLock;
-  }
-
   bool isVerified() {
     return verified;
   }
@@ -50,14 +35,6 @@ class User {
 
   void setAvatar(Uint8List avatar) {
     this.avatar = avatar;
-  }
-
-  updateTileLock(String tileLock) {
-    if (!tileLock.endsWith("Z")) {
-      // The server has utc timestamp, but it's not formatted with the 'Z'.
-      tileLock += "Z";
-    }
-    this.tileLock = DateTime.parse(tileLock).toLocal();
   }
 
   List<Friend> getFriends() {
@@ -109,18 +86,6 @@ class User {
       }
     } else {
       friends = [];
-    }
-
-    if (json.containsKey("tile_lock")) {
-      String timeLock = json["tile_lock"];
-      if (!timeLock.endsWith("Z")) {
-        // The server has utc timestamp, but it's not formatted with the 'Z'.
-        timeLock += "Z";
-      }
-      tileLock = DateTime.parse(timeLock).toLocal();
-    } else {
-      // If the timeLlock is not present it will not be used.
-      tileLock = DateTime.now();
     }
 
     if (json.containsKey("avatar") && json["avatar"] != null) {

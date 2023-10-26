@@ -72,7 +72,6 @@ class AuthServiceLeaderboard {
   }
 
   Future<List<Rank>?> getLeaderboardTwoPlayers() async {
-    print("getting leaderboard two player");
     String endPoint = "get/leaderboard/two_players";
     var response = await AuthApi().dio.get(endPoint,
       options: Options(headers: {

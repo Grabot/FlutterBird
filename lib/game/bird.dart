@@ -39,6 +39,10 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       await loadBird("flutter_red.png");
     } else if (birdType == 3) {
       await loadBird("flutter_blue.png");
+    } else if (birdType == 4) {
+      await loadBird("flutter_white.png");
+    } else if (birdType == 5) {
+      await loadBird("flutter_black.png");
     }
 
     return super.onLoad();
@@ -160,10 +164,10 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   }
 
   _updatePositionMenu(double dt) {
-    if ((position.y > ((gameRef.size.y/3) + (20 * heightScale))) && accelerationY > 0) {
+    if ((position.y > ((gameRef.size.y/2) + (20 * heightScale))) && accelerationY > 0) {
       accelerationY *= -1;
     }
-    if ((position.y < ((gameRef.size.y/3) - (20 * heightScale))) && accelerationY < 0) {
+    if ((position.y < ((gameRef.size.y/2) - (20 * heightScale))) && accelerationY < 0) {
       accelerationY *= -1;
     }
     velocityY -= (((accelerationY * dt) / 2) * -1);
@@ -228,6 +232,12 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     } else if (newBirdType == 3 && newBirdType != birdType) {
       birdType = newBirdType;
       await loadBird("flutter_blue.png");
+    } else if (newBirdType == 4 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("flutter_white.png");
+    } else if (newBirdType == 5 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("flutter_black.png");
     }
     birdOutline2.changeBird();
   }

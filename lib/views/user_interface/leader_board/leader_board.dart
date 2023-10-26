@@ -35,13 +35,13 @@ class LeaderBoardState extends State<LeaderBoard> {
   bool showBottomLeaderBoard = true;
 
   int selectedTimeRanking = 4;
-  bool singleBirdSelected = true;
+  bool twoPlayer = false;
 
   @override
   void initState() {
     _focusLeaderBoard.addListener(_onFocusChange);
     leaderBoardChangeNotifier = LeaderBoardChangeNotifier();
-    leaderBoardChangeNotifier.addListener(chatWindowChangeListener);
+    leaderBoardChangeNotifier.addListener(leaderboardBoxChangeListener);
     settings = Settings();
     settings.addListener(settingsChangeListener);
     userScore = UserScore();
@@ -58,10 +58,11 @@ class LeaderBoardState extends State<LeaderBoard> {
     }
   }
 
-  chatWindowChangeListener() {
+  leaderboardBoxChangeListener() {
     if (mounted) {
       if (!showLeaderBoard && leaderBoardChangeNotifier.getLeaderBoardVisible()) {
         selectedTimeRanking = leaderBoardChangeNotifier.getRankingSelection();
+        twoPlayer = leaderBoardChangeNotifier.isTwoPlayer();
         showLeaderBoard = true;
       }
       if (showLeaderBoard && !leaderBoardChangeNotifier.getLeaderBoardVisible()) {
@@ -237,9 +238,9 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardHeaderRow(double leaderBoardWidth, double headerRowHeight, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
-    double nameRowWidth = (totalHeaderWidth/6)*3;
+    double nameRowWidth = (totalHeaderWidth/6)*2;
     double scoreRowWidth = totalHeaderWidth/6;
-    double achievedAtWidth = totalHeaderWidth/6;
+    double achievedAtWidth = totalHeaderWidth/3;
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       width: leaderBoardWidth-20,
@@ -282,9 +283,9 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardTableRow(double leaderBoardWidth, Rank userRank, int index, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
-    double nameRowWidth = (totalHeaderWidth/6)*3;
+    double nameRowWidth = (totalHeaderWidth/6)*2;
     double scoreRowWidth = totalHeaderWidth/6;
-    double achievedAtWidth = totalHeaderWidth/6;
+    double achievedAtWidth = (totalHeaderWidth/3);
     return Container(
       height: 100,
       color: userRank.getMe() ? Colors.green.withOpacity(0.3) : Colors.black12,
@@ -345,10 +346,10 @@ class LeaderBoardState extends State<LeaderBoard> {
                 DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
                 style: userRank.getMe()
                     ? TextStyle(
-                  fontSize: (fontSize/4)*3,
+                  fontSize: fontSize,
                   fontWeight: FontWeight.bold,
                 )
-                    : TextStyle(fontSize: (fontSize/4)*3),
+                    : TextStyle(fontSize: fontSize),
             ),
           ),
         ],
@@ -358,7 +359,7 @@ class LeaderBoardState extends State<LeaderBoard> {
 
   Widget leaderBoardTable(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
     List rankingList = [];
-    if (singleBirdSelected) {
+    if (!twoPlayer) {
       rankingList = settings.rankingsOnePlayerAll;
       if (selectedTimeRanking == 0) {
         rankingList = settings.rankingsOnePlayerDay;
@@ -422,8 +423,7 @@ class LeaderBoardState extends State<LeaderBoard> {
     );
   }
 
-  Widget leaderContent(double leaderBoardWidth, double fontSize) {
-    double leaderBoardHeight = (leaderBoardWidth/4) * 3;
+  Widget leaderContent(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
     double onePlayerTwoPlayerOptionWidth = leaderBoardWidth/10;
     return Container(
       width: leaderBoardWidth+onePlayerTwoPlayerOptionWidth,
@@ -458,18 +458,18 @@ class LeaderBoardState extends State<LeaderBoard> {
             height: onePlayerTwoPlayerOptionWidth*2,
             child: Column(
               children: [
+                SizedBox(height: 2*onePlayerTwoPlayerOptionMargin),
                 InkWell(
                   onTap: () {
-                    if (!singleBirdSelected) {
+                    if (twoPlayer) {
                       retrieveLeaderBoard(true);
                       setState(() {
-                        singleBirdSelected = true;
+                        twoPlayer = false;
                       });
                     }
                   },
                   child: Container(
-                    margin: EdgeInsets.all(onePlayerTwoPlayerOptionMargin),
-                    color: singleBirdSelected ? Colors.green : Color(0xFFdcd587),
+                    color: !twoPlayer ? Colors.green : Color(0xFFdcd587),
                     width: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     height: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     child: Image.asset(
@@ -480,16 +480,15 @@ class LeaderBoardState extends State<LeaderBoard> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (singleBirdSelected) {
+                    if (!twoPlayer) {
                       retrieveLeaderBoard(false);
                       setState(() {
-                        singleBirdSelected = false;
+                        twoPlayer = true;
                       });
                     }
                   },
                   child: Container(
-                    margin: EdgeInsets.all(onePlayerTwoPlayerOptionMargin),
-                    color: !singleBirdSelected ? Colors.green : Color(0xFFdcd587),
+                    color: twoPlayer ? Colors.green : Color(0xFFdcd587),
                     width: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     height: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     child: Image.asset(
@@ -498,6 +497,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                     ),
                   ),
                 ),
+                SizedBox(height: 2*onePlayerTwoPlayerOptionMargin),
               ]
             ),
           ),
@@ -512,17 +512,19 @@ class LeaderBoardState extends State<LeaderBoard> {
 
     double heightScale = height / 800;
     double leaderBoardWidth = 800 * heightScale;
+    double leaderBoardHeight = (leaderBoardWidth/4) * 3;
     double fontSize = 18 * heightScale;
     if (width < (leaderBoardWidth + (leaderBoardWidth/10))) {
       leaderBoardWidth = width-(leaderBoardWidth/10);
       double newHeightScaleFont = width / 800;
       fontSize = 18 * newHeightScaleFont;
+      // leaderBoardHeight = (height/10)*8;
     }
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           leaderBoardMessage(heightScale),
-          leaderContent(leaderBoardWidth, fontSize)
+          leaderContent(leaderBoardWidth, leaderBoardHeight, fontSize)
         ]
     );
   }

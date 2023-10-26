@@ -1,32 +1,24 @@
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
-import 'package:flutter_bird/locator.dart';
 import 'package:flutter_bird/services/game_settings.dart';
-import 'package:flutter_bird/services/navigation_service.dart';
-import 'package:flutter_bird/services/settings.dart';
-import 'package:flutter_bird/services/socket_services.dart';
-import 'package:flutter_bird/util/render_avatar.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/game_settings/game_settings_box/game_settings_change_notifier.dart';
-import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
-import 'package:flutter_bird/views/user_interface/ui_util/clear_ui.dart';
 
 
-class GameSettingsButton extends StatefulWidget {
+class GameSettingsButtons extends StatefulWidget {
 
   final FlutterBird game;
 
-  const GameSettingsButton({
+  const GameSettingsButtons({
     required Key key,
     required this.game
   }) : super(key: key);
 
   @override
-  GameSettingsButtonState createState() => GameSettingsButtonState();
+  GameSettingsButtonSState createState() => GameSettingsButtonSState();
 }
 
-class GameSettingsButtonState extends State<GameSettingsButton> with TickerProviderStateMixin {
+class GameSettingsButtonSState extends State<GameSettingsButtons> {
 
   bool normalMode = true;
   int gameSettingsState = 0;
@@ -166,6 +158,9 @@ class GameSettingsButtonState extends State<GameSettingsButton> with TickerProvi
     return Column(
         children: [
           Container(
+            height: statusBarPadding
+          ),
+          Container(
             height: profileHeight+10,
           ),
           Container(
@@ -202,8 +197,8 @@ class GameSettingsButtonState extends State<GameSettingsButton> with TickerProvi
       buttonWidth = 30;
       extraPadding = 20;
     }
-    double combinedHeight = profileOverviewHeight + buttonHeight + buttonHeight;
     double statusBarPadding = MediaQuery.of(context).viewPadding.top;
+    double combinedHeight = profileOverviewHeight + buttonHeight + buttonHeight + statusBarPadding;
     return Align(
       alignment: FractionalOffset.topRight,
       child: SingleChildScrollView(

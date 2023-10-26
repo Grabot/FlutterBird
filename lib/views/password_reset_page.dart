@@ -38,15 +38,10 @@ class _PasswordResetState extends State<PasswordReset> {
   @override
   void initState() {
     super.initState();
-    String baseUrl = Uri.base.toString();
-    String path = Uri.base.path;
+    // String baseUrl = Uri.base.toString();
+    // String path = Uri.base.path;
     accessToken = Uri.base.queryParameters["access_token"];
     refreshToken = Uri.base.queryParameters["refresh_token"];
-
-    print("base: $baseUrl");
-    print("path: $path");
-    print("access token: $accessToken");
-    print("refresh token: $refreshToken");
 
     if (accessToken != null && refreshToken != null) {
       // Check if the token from the mail is still valid.
@@ -69,9 +64,6 @@ class _PasswordResetState extends State<PasswordReset> {
         String newPassword = passwordReset1Controller.text;
         // Check if the token from the mail is still valid.
         AuthServiceLogin().updatePassword(accessToken!, refreshToken!, newPassword).then((updatePasswordResponse) {
-          print("password updated $updatePasswordResponse");
-          print("password updated ${updatePasswordResponse.getResult()}");
-          print("password updated ${updatePasswordResponse.getMessage()}");
           setState(() {
             passwordUpdated = updatePasswordResponse.getResult();
           });
@@ -136,7 +128,6 @@ class _PasswordResetState extends State<PasswordReset> {
               children: [
                 TextFormField(
                   onTap: () {
-                    print("tapped");
                   },
                   obscureText: true,
                   validator: (val) {

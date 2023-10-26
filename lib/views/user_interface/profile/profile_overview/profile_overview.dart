@@ -24,7 +24,7 @@ class ProfileOverview extends StatefulWidget {
   ProfileOverviewState createState() => ProfileOverviewState();
 }
 
-class ProfileOverviewState extends State<ProfileOverview> with TickerProviderStateMixin {
+class ProfileOverviewState extends State<ProfileOverview> {
 
   late ProfileChangeNotifier profileChangeNotifier;
   Settings settings = Settings();

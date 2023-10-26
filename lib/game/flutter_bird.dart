@@ -87,18 +87,14 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   int pipeBird1Priority = 0;
   int pipeBird2Priority = 2;
 
+  Vector2 birdSize = Vector2(85, 60);
+
   @override
   Future<void> onLoad() async {
     sky = Sky();
     heightScale = size.y / 800;
 
-    Vector2 birdSize = Vector2(85, 60);
-    birdSize.y = (size.y / 10000) * 466;
-    birdSize.x = (birdSize.y / 12) * 17;
-
-    // position the birds next to each other, with a little gap
-    initialPosBird1 = Vector2(birdSize.x * 3 + 20, (size.y/3));
-    Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (size.y/3));
+    Vector2 initialPosBird2 = determineBirdPos(size);
 
     birdOutlineBird1 = BirdOutline(
         initialPos: initialPosBird1
@@ -117,7 +113,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         birdOutline2: birdOutlineBird2
     )..priority = 3;
 
-    helpMessage = HelpMessage();
+    helpMessage = HelpMessage()..priority = 10;
     scoreIndicator = ScoreIndicator();
     add(sky);
     add(bird1);
@@ -255,7 +251,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   checkingAchievements() {
     if (twoPlayers) {
       if (score >= 10 && !userAchievements.getBronzeDouble()) {
-        print("achieved Bronze double");
         userAchievements.achievedBronzeDouble();
         scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeDoubleAchievement);
       }
@@ -269,7 +264,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       }
     } else {
       if (score >= 10 && !userAchievements.getBronzeSingle()) {
-        print("achieved Bronze single");
         userAchievements.achievedBronzeSingle();
         scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeSingleAchievement);
       }
@@ -285,10 +279,9 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     User? currentUser = settings.getUser();
     if (currentUser != null) {
       if (scoreScreenChangeNotifier.getAchievementGotten().isNotEmpty) {
-        print("we should update the achievements in the backend");
         AuthServiceFlutterBird().updateAchievements(userAchievements.getAchievements()).then((result) {
           if (result.getResult()) {
-            print("we have updated the score in the db");
+            // we have updated the score in the db. Do nothing
           }
         });
       }
@@ -311,7 +304,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       if (currentUser != null) {
         AuthServiceFlutterBird().updateUserScore(userScore.getScore()).then((result) {
           if (result.getResult()) {
-            print("we have updated the score in the db");
+            // we have updated the score in the db. Do nothing
           }
         });
       }
@@ -383,7 +376,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     lastPipeDuoBird1 = newPipeDuo1;
     pipesBird1.add(newPipeDuo1);
     if (twoPlayers) {
-      print("adding pipes for two players");
       PipeDuo newPipeDuo2 = PipeDuo(
         position: Vector2(pipeX + 50, 0),
         birdType: bird2.getBirdType(),
@@ -489,7 +481,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
     if (frameTimes >= 1) {
       fps = frames;
-      print("fps: $fps");
+      // print("fps: $fps");
       frameTimes = 0;
       frames = 0;
     }
@@ -565,18 +557,28 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     }
   }
 
+  Vector2 determineBirdPos(Vector2 gameSize) {
+    birdSize.y = (gameSize.y / 10000) * 466;
+    birdSize.x = (birdSize.y / 12) * 17;
+
+    // The bird is anchored in the center, so subtract half of himself.
+    double birdSeparationX = gameSize.x / 100;
+    // Add separation on side of the screen for the first bird and the between the birds themselves.
+    double bird1PosX = birdSize.x - (birdSize.x / 2) + birdSeparationX;
+    double bird2PosX = bird1PosX + birdSize.x + birdSeparationX;
+    initialPosBird1 = Vector2(bird2PosX, (gameSize.y/3));
+    return Vector2(bird1PosX, (gameSize.y/3));
+  }
+
   @override
   void onGameResize(Vector2 gameSize) {
     heightScale = gameSize.y / 800;
     double pipe_width = (52 * heightScale) * 1.5;
     pipeInterval = (pipeGap * heightScale) + pipe_width;
     pipeBuffer = gameSize.x + pipeInterval;
-    Vector2 birdSize = Vector2(85, 60);
-    birdSize.y = (gameSize.y / 10000) * 466;
-    birdSize.x = (birdSize.y / 12) * 17;
 
-    initialPosBird1 = Vector2(birdSize.x * 3 + 20, (gameSize.y/3));
-    Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (gameSize.y/3));
+    Vector2 initialPosBird2 = determineBirdPos(gameSize);
+
     if (dataLoaded) {
       bird1.setInitialPos(initialPosBird1);
       bird2.setInitialPos(initialPosBird2);
@@ -589,11 +591,11 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   settingsChangeListener() {
     if (gameSettings.getPlayerType() != 0 && !twoPlayers) {
       twoPlayers = true;
-      Vector2 birdSize = Vector2(85, 60);
+
       birdSize.y = (size.y / 10000) * 466;
       birdSize.x = (birdSize.y / 12) * 17;
 
-      Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (size.y/3));
+      Vector2 initialPosBird2 = determineBirdPos(size);
       bird2.setInitialPos(initialPosBird2);
       bird2.reset(size.y);
       add(bird2);
@@ -627,11 +629,11 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       clearPipes();
     } else {
       twoPlayers = true;
-      Vector2 birdSize = Vector2(85, 60);
+
       birdSize.y = (size.y / 10000) * 466;
       birdSize.x = (birdSize.y / 12) * 17;
 
-      Vector2 initialPosBird2 = Vector2(birdSize.x * 2 - 20, (size.y/3));
+      Vector2 initialPosBird2 = determineBirdPos(size);
       bird2.setInitialPos(initialPosBird2);
       bird2.reset(size.y);
       add(bird2);

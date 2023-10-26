@@ -18,7 +18,6 @@ class AuthServiceLogin {
   AuthServiceLogin._internal();
 
   Future<LoginResponse> getLogin(LoginRequest loginRequest) async {
-    print("getting logging");
     Settings().setLoggingIn(true);
     String endPoint = "login";
     var response = await AuthApi().dio.post(endPoint,
@@ -30,7 +29,6 @@ class AuthServiceLogin {
 
     LoginResponse loginResponse = LoginResponse.fromJson(response.data);
     if (loginResponse.getResult()) {
-      print("successful login getLogin");
       successfulLogin(loginResponse);
     }
     return loginResponse;
@@ -48,7 +46,6 @@ class AuthServiceLogin {
 
     LoginResponse loginResponse = LoginResponse.fromJson(response.data);
     if (loginResponse.getResult()) {
-      print("successful login getRegister");
       successfulLogin(loginResponse);
     }
     return loginResponse;
@@ -85,7 +82,6 @@ class AuthServiceLogin {
 
     LoginResponse loginResponse = LoginResponse.fromJson(response.data);
     if (loginResponse.getResult()) {
-      print("successful login getRefresh");
       successfulLogin(loginResponse);
     }
     return loginResponse;
@@ -106,7 +102,6 @@ class AuthServiceLogin {
 
     LoginResponse loginResponse = LoginResponse.fromJson(response.data);
     if (loginResponse.getResult()) {
-      print("successful login getTokenLogin");
       successfulLogin(loginResponse);
     }
     return loginResponse;

@@ -86,7 +86,7 @@ getScore(LoginResponse loginResponse, int userId) {
     if (updateScore) {
       AuthServiceFlutterBird().updateUserScore(score).then((result) {
         if (result.getResult()) {
-          print("we have updated the score in the db");
+          // we have updated the score in the db. Do nothing.
         }
       });
     }
@@ -138,7 +138,7 @@ getAchievements(LoginResponse loginResponse, int userId) {
     if (updateAchievements) {
       AuthServiceFlutterBird().updateAchievements(achievements).then((result) {
         if (result.getResult()) {
-          print("we have updated the score in the db");
+          // we have updated the score in the db. Do nothing.
         }
       });
     }

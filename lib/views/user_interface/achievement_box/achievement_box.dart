@@ -27,7 +27,7 @@ class AchievementBox extends StatefulWidget {
   AchievementBoxState createState() => AchievementBoxState();
 }
 
-class AchievementBoxState extends State<AchievementBox> with TickerProviderStateMixin {
+class AchievementBoxState extends State<AchievementBox> {
 
   // Used if any text fields are added to the profile.
   final FocusNode _focusAchievementBox = FocusNode();

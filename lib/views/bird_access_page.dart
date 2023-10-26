@@ -30,25 +30,19 @@ class _BirdAccessState extends State<BirdAccess> {
   @override
   void initState() {
     super.initState();
-    String baseUrl = Uri.base.toString();
-    String path = Uri.base.path;
+    // String baseUrl = Uri.base.toString();
+    // String path = Uri.base.path;
     String? accessToken = Uri.base.queryParameters["access_token"];
     String? refreshToken = Uri.base.queryParameters["refresh_token"];
 
-    print("base: $baseUrl");
-    print("path: $path");
-    print("access token: $accessToken");
-    print("refresh token: $refreshToken");
     // Use the tokens to immediately refresh the access token
     if (accessToken != null && refreshToken != null) {
       AuthServiceLogin authService = AuthServiceLogin();
       authService.getRefresh(accessToken, refreshToken).then((loginResponse) {
         if (loginResponse.getResult()) {
-          print("it was a success");
           // We navigate to the home screen and it should be logged in.
           _navigationService.navigateTo(routes.HomeRoute);
         } else {
-          print("it failed");
           showToastMessage("something went wrong with logging in");
           _navigationService.navigateTo(routes.HomeRoute);
         }

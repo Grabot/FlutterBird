@@ -405,7 +405,7 @@ class ScoreScreenState extends State<ScoreScreen> {
           Container(
             child: TextButton(
                 onPressed: () {
-                  print("pressed share button");
+                  // TODO: implement the share functionality.
                 },
                 child: Container(
                   width: scoreWidth/4,
@@ -450,7 +450,9 @@ class ScoreScreenState extends State<ScoreScreen> {
     setState(() {
       if (goToLeaderboard) {
         scoreScreenChangeNotifier.setScoreScreenVisible(false);
-        LeaderBoardChangeNotifier().setLeaderBoardVisible(true);
+        LeaderBoardChangeNotifier leaderBoardChangeNotifier = LeaderBoardChangeNotifier();
+        leaderBoardChangeNotifier.setTwoPlayer(scoreScreenChangeNotifier.isTwoPlayer());
+        leaderBoardChangeNotifier.setLeaderBoardVisible(true);
       } else {
         scoreScreenChangeNotifier.setScoreScreenVisible(false);
         widget.game.startGame();

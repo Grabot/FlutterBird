@@ -33,12 +33,10 @@ class SocketServices extends ChangeNotifier {
     });
 
     socket.onConnect((_) {
-      print("on connect");
       socket.emit('message_event', 'Connected!');
     });
 
     socket.onDisconnect((_) {
-      print("on disconnect");
       socket.emit('message_event', 'Disconnected!');
     });
 
@@ -66,7 +64,6 @@ class SocketServices extends ChangeNotifier {
       }
     }).onError((error, stackTrace) {
       // TODO: What to do on an error? Reset?
-      print("error: $error");
     });
   }
 
@@ -108,7 +105,6 @@ class SocketServices extends ChangeNotifier {
   }
 
   updatingLeaderboard(Map<String, dynamic> data) {
-    print("updating leaderboard");
     Rank newRank = Rank.fromJson(data);
     settings.updateLeaderboard(newRank, data["one_player"]);
   }

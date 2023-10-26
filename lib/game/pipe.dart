@@ -36,6 +36,12 @@ class Pipe extends SpriteComponent with HasGameRef<FlutterBird> {
     } else if (birdType == 3) {
       final image = await Flame.images.load('pipe-blue_big.png');
       sprite = Sprite(image);
+    } else if (birdType == 4) {
+      final image = await Flame.images.load('pipe-white_big.png');
+      sprite = Sprite(image);
+    } else if (birdType == 5) {
+      final image = await Flame.images.load('pipe-black_big.png');
+      sprite = Sprite(image);
     }
     anchor = Anchor.center;
     add(RectangleHitbox());

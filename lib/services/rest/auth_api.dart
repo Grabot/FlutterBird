@@ -110,7 +110,6 @@ class AppInterceptors extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    print("on error! :(");
     switch (err.type) {
       case DioErrorType.connectionTimeout:
       case DioErrorType.sendTimeout:

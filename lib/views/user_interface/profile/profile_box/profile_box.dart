@@ -37,7 +37,7 @@ class ProfileBox extends StatefulWidget {
   ProfileBoxState createState() => ProfileBoxState();
 }
 
-class ProfileBoxState extends State<ProfileBox> with TickerProviderStateMixin {
+class ProfileBoxState extends State<ProfileBox> {
 
   // Used if any text fields are added to the profile.
   final FocusNode _focusProfileBox = FocusNode();

@@ -122,7 +122,6 @@ class LoginScreenState extends State<LoginScreen> {
       AuthServiceLogin authServiceLogin = AuthServiceLogin();
       authServiceLogin.getLogin(LoginRequest(emailOrUserName, password)).then((loginResponse) {
         if (loginResponse.getResult()) {
-          print("signing in");
           ScoreScreenChangeNotifier().notify();
           goBack();
           isLoading = false;
@@ -148,7 +147,6 @@ class LoginScreenState extends State<LoginScreen> {
       AuthServiceLogin authService = AuthServiceLogin();
       authService.getRegister(RegisterRequest(email, userName, password)).then((loginResponse) {
         if (loginResponse.getResult()) {
-          print("signing in");
           ScoreScreenChangeNotifier().notify();
           goBack();
           isLoading = false;
@@ -168,7 +166,6 @@ class LoginScreenState extends State<LoginScreen> {
   forgotPassword() {
     if (formKeyReset.currentState!.validate() && !isLoading) {
       isLoading = true;
-      print("this guy forgot his gosh darned password");
       resetEmail = forgotPasswordEmailController.text;
       AuthServiceLogin authService = AuthServiceLogin();
       authService.getPasswordReset(resetEmail).then((passwordResetResponse) {
@@ -282,7 +279,6 @@ class LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       final Uri _url = Uri.parse(googleLogin);
                       _launchUrl(_url);
-                      print("tapped Google");
                     },
                     child: SizedBox(
                       height: loginBoxSize,
@@ -325,7 +321,6 @@ class LoginScreenState extends State<LoginScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      print("tapped reddit");
                       final Uri _url = Uri.parse(redditLogin);
                       _launchUrl(_url);
                     },
@@ -396,9 +391,7 @@ class LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextFormField(
                 onTap: () {
-                  if (!isLoading) {
-                    print("tapped field forgot password");
-                  }
+
                 },
                 validator: (val) {
                   return val == null || val.isEmpty
@@ -507,9 +500,7 @@ class LoginScreenState extends State<LoginScreen> {
             ),
             TextFormField(
               onTap: () {
-                if (!isLoading) {
-                  print("tapped field 1.5");
-                }
+
               },
               validator: (val) {
                 if (val != null) {
@@ -535,9 +526,7 @@ class LoginScreenState extends State<LoginScreen> {
             ),
             TextFormField(
               onTap: () {
-                if (!isLoading) {
-                  print("tapped field 1.2");
-                }
+
               },
               validator: (val) {
                 if (val != null) {
@@ -563,9 +552,7 @@ class LoginScreenState extends State<LoginScreen> {
             ),
             TextFormField(
               onTap: () {
-                if (!isLoading) {
-                  print("tapped field 3 1");
-                }
+
               },
               obscureText: true,
               validator: (val) {
@@ -652,9 +639,7 @@ class LoginScreenState extends State<LoginScreen> {
                 children: [
                   TextFormField(
                     onTap: () {
-                      if (!isLoading) {
-                        print("tapped field 1");
-                      }
+
                     },
                     validator: (val) {
                       return val == null || val.isEmpty
@@ -681,9 +666,7 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     onTap: () {
-                      if (!isLoading) {
-                        print("tapped field 3 2");
-                      }
+
                     },
                     onFieldSubmitted: (value) {
                       if (!isLoading) {

@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <=3.1.4"
+  sdk: ">=3.0.0 <=4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -83,6 +83,8 @@ flutter:
     - assets/images/pipe-red_big.png
     - assets/images/pipe-yellow_big.png
     - assets/images/pipe-blue_big.png
+    - assets/images/pipe-white_big.png
+    - assets/images/pipe-black_big.png
     - assets/images/parallax/city_night/city_bg_night_1.png
     - assets/images/parallax/city_night/city_bg_night_2.png
     - assets/images/parallax/city_day/city_bg_day_1.png
@@ -93,6 +95,8 @@ flutter:
     - assets/images/flutter_blue.png
     - assets/images/flutter_red.png
     - assets/images/flutter_green.png
+    - assets/images/flutter_white.png
+    - assets/images/flutter_black.png
     - assets/images/bird_outline.png
     - assets/images/bird_outline_animation.png
     - assets/images/message_phone.png
@@ -121,10 +125,10 @@ flutter:
     - assets/images/ui/game_settings/bird/bird_red.png
     - assets/images/ui/game_settings/bird/bird_blue.png
     - assets/images/ui/game_settings/bird/bird_green.png
+    - assets/images/ui/game_settings/bird/bird_white.png
+    - assets/images/ui/game_settings/bird/bird_black.png
     - assets/images/ui/game_settings/background/day.png
     - assets/images/ui/game_settings/background/night.png
-    - assets/images/ui/game_settings/pipes/green_pipe.png
-    - assets/images/ui/game_settings/pipes/red_pipe.png
     - assets/images/ui/game_settings/player/1_bird.png
     - assets/images/ui/game_settings/player/2_birds.png
     - assets/images/achievements/bird_1.png
