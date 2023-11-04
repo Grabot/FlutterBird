@@ -28,7 +28,7 @@ class LoadingBoxState extends State<LoadingBox> {
     loadingBoxChangeNotifier = LoadingBoxChangeNotifier();
     loadingBoxChangeNotifier.addListener(loadingBoxChangeListener);
 
-    _focusLoadingBox.addListener(_onFocusChange);
+    // _focusLoadingBox.addListener(_onFocusChange);
     super.initState();
   }
 
@@ -52,9 +52,9 @@ class LoadingBoxState extends State<LoadingBox> {
     }
   }
 
-  void _onFocusChange() {
-    widget.game.loadingBoxFocus(_focusLoadingBox.hasFocus);
-  }
+  // void _onFocusChange() {
+  //   widget.game.loadingBoxFocus(_focusLoadingBox.hasFocus);
+  // }
 
   Widget loadingBox(BuildContext context) {
     return Container(

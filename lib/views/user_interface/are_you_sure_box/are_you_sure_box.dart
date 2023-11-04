@@ -35,7 +35,7 @@ class AreYouSureBoxState extends State<AreYouSureBox> {
     areYouSureBoxChangeNotifier = AreYouSureBoxChangeNotifier();
     areYouSureBoxChangeNotifier.addListener(areYouSureBoxChangeListener);
 
-    _focusAreYouSureBox.addListener(_onFocusChange);
+    // _focusAreYouSureBox.addListener(_onFocusChange);
     super.initState();
   }
 
@@ -59,9 +59,9 @@ class AreYouSureBoxState extends State<AreYouSureBox> {
     }
   }
 
-  void _onFocusChange() {
-    widget.game.loadingBoxFocus(_focusAreYouSureBox.hasFocus);
-  }
+  // void _onFocusChange() {
+  //   widget.game.loadingBoxFocus(_focusAreYouSureBox.hasFocus);
+  // }
 
   cancelButtonAction() {
     areYouSureBoxChangeNotifier.setAreYouSureBoxVisible(false);

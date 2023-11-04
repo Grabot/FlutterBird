@@ -58,10 +58,16 @@ getScore(LoginResponse loginResponse, int userId) {
   if (score != null) {
     bool updateScore = false;
 
-    if (score.getBestScore() > userScore.getBestScore()) {
-      userScore.setBestScore(score.getBestScore());
-    } else if (userScore.getBestScore() > score.getBestScore()) {
-      score.setBestScore(userScore.getBestScore());
+    if (score.getBestScoreSingleBird() > userScore.getBestScoreSingleBird()) {
+      userScore.setBestScoreSingleBird(score.getBestScoreSingleBird());
+    } else if (userScore.getBestScoreSingleBird() > score.getBestScoreSingleBird()) {
+      score.setBestScoreSingleBird(userScore.getBestScoreSingleBird());
+      updateScore = true;
+    }
+    if (score.getBestScoreDoubleBird() > userScore.getBestScoreDoubleBird()) {
+      userScore.setBestScoreDoubleBird(score.getBestScoreDoubleBird());
+    } else if (userScore.getBestScoreDoubleBird() > score.getBestScoreDoubleBird()) {
+      score.setBestScoreDoubleBird(userScore.getBestScoreDoubleBird());
       updateScore = true;
     }
     if (score.getTotalFlutters() > userScore.getTotalFlutters()) {
@@ -84,7 +90,8 @@ getScore(LoginResponse loginResponse, int userId) {
     }
 
     if (updateScore) {
-      AuthServiceFlutterBird().updateUserScore(score).then((result) {
+      // TODO: Add double bird score once it's on the score object
+      AuthServiceFlutterBird().updateUserScore(score.getBestScoreSingleBird(), score.getBestScoreDoubleBird(), score).then((result) {
         if (result.getResult()) {
           // we have updated the score in the db. Do nothing.
         }

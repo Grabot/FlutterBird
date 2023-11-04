@@ -24,7 +24,8 @@ class SecureStorage {
     return await storage.read(key: _keyRefreshToken);
   }
 
-  final String _keyBestScore = 'bestScore';
+  final String _keyBestScoreSingleBird = 'bestScoreSingleBird';
+  final String _keyBestScoreDoubleBird = 'bestScoreDoubleBird';
   final String _keyTotalFluttersToken = 'totalFlutterToken';
   final String _keyTotalPipesToken = 'totalPipesToken';
   final String _keyTotalGamesToken = 'totalGamesToken';
@@ -53,12 +54,20 @@ class SecureStorage {
     return await storage.read(key: _keyTotalGamesToken);
   }
 
-  Future setBestScore(String bestScore) async {
-    await storage.write(key: _keyBestScore, value: bestScore);
+  Future setBestScoreSingleBird(String bestScoreSingleBird) async {
+    await storage.write(key: _keyBestScoreSingleBird, value: bestScoreSingleBird);
   }
 
-  Future<String?> getBestScore() async {
-    return await storage.read(key: _keyBestScore);
+  Future<String?> getBestScoreSingleBird() async {
+    return await storage.read(key: _keyBestScoreSingleBird);
+  }
+
+  Future setBestScoreDoubleBird(String bestScoreDoubleBird) async {
+    await storage.write(key: _keyBestScoreDoubleBird, value: bestScoreDoubleBird);
+  }
+
+  Future<String?> getBestScoreDoubleBird() async {
+    return await storage.read(key: _keyBestScoreDoubleBird);
   }
 
   final String _keyBirdType1 = 'birdType1';
@@ -116,23 +125,6 @@ class SecureStorage {
     return await storage.read(key: _keySound);
   }
 
-  Future logout() async {
-    await storage.write(key: _keyAccessToken, value: null);
-    await storage.write(key: _keyRefreshToken, value: null);
-
-    await storage.write(key: _keyBestScore, value: null);
-    await storage.write(key: _keyTotalFluttersToken, value: null);
-    await storage.write(key: _keyTotalPipesToken, value: null);
-    await storage.write(key: _keyTotalGamesToken, value: null);
-
-    await storage.write(key: _keyBirdType1, value: null);
-    await storage.write(key: _keyBirdType2, value: null);
-    await storage.write(key: _keyBackgroundType, value: null);
-    await storage.write(key: _keyPipeType, value: null);
-    await storage.write(key: _keyPlayerType, value: null);
-    await storage.write(key: _keySound, value: null);
-  }
-
   final String _keyBronzeSingle = 'bronzeSingle';
   final String _keySilverSingle = 'silverSingle';
   final String _keyGoldSingle = 'goldSingle';
@@ -181,4 +173,23 @@ class SecureStorage {
   Future<String?> getGoldDouble() async {
     return await storage.read(key: _keyGoldDouble);
   }
+
+  Future logout() async {
+    await storage.write(key: _keyAccessToken, value: null);
+    await storage.write(key: _keyRefreshToken, value: null);
+
+    await storage.write(key: _keyBestScoreSingleBird, value: null);
+    await storage.write(key: _keyBestScoreDoubleBird, value: null);
+    await storage.write(key: _keyTotalFluttersToken, value: null);
+    await storage.write(key: _keyTotalPipesToken, value: null);
+    await storage.write(key: _keyTotalGamesToken, value: null);
+
+    await storage.write(key: _keyBirdType1, value: null);
+    await storage.write(key: _keyBirdType2, value: null);
+    await storage.write(key: _keyBackgroundType, value: null);
+    await storage.write(key: _keyPipeType, value: null);
+    await storage.write(key: _keyPlayerType, value: null);
+    await storage.write(key: _keySound, value: null);
+  }
+
 }

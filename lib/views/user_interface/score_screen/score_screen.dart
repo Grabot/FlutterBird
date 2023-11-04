@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/settings.dart';
+import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
@@ -33,19 +34,19 @@ class ScoreScreenState extends State<ScoreScreen> {
   late ScoreScreenChangeNotifier scoreScreenChangeNotifier;
   late Settings settings;
   late UserScore userScore;
-  final FocusNode _focusScoreScreen = FocusNode();
+  late UserAchievements userAchievements;
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
 
   @override
   void initState() {
-    _focusScoreScreen.addListener(_onFocusChange);
     scoreScreenChangeNotifier = ScoreScreenChangeNotifier();
     scoreScreenChangeNotifier.addListener(chatWindowChangeListener);
     settings = Settings();
     userScore = UserScore();
+    userAchievements = UserAchievements();
 
     _controller.addListener(() {
       checkTopBottomScroll();
@@ -64,10 +65,6 @@ class ScoreScreenState extends State<ScoreScreen> {
       checkTopBottomScroll();
       setState(() {});
     }
-  }
-
-  void _onFocusChange() {
-    widget.game.chatBoxFocus(_focusScoreScreen.hasFocus);
   }
 
   @override
@@ -121,34 +118,110 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget achievementsNobodyLoggedIn(double fontSize, double medalWidth, double medalHeight) {
-    return Text(
-        "TODO:",
-        style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: Colors.white
+  Widget achievementsOwnedGrid(double medalWidth, double medalHeight) {
+    List earnedAchievements = userAchievements.achievedAchievementList();
+    return Container(
+        width: medalWidth,
+        height: medalHeight,
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+          ),
+          physics: earnedAchievements.length <= 12
+              ? const NeverScrollableScrollPhysics()  // no scrolling with less than 12 items
+              : const AlwaysScrollableScrollPhysics(),
+          itemCount: earnedAchievements.length,
+          itemBuilder: (context, index) {
+            return achievementTile(earnedAchievements[index], medalWidth/4);
+          },
+        ),
+    );
+  }
+
+  Widget achievementsOwnedList(double medalWidth, double medalHeight) {
+    List ownedAchievements = userAchievements.achievedAchievementList();
+    return Container(
+        width: medalWidth,
+        height: medalWidth/4,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: ownedAchievements.length,
+          itemBuilder: (context, index) {
+            return achievementTile(ownedAchievements[index], medalWidth/4);
+          },
         )
     );
   }
 
-  Widget achievementsList(double medalWidth, double medalHeight) {
-    double achievementGridHeight = medalHeight;
-    return SingleChildScrollView(
-        child: Container(
-          width: medalWidth,
-          height: achievementGridHeight,
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-            ),
-            itemCount: scoreScreenChangeNotifier.getAchievementGotten().length,
-            itemBuilder: (context, index) {
-              return achievementTile(scoreScreenChangeNotifier.getAchievementGotten()[index], medalWidth/4);
-            },
-          ),
-        )
+  Widget achievementsEarnedWidget(double medalWidth, double medalHeight) {
+    List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
+    return Container(
+      width: medalWidth,
+      height: medalHeight,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: achievementsEarned.length,
+        itemBuilder: (context, index) {
+          return achievementTile(achievementsEarned[index], medalHeight);
+        },
+      )
     );
+  }
+
+  Widget achievementsList(double medalWidth, double medalHeight, double fontSize) {
+    List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
+    double achievementGridHeight = medalHeight;
+    if (achievementsEarned.isEmpty) {
+      // no new achievements earned, show only the achievements owned.
+      return Column(
+          children: [
+            Container(
+                height: 30,
+                width: medalWidth,
+                child: Text(
+                    "Achievements owned",
+                    style: TextStyle(
+                        fontSize: (fontSize/4)*3,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFcba830)
+                    )
+                )
+            ),
+            achievementsOwnedGrid(medalWidth, achievementGridHeight - 30)
+          ]
+      );
+    } else {
+      return Column(
+        children: [
+          Container(
+              height: 30,
+              width: medalWidth,
+              child: Text(
+                  "New achievements!",
+                  style: TextStyle(
+                      fontSize: (fontSize/4)*3,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFcba830)
+                  )
+              )
+          ),
+          achievementsEarnedWidget(medalWidth, (achievementGridHeight / 2) - 30),
+          Container(
+              height: 30,
+              width: medalWidth,
+              child: Text(
+                  "Achievements owned",
+                  style: TextStyle(
+                      fontSize: (fontSize/4)*3,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFcba830)
+                  )
+              )
+          ),
+          achievementsOwnedList(medalWidth, (achievementGridHeight / 2) - 30),
+        ],
+      );
+    }
   }
 
   Widget medalImage(double medalWidth, double medalHeight, double fontSize) {
@@ -156,21 +229,43 @@ class ScoreScreenState extends State<ScoreScreen> {
       alignment: Alignment.center,
       width: medalWidth,
       height: medalHeight-10, // subtract the margin for the outer line.
-      child: achievementsList(medalWidth, medalHeight),
+      child: achievementsList(medalWidth, medalHeight-10, fontSize),
+    );
+  }
+
+  Widget scoreSingleBirdDoubleBirdHeader(double scoreWidth, double scoreHeight, double fontSize) {
+    String birdHeader = "single bird";
+    if (scoreScreenChangeNotifier.isTwoPlayer()) {
+      birdHeader = "double bird";
+    }
+    return Container(
+      margin: const EdgeInsets.only(right: 20),
+      alignment: Alignment.centerRight,
+      width: scoreWidth-20,
+      height: scoreHeight,
+      child: Text(
+          birdHeader,
+          style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFcba830)
+          )
+      ),
     );
   }
 
   Widget scoreNowHeader(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
+      margin: const EdgeInsets.only(right: 20),
       alignment: Alignment.centerRight,
-      width: scoreWidth,
+      width: scoreWidth-20,
       height: scoreHeight,
       child: Text(
         "Score",
         style: TextStyle(
           fontSize: fontSize*1.5,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFcba830)
+          color: const Color(0xFFcba830)
         )
       ),
     );
@@ -178,8 +273,9 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   Widget scoreNow(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
+      margin: const EdgeInsets.only(right: 20),
       alignment: Alignment.centerRight,
-      width: scoreWidth,
+      width: scoreWidth-20,
       height: scoreHeight,
       child: Stack(
         children: [
@@ -207,8 +303,9 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   Widget scoreBestHeader(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
+      margin: const EdgeInsets.only(right: 20),
       alignment: Alignment.centerRight,
-      width: scoreWidth,
+      width: scoreWidth-20,
       height: scoreHeight,
       child: Text(
         "Best",
@@ -221,15 +318,46 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreBest(double scoreWidth, double scoreHeight, double fontSize) {
+  Widget scoreBestDoubleBird(double scoreWidth, double scoreHeight, double fontSize) {
     return Container(
+      margin: const EdgeInsets.only(right: 20),
       alignment: Alignment.centerRight,
-      width: scoreWidth,
+      width: scoreWidth-20,
+      height: scoreHeight,
+      child: Stack(
+          children: [
+            Text(
+              "${userScore.getBestScoreDoubleBird()}",
+              style: TextStyle(
+                fontSize: fontSize*3,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = (scoreWidth / 30)
+                  ..color = Colors.black,
+              ),
+            ),
+            Text(
+              "${userScore.getBestScoreDoubleBird()}",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: fontSize*3,
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+
+  Widget scoreBestSingleBird(double scoreWidth, double scoreHeight, double fontSize) {
+    return Container(
+      margin: const EdgeInsets.only(right: 20),
+      alignment: Alignment.centerRight,
+      width: scoreWidth-20,
       height: scoreHeight,
       child: Stack(
         children: [
           Text(
-            "${userScore.getBestScore()}",
+            "${userScore.getBestScoreSingleBird()}",
             style: TextStyle(
               fontSize: fontSize*3,
               foreground: Paint()
@@ -239,7 +367,7 @@ class ScoreScreenState extends State<ScoreScreen> {
             ),
           ),
           Text(
-            "${userScore.getBestScore()}",
+            "${userScore.getBestScoreSingleBird()}",
             style: TextStyle(
               color: Colors.white,
               fontSize: fontSize*3,
@@ -309,31 +437,42 @@ class ScoreScreenState extends State<ScoreScreen> {
     double medalHeaderHeight = totalHeight/6;
     double achievementHeight = (totalHeight/6)*5;
     User? currentUser = settings.getUser();
+
+    double scoreHeight = (rightWidth/12)*3;
     return Column(
       children: [
         Container(
           height: totalHeight,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  medalHeader(leftWidth, medalHeaderHeight, fontSize),
-                  medalImage(leftWidth, achievementHeight, fontSize),
-                ],
+          child:
+          Row(
+            children: <Widget>[
+              Expanded(
+                flex: 7, // 30%
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    medalHeader(leftWidth, medalHeaderHeight, fontSize),
+                    medalImage(leftWidth, achievementHeight, fontSize),
+                  ],
+                ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  scoreNowHeader(rightWidth, rightWidth/6, fontSize),
-                  scoreNow(rightWidth, (rightWidth/12)*3, fontSize),
-                  scoreBestHeader(rightWidth, rightWidth/6, fontSize),
-                  scoreBest(rightWidth, (rightWidth/12)*3, fontSize),
-                ],
-              )
+              Expanded(
+                flex: 3, // 70%
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    scoreSingleBirdDoubleBirdHeader(rightWidth, rightWidth/12, fontSize),
+                    scoreNowHeader(rightWidth, rightWidth/6, fontSize),
+                    scoreNow(rightWidth, scoreHeight, fontSize),
+                    scoreBestHeader(rightWidth, rightWidth/6, fontSize),
+                    scoreScreenChangeNotifier.isTwoPlayer()
+                        ? scoreBestDoubleBird(rightWidth, scoreHeight, fontSize)
+                        : scoreBestSingleBird(rightWidth, scoreHeight, fontSize),
+                  ],
+                ),
+              ),
             ],
-          ),
+          )
         ),
         currentUser == null ? loginReminder(scoreWidth-60, fontSize) : Container()
       ]

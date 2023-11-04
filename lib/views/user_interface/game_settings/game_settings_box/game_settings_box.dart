@@ -3,6 +3,7 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
 import 'package:flutter_bird/services/game_settings.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
+import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:themed/themed.dart';
@@ -44,7 +45,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     gameSettingsChangeNotifier = GameSettingsChangeNotifier();
     gameSettingsChangeNotifier.addListener(gameSettingsChangeListener);
 
-    _focusGameSettingsBox.addListener(_onFocusChange);
+    // _focusGameSettingsBox.addListener(_onFocusChange);
     _controller.addListener(() {
       checkTopBottomScroll();
     });
@@ -106,9 +107,9 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     }
   }
 
-  _onFocusChange() {
-    widget.game.gameSettingsFocus(_focusGameSettingsBox.hasFocus);
-  }
+  // _onFocusChange() {
+  //   widget.game.gameSettingsFocus(_focusGameSettingsBox.hasFocus);
+  // }
 
   Widget gameSettingsHeader(double headerWidth, double headerHeight, double fontSize) {
     return Row(
@@ -135,6 +136,11 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
   }
 
   pressedPlayerChange(int playerType) {
+    if (playerType == 1) {
+      Settings().getLeaderBoardsTwoPlayer();
+    } else {
+      Settings().getLeaderBoardsOnePlayer();
+    }
     if (gameSettings.getPlayerType() != playerType) {
       gameSettings.setPlayerType(playerType);
       widget.game.changePlayer(playerType);

@@ -54,7 +54,7 @@ class AchievementBoxState extends State<AchievementBox> {
 
     currentUser = settings.getUser();
 
-    _focusAchievementBox.addListener(_onFocusChange);
+    // _focusAchievementBox.addListener(_onFocusChange);
 
     _controller.addListener(() {
       checkTopBottomScroll();
@@ -109,9 +109,9 @@ class AchievementBoxState extends State<AchievementBox> {
     }
   }
 
-  _onFocusChange() {
-    widget.game.achievementBoxFocus(_focusAchievementBox.hasFocus);
-  }
+  // _onFocusChange() {
+  //   widget.game.achievementBoxFocus(_focusAchievementBox.hasFocus);
+  // }
 
   Widget achievementItem(Achievement achievement, double achievementWindowWidth, double achievementSize, double fontSize) {
     double marginWidth = 20;

@@ -81,10 +81,10 @@ class ProfileBoxState extends State<ProfileBox> {
 
     currentUser = settings.getUser();
 
-    _focusProfileBox.addListener(_onFocusChange);
+    // _focusProfileBox.addListener(_onFocusChange);
     settings.addListener(settingsChangeListener);
-    _focusUsernameChange.addListener(_onFocusUsernameChange);
-    _focusPasswordChange.addListener(_onFocusPasswordChange);
+    // _focusUsernameChange.addListener(_onFocusUsernameChange);
+    // _focusPasswordChange.addListener(_onFocusPasswordChange);
 
     _controller.addListener(() {
       checkTopBottomScroll();
@@ -139,17 +139,17 @@ class ProfileBoxState extends State<ProfileBox> {
     }
   }
 
-  _onFocusPasswordChange() {
-    widget.game.profileFocus(_focusPasswordChange.hasFocus);
-  }
-
-  _onFocusUsernameChange() {
-    widget.game.profileFocus(_focusUsernameChange.hasFocus);
-  }
-
-  _onFocusChange() {
-    widget.game.profileFocus(_focusProfileBox.hasFocus);
-  }
+  // _onFocusPasswordChange() {
+  //   widget.game.profileFocus(_focusPasswordChange.hasFocus);
+  // }
+  //
+  // _onFocusUsernameChange() {
+  //   widget.game.profileFocus(_focusUsernameChange.hasFocus);
+  // }
+  //
+  // _onFocusChange() {
+  //   widget.game.profileFocus(_focusProfileBox.hasFocus);
+  // }
 
   settingsChangeListener() {
     if (mounted) {
@@ -205,12 +205,12 @@ class ProfileBoxState extends State<ProfileBox> {
   }
 
   goBack() {
-    print("going back");
     if (settingsPressed) {
       settingsPressed = false;
       return;
     }
     setState(() {
+      widget.game.focusGame();
       profileChangeNotifier.setProfileVisible(false);
     });
   }
@@ -293,8 +293,11 @@ class ProfileBoxState extends State<ProfileBox> {
   Widget userStats(double userStatsWidth, double fontSize) {
     return Column(
       children: [
-        expandedText(userStatsWidth, "Best score: ", fontSize, false),
-        expandedText(userStatsWidth, "${userScore.getBestScore()}", fontSize+6, true),
+        expandedText(userStatsWidth, "Best score single bird: ", fontSize, false),
+        expandedText(userStatsWidth, "${userScore.getBestScoreSingleBird()}", fontSize+6, true),
+        SizedBox(height: 20),
+        expandedText(userStatsWidth, "Best score double bird: ", fontSize, false),
+        expandedText(userStatsWidth, "${userScore.getBestScoreDoubleBird()}", fontSize+6, true),
         SizedBox(height: 20),
         expandedText(userStatsWidth, "Number of games played: ", fontSize, false),
         expandedText(userStatsWidth, "${userScore.getTotalGames()}", fontSize+6, true),

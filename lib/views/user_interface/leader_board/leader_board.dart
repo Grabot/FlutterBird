@@ -39,7 +39,7 @@ class LeaderBoardState extends State<LeaderBoard> {
 
   @override
   void initState() {
-    _focusLeaderBoard.addListener(_onFocusChange);
+    // _focusLeaderBoard.addListener(_onFocusChange);
     leaderBoardChangeNotifier = LeaderBoardChangeNotifier();
     leaderBoardChangeNotifier.addListener(leaderboardBoxChangeListener);
     settings = Settings();
@@ -73,9 +73,9 @@ class LeaderBoardState extends State<LeaderBoard> {
     }
   }
 
-  void _onFocusChange() {
-    widget.game.leaderBoardFocus(_focusLeaderBoard.hasFocus);
-  }
+  // void _onFocusChange() {
+  //   widget.game.leaderBoardFocus(_focusLeaderBoard.hasFocus);
+  // }
 
   @override
   void dispose() {

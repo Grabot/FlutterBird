@@ -18,11 +18,20 @@ class UserAchievements {
   bool silverDouble = false;
   bool goldDouble = false;
 
+  int totalNumberOfAchievements = 6;
+  int totalAchievementsRetrieved = 0;
+
   late List<Achievement> allAchievementsAvailable;
 
   SecureStorage secureStorage = SecureStorage();
 
-  int totalAchievementsRetrieved = 0;
+  late Achievement bronzeSingleAchievement;
+  late Achievement silverSingleAchievement;
+  late Achievement goldSingleAchievement;
+  late Achievement bronzeDoubleAchievement;
+  late Achievement silverDoubleAchievement;
+  late Achievement goldDoubleAchievement;
+
   UserAchievements._internal() {
     // retrieve storage
     secureStorage.getBronzeSingle().then((value) {
@@ -69,15 +78,8 @@ class UserAchievements {
     });
   }
 
-  late Achievement bronzeSingleAchievement;
-  late Achievement silverSingleAchievement;
-  late Achievement goldSingleAchievement;
-  late Achievement bronzeDoubleAchievement;
-  late Achievement silverDoubleAchievement;
-  late Achievement goldDoubleAchievement;
-
   createAchievementList() {
-    if (totalAchievementsRetrieved >= 6) {
+    if (totalAchievementsRetrieved == totalNumberOfAchievements) {
       bronzeSingleAchievement = Achievement(
           imageName: "bird_1",
           tooltip: "got more than 10 points in single player",
@@ -157,7 +159,7 @@ class UserAchievements {
     return silverSingle;
   }
   achievedSilverSingle() async {
-    this.silverSingle = true;
+    silverSingle = true;
     silverSingleAchievement.achieved = true;
     secureStorage.setSilverSingle(silverSingle.toString());
   }
@@ -166,7 +168,7 @@ class UserAchievements {
     return goldSingle;
   }
   achievedGoldSingle() async {
-    this.goldSingle = true;
+    goldSingle = true;
     goldSingleAchievement.achieved = true;
     secureStorage.setGoldSingle(goldSingle.toString());
   }
@@ -175,7 +177,7 @@ class UserAchievements {
     return bronzeDouble;
   }
   achievedBronzeDouble() async {
-    this.bronzeDouble = true;
+    bronzeDouble = true;
     bronzeDoubleAchievement.achieved = true;
     secureStorage.setBronzeDouble(bronzeDouble.toString());
   }
@@ -184,7 +186,7 @@ class UserAchievements {
     return silverDouble;
   }
   achievedSilverDouble() async {
-    this.silverDouble = true;
+    silverDouble = true;
     silverDoubleAchievement.achieved = true;
     secureStorage.setSilverDouble(silverDouble.toString());
   }
@@ -193,7 +195,7 @@ class UserAchievements {
     return goldDouble;
   }
   achievedGoldDouble() async {
-    this.goldDouble = true;
+    goldDouble = true;
     goldDoubleAchievement.achieved = true;
     secureStorage.setGoldDouble(goldDouble.toString());
   }

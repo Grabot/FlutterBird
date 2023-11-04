@@ -110,6 +110,7 @@ class LoginScreenState extends State<LoginScreen> {
   goBack() {
     setState(() {
       LoginScreenChangeNotifier().setLoginScreenVisible(false);
+      widget.game.focusGame();
     });
   }
 

@@ -10,7 +10,7 @@ class ScoreScreenChangeNotifier extends ChangeNotifier {
   bool isHighScore = false;
   bool twoPlayer = false;
 
-  List<Achievement> achievementGotten = [];
+  List<Achievement> achievementEarned = [];
 
   static final ScoreScreenChangeNotifier _instance = ScoreScreenChangeNotifier._internal();
 
@@ -52,14 +52,14 @@ class ScoreScreenChangeNotifier extends ChangeNotifier {
   }
 
   clearAchievementList() {
-    achievementGotten.clear();
+    achievementEarned.clear();
   }
 
   addAchievement(Achievement achievement) {
-    achievementGotten.add(achievement);
+    achievementEarned.add(achievement);
   }
 
-  List<Achievement> getAchievementGotten() {
-    return achievementGotten;
+  List<Achievement> getAchievementEarned() {
+    return achievementEarned;
   }
 }

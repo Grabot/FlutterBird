@@ -171,6 +171,10 @@ class Settings extends ChangeNotifier {
         DateTime monthAgo = now.subtract(const Duration(days: 31));
         DateTime yearAgo = now.subtract(const Duration(days: 365));
         for (Rank rank in value) {
+          if (rankingsTwoPlayerDay.contains(rank)) {
+            // already in the lists
+            continue;
+          }
           if (rank.timestamp.isAfter(dayAgo)) {
             rankingsTwoPlayerDay.add(rank);
           }

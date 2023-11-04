@@ -263,7 +263,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         scoreScreenChangeNotifier.addAchievement(userAchievements.goldDoubleAchievement);
       }
     } else {
-      if (score >= 10 && !userAchievements.getBronzeSingle()) {
+      if (score >= 1 && !userAchievements.getBronzeSingle()) {
         userAchievements.achievedBronzeSingle();
         scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeSingleAchievement);
       }
@@ -278,7 +278,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     }
     User? currentUser = settings.getUser();
     if (currentUser != null) {
-      if (scoreScreenChangeNotifier.getAchievementGotten().isNotEmpty) {
+      if (scoreScreenChangeNotifier.getAchievementEarned().isNotEmpty) {
         AuthServiceFlutterBird().updateAchievements(userAchievements.getAchievements()).then((result) {
           if (result.getResult()) {
             // we have updated the score in the db. Do nothing
@@ -302,11 +302,19 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       userScore.addTotalGames(1);
       User? currentUser = settings.getUser();
       if (currentUser != null) {
-        AuthServiceFlutterBird().updateUserScore(userScore.getScore()).then((result) {
-          if (result.getResult()) {
-            // we have updated the score in the db. Do nothing
-          }
-        });
+        if (twoPlayers) {
+          AuthServiceFlutterBird().updateUserScore(null, score, userScore.getScore()).then((result) {
+            if (result.getResult()) {
+              // we have updated the score in the db. Do nothing
+            }
+          });
+        } else {
+          AuthServiceFlutterBird().updateUserScore(score, null, userScore.getScore()).then((result) {
+            if (result.getResult()) {
+              // we have updated the score in the db. Do nothing
+            }
+          });
+        }
       }
       checkingAchievements();
       sky.gameOver();
@@ -434,9 +442,16 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       checkOutOfBounds();
     } else if (gameEnded && !deathTimeEnded) {
       bool isHighScore = false;
-      if (score > userScore.getBestScore()) {
-        isHighScore = true;
-        userScore.setBestScore(score);
+      if (twoPlayers) {
+        if (score > userScore.getBestScoreDoubleBird()) {
+          isHighScore = true;
+          userScore.setBestScoreDoubleBird(score);
+        }
+      } else {
+        if (score > userScore.getBestScoreSingleBird()) {
+          isHighScore = true;
+          userScore.setBestScoreSingleBird(score);
+        }
       }
       scoreScreenChangeNotifier.setScore(score, isHighScore);
       timeSinceEnded += dt;
@@ -566,8 +581,8 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     // Add separation on side of the screen for the first bird and the between the birds themselves.
     double bird1PosX = birdSize.x - (birdSize.x / 2) + birdSeparationX;
     double bird2PosX = bird1PosX + birdSize.x + birdSeparationX;
-    initialPosBird1 = Vector2(bird2PosX, (gameSize.y/3));
-    return Vector2(bird1PosX, (gameSize.y/3));
+    initialPosBird1 = Vector2(bird2PosX, (gameSize.y/2));
+    return Vector2(bird1PosX, (gameSize.y/2));
   }
 
   @override
@@ -655,59 +670,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     sky.changeBackground(backgroundType);
   }
 
-  chatWindowFocus(bool chatWindowFocus) {
-    playFieldFocus = !chatWindowFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  scoreScreenFocus(bool scoreScreenFocus) {
-    playFieldFocus = !scoreScreenFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  chatBoxFocus(bool chatFocus) {
-    playFieldFocus = !chatFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  profileFocus(bool profileFocus) {
-    playFieldFocus = !profileFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  achievementBoxFocus(bool achievementBoxFocus) {
-    playFieldFocus = !achievementBoxFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  loadingBoxFocus(bool loadingFocus) {
-    playFieldFocus = !loadingFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  gameSettingsFocus(bool gameSettingsFocus) {
-    playFieldFocus = !gameSettingsFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
-  }
-
-  leaderBoardFocus(bool leaderBoardFocus) {
-    playFieldFocus = !leaderBoardFocus;
-    if (playFieldFocus) {
-      gameFocus.requestFocus();
-    }
+  focusGame() {
+    gameFocus.requestFocus();
   }
 }
