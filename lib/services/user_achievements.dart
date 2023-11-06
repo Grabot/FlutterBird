@@ -18,7 +18,7 @@ class UserAchievements {
   bool silverDouble = false;
   bool goldDouble = false;
 
-  int totalNumberOfAchievements = 6;
+  int totalNumberOfAchievements = 7;
   int totalAchievementsRetrieved = 0;
 
   late List<Achievement> allAchievementsAvailable;
@@ -31,6 +31,7 @@ class UserAchievements {
   late Achievement bronzeDoubleAchievement;
   late Achievement silverDoubleAchievement;
   late Achievement goldDoubleAchievement;
+  late Achievement flutterOneAchievement;
 
   UserAchievements._internal() {
     // retrieve storage
@@ -76,39 +77,58 @@ class UserAchievements {
       }
       createAchievementList();
     });
+    secureStorage.getFlutterOne().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        flutterOne = bool.parse(value);
+      }
+      createAchievementList();
+    });
   }
 
   createAchievementList() {
     if (totalAchievementsRetrieved == totalNumberOfAchievements) {
       bronzeSingleAchievement = Achievement(
-          imageName: "bird_1",
+          achievementName: "bronzeSingle",
+          imageName: "single_bird_bronze_medal",
           tooltip: "got more than 10 points in single player",
           achieved: bronzeSingle
       );
       silverSingleAchievement = Achievement(
-          imageName: "bird_1",
+          achievementName: "silverSingle",
+          imageName: "single_bird_silver_medal",
           tooltip: "got more than 25 points in single player!",
           achieved: silverSingle
       );
       goldSingleAchievement = Achievement(
-          imageName: "bird_1",
+          achievementName: "goldSingle",
+          imageName: "single_bird_gold_medal",
           tooltip: "got more than 100 points in single player!!!",
           achieved: goldSingle
       );
       bronzeDoubleAchievement = Achievement(
-          imageName: "bird_1",
+          achievementName: "bronzeDouble",
+          imageName: "double_bird_bronze_medal",
           tooltip: "got more than 10 points with 2 players",
           achieved: bronzeDouble
       );
       silverDoubleAchievement = Achievement(
-          imageName: "bird_1",
+          achievementName: "silverDouble",
+          imageName: "double_bird_silver_medal",
           tooltip: "got more than 25 points with 2 players!",
           achieved: silverDouble
       );
       goldDoubleAchievement = Achievement(
-          imageName: "bird_1",
+          achievementName: "goldDouble",
+          imageName: "double_bird_gold_medal",
           tooltip: "got more than 100 points with 2 players!!!",
           achieved: goldDouble
+      );
+      flutterOneAchievement = Achievement(
+          achievementName: "flutterOne",
+          imageName: "bird_placeholder",
+          tooltip: "You have fluttered your birds already more than a thousand times",
+          achieved: flutterOne
       );
       allAchievementsAvailable = [
         bronzeSingleAchievement,
@@ -116,7 +136,8 @@ class UserAchievements {
         goldSingleAchievement,
         bronzeDoubleAchievement,
         silverDoubleAchievement,
-        goldDoubleAchievement
+        goldDoubleAchievement,
+        flutterOneAchievement
       ];
     }
   }
@@ -132,18 +153,21 @@ class UserAchievements {
     bronzeDouble = false;
     silverDouble = false;
     goldDouble = false;
+    flutterOne = false;
     secureStorage.setBronzeSingle("false");
     secureStorage.setSilverSingle("false");
     secureStorage.setGoldSingle("false");
     secureStorage.setBronzeDouble("false");
     secureStorage.setSilverDouble("false");
     secureStorage.setGoldDouble("false");
+    secureStorage.setFlutterOne("false");
     bronzeSingleAchievement.achieved = false;
     silverSingleAchievement.achieved = false;
     goldSingleAchievement.achieved = false;
     bronzeDoubleAchievement.achieved = false;
     silverDoubleAchievement.achieved = false;
     goldDoubleAchievement.achieved = false;
+    flutterOneAchievement.achieved = false;
   }
 
   getBronzeSingle() {
@@ -198,6 +222,16 @@ class UserAchievements {
     goldDouble = true;
     goldDoubleAchievement.achieved = true;
     secureStorage.setGoldDouble(goldDouble.toString());
+  }
+
+  bool flutterOne = false;
+  getFlutterOne() {
+    return flutterOne;
+  }
+  achievedFlutterOne() async {
+    flutterOne = true;
+    flutterOneAchievement.achieved = true;
+    secureStorage.setFlutterOne(flutterOne.toString());
   }
 
   List<Achievement> getAchievementsAvailable() {

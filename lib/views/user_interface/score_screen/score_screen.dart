@@ -12,6 +12,7 @@ import 'package:flutter_bird/views/user_interface/models/rank.dart';
 import 'package:flutter_bird/views/user_interface/leader_board/leader_board_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
+import '../models/tooltip.dart';
 import 'score_screen_change_notifier.dart';
 
 class ScoreScreen extends StatefulWidget {
@@ -39,6 +40,8 @@ class ScoreScreenState extends State<ScoreScreen> {
   final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
+
+  bool tooltipShowing = false;
 
   @override
   void initState() {
@@ -132,7 +135,7 @@ class ScoreScreenState extends State<ScoreScreen> {
               : const AlwaysScrollableScrollPhysics(),
           itemCount: earnedAchievements.length,
           itemBuilder: (context, index) {
-            return achievementTile(earnedAchievements[index], medalWidth/4);
+            return achievementTile(context, earnedAchievements[index], medalWidth/4);
           },
         ),
     );
@@ -140,14 +143,18 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   Widget achievementsOwnedList(double medalWidth, double medalHeight) {
     List ownedAchievements = userAchievements.achievedAchievementList();
+    // We own the newly made achievements, but we don't want to show them as owned yet.
+    List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
+    List show = ownedAchievements;
+    show.removeWhere((item) => achievementsEarned.contains(item));
     return Container(
         width: medalWidth,
         height: medalWidth/4,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: ownedAchievements.length,
+          itemCount: show.length,
           itemBuilder: (context, index) {
-            return achievementTile(ownedAchievements[index], medalWidth/4);
+            return achievementTile(context, show[index], medalWidth/4);
           },
         )
     );
@@ -162,7 +169,7 @@ class ScoreScreenState extends State<ScoreScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: achievementsEarned.length,
         itemBuilder: (context, index) {
-          return achievementTile(achievementsEarned[index], medalHeight);
+          return achievementTile(context, achievementsEarned[index], medalHeight);
         },
       )
     );
@@ -639,6 +646,11 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   tappedOutside() {
+    if (tooltipShowing) {
+      // Even if pressed in the score screen.
+      // It will think it's outside the score screen if the tooltip is showing.
+      return;
+    }
     User? currentUser = settings.getUser();
     if (currentUser != null) {
       int tenthPosDayScore = -1;
@@ -681,5 +693,59 @@ class ScoreScreenState extends State<ScoreScreen> {
         alignment: FractionalOffset.center,
         child: showScoreScreen ? scoreScreenOverlay(context) : Container()
     );
+  }
+
+  Widget achievementTile(BuildContext context, Achievement achievement, double achievementSize) {
+    GlobalKey achievementsKey = GlobalKey();
+    return GestureDetector(
+      key: achievementsKey,
+      onTap: () {
+        // an ugly custom way to show tooltip, so it won't get stuck on the screen.
+        // It uses the popup menu functionality.
+        _showTooltip(context, achievementsKey, achievement.getTooltip());
+      },
+      child: Image.asset(
+        achievement.getImagePath(),
+        width: achievementSize,
+        height: achievementSize,
+        gaplessPlayback: true,
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
+  void _showTooltip(BuildContext context, GlobalKey achievementsKey, String tooltip) {
+    Offset _tapPosition = _storePosition(context, achievementsKey);
+    _showTooltipPopup(context, achievementsKey, _tapPosition, tooltip);
+  }
+
+  Offset _storePosition(BuildContext context, GlobalKey achievementsKey) {
+    RenderBox box = achievementsKey.currentContext!.findRenderObject() as RenderBox;
+    Offset position = box.localToGlobal(Offset.zero);
+    position = position + const Offset(0, 50);
+    return position;
+  }
+
+  void _showTooltipPopup(BuildContext context, GlobalKey achievementsKey, Offset _tapPosition, String tooltip) {
+    final RenderBox overlay =
+    Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    Future.delayed(const Duration(seconds: 2), () {
+      // If the tooltip is still showing, we do a pop which will remove it.
+      if (tooltipShowing) {
+        Navigator.pop(context);
+      }
+    });
+    tooltipShowing = true;
+    showMenu(
+        context: context,
+        items: [TooltipPopup(key: UniqueKey(), tooltip: tooltip)],
+        position: RelativeRect.fromRect(
+            _tapPosition & const Size(40, 40), Offset.zero & overlay.size))
+        .then((int? delta) {
+      // do nothing, this will remove the tooltip.
+      tooltipShowing = false;
+      return;
+    });
   }
 }

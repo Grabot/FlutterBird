@@ -10,6 +10,7 @@ import 'package:flutter_bird/services/socket_services.dart';
 import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
+import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_box.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -333,16 +334,4 @@ int getRankingSelection(bool onePlayer, int currentScore, Settings settings) {
     }
   }
   return -1;
-}
-
-Widget achievementTile(Achievement achievement, double achievementSize) {
-  return Container(
-      child: Image.asset(
-        achievement.getImagePath(),
-        width: achievementSize,
-        height: achievementSize,
-        gaplessPlayback: true,
-        fit: BoxFit.fill,
-      )
-  );
 }

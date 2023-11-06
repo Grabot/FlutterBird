@@ -131,6 +131,7 @@ class SecureStorage {
   final String _keyBronzeDouble = 'bronzeDouble';
   final String _keySilverDouble = 'silverDouble';
   final String _keyGoldDouble = 'goldDouble';
+  final String _keyFlutterOne = 'flutterOne';
 
   Future setBronzeSingle(String bronzeSingle) async {
     await storage.write(key: _keyBronzeSingle, value: bronzeSingle);
@@ -174,6 +175,13 @@ class SecureStorage {
     return await storage.read(key: _keyGoldDouble);
   }
 
+  Future setFlutterOne(String flutterOne) async {
+    await storage.write(key: _keyFlutterOne, value: flutterOne);
+  }
+  Future<String?> getFlutterOne() async {
+    return await storage.read(key: _keyFlutterOne);
+  }
+
   Future logout() async {
     await storage.write(key: _keyAccessToken, value: null);
     await storage.write(key: _keyRefreshToken, value: null);
@@ -190,6 +198,14 @@ class SecureStorage {
     await storage.write(key: _keyPipeType, value: null);
     await storage.write(key: _keyPlayerType, value: null);
     await storage.write(key: _keySound, value: null);
+
+    await storage.write(key: _keyBronzeSingle, value: null);
+    await storage.write(key: _keySilverSingle, value: null);
+    await storage.write(key: _keyGoldSingle, value: null);
+    await storage.write(key: _keyBronzeDouble, value: null);
+    await storage.write(key: _keySilverDouble, value: null);
+    await storage.write(key: _keyGoldDouble, value: null);
+    await storage.write(key: _keyFlutterOne, value: null);
   }
 
 }

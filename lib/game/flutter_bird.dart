@@ -249,6 +249,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   }
 
   checkingAchievements() {
+    // First check the medal achievements
     if (twoPlayers) {
       if (score >= 10 && !userAchievements.getBronzeDouble()) {
         userAchievements.achievedBronzeDouble();
@@ -275,6 +276,11 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         userAchievements.achievedGoldSingle();
         scoreScreenChangeNotifier.addAchievement(userAchievements.goldSingleAchievement);
       }
+    }
+    // Then check the play achievements
+    if (userScore.getTotalFlutters() > 4 && !userAchievements.getFlutterOne()) {
+      userAchievements.achievedFlutterOne();
+      scoreScreenChangeNotifier.addAchievement(userAchievements.flutterOneAchievement);
     }
     User? currentUser = settings.getUser();
     if (currentUser != null) {

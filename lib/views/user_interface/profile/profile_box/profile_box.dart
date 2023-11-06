@@ -14,12 +14,12 @@ import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/render_avatar.dart';
 import 'package:flutter_bird/util/util.dart';
-import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'package:flutter_bird/views/user_interface/achievement_box/achievement_box_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/change_avatar_box/change_avatar_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
+import 'package:flutter_bird/views/user_interface/models/tooltip.dart';
 
 import 'profile_change_notifier.dart';
 
@@ -39,12 +39,7 @@ class ProfileBox extends StatefulWidget {
 
 class ProfileBoxState extends State<ProfileBox> {
 
-  // Used if any text fields are added to the profile.
-  final FocusNode _focusProfileBox = FocusNode();
   late ProfileChangeNotifier profileChangeNotifier;
-
-  final NavigationService _navigationService = locator<NavigationService>();
-
   Settings settings = Settings();
   UserScore userScore = UserScore();
   UserAchievements userAchievements = UserAchievements();
@@ -63,16 +58,16 @@ class ProfileBoxState extends State<ProfileBox> {
   bool changeUserName = false;
   final GlobalKey<FormState> userNameKey = GlobalKey<FormState>();
   final TextEditingController userNameController = TextEditingController();
-  final FocusNode _focusUsernameChange = FocusNode();
 
   bool changePassword = false;
   final GlobalKey<FormState> passwordKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
-  final FocusNode _focusPasswordChange = FocusNode();
 
   ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
+
+  bool tooltipShowing = false;
 
   @override
   void initState() {
@@ -81,10 +76,7 @@ class ProfileBoxState extends State<ProfileBox> {
 
     currentUser = settings.getUser();
 
-    // _focusProfileBox.addListener(_onFocusChange);
     settings.addListener(settingsChangeListener);
-    // _focusUsernameChange.addListener(_onFocusUsernameChange);
-    // _focusPasswordChange.addListener(_onFocusPasswordChange);
 
     _controller.addListener(() {
       checkTopBottomScroll();
@@ -138,18 +130,6 @@ class ProfileBoxState extends State<ProfileBox> {
       setState(() {});
     }
   }
-
-  // _onFocusPasswordChange() {
-  //   widget.game.profileFocus(_focusPasswordChange.hasFocus);
-  // }
-  //
-  // _onFocusUsernameChange() {
-  //   widget.game.profileFocus(_focusUsernameChange.hasFocus);
-  // }
-  //
-  // _onFocusChange() {
-  //   widget.game.profileFocus(_focusProfileBox.hasFocus);
-  // }
 
   settingsChangeListener() {
     if (mounted) {
@@ -205,6 +185,11 @@ class ProfileBoxState extends State<ProfileBox> {
   }
 
   goBack() {
+    if (tooltipShowing) {
+      // Even if pressed in the profile box.
+      // It will think it's outside the profile box if the tooltip is showing.
+      return;
+    }
     if (settingsPressed) {
       settingsPressed = false;
       return;
@@ -334,7 +319,7 @@ class ProfileBoxState extends State<ProfileBox> {
             ),
             itemCount: achievedAchievements.length,
             itemBuilder: (context, index) {
-              return achievementTile(achievedAchievements[index], (achievementWidth/8));
+              return achievementTile(context, achievedAchievements[index], (achievementWidth/8));
             },
           ),
         ),
@@ -568,7 +553,6 @@ class ProfileBoxState extends State<ProfileBox> {
               key: userNameKey,
               child: TextFormField(
                 controller: userNameController,
-                focusNode: _focusUsernameChange,
                 validator: (val) {
                   return val == null || val.isEmpty
                       ? "Please enter a username if you want to change it"
@@ -643,7 +627,6 @@ class ProfileBoxState extends State<ProfileBox> {
               key: passwordKey,
               child: TextFormField(
                 controller: passwordController,
-                focusNode: _focusPasswordChange,
                 validator: (val) {
                   return val == null || val.isEmpty
                       ? "fill in new password"
@@ -840,7 +823,7 @@ class ProfileBoxState extends State<ProfileBox> {
   bool settingsPressed = false;
   void _showPopupMenu() {
     settingsPressed = true;
-    _storePosition();
+    _storePositionSettings();
     _showChatDetailPopupMenu();
   }
 
@@ -872,17 +855,71 @@ class ProfileBoxState extends State<ProfileBox> {
     });
   }
 
-  void _storePosition() {
+  void _storePositionSettings() {
     RenderBox box = settingsKey.currentContext!.findRenderObject() as RenderBox;
     Offset position = box.localToGlobal(Offset.zero);
     position = position + const Offset(0, 50);
     _tapPosition = position;
   }
+
+  Widget achievementTile(BuildContext context, Achievement achievement, double achievementSize) {
+    GlobalKey achievementsKey = GlobalKey();
+    return GestureDetector(
+      key: achievementsKey,
+      onTap: () {
+        // an ugly custom way to show tooltip, so it won't get stuck on the screen.
+        // It uses the popup menu functionality.
+        _showTooltip(context, achievementsKey, achievement.getTooltip());
+      },
+      child: Image.asset(
+        achievement.getImagePath(),
+        width: achievementSize,
+        height: achievementSize,
+        gaplessPlayback: true,
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
+  void _showTooltip(BuildContext context, GlobalKey achievementsKey, String tooltip) {
+    Offset _tapPosition = _storePosition(context, achievementsKey);
+    _showTooltipPopup(context, achievementsKey, _tapPosition, tooltip);
+  }
+
+  Offset _storePosition(BuildContext context, GlobalKey achievementsKey) {
+    RenderBox box = achievementsKey.currentContext!.findRenderObject() as RenderBox;
+    Offset position = box.localToGlobal(Offset.zero);
+    position = position + const Offset(0, 50);
+    return position;
+  }
+
+  void _showTooltipPopup(BuildContext context, GlobalKey achievementsKey, Offset _tapPosition, String tooltip) {
+    final RenderBox overlay =
+    Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    Future.delayed(const Duration(seconds: 2), () {
+      // If the tooltip is still showing, we do a pop which will remove it.
+      if (tooltipShowing) {
+        Navigator.pop(context);
+      }
+    });
+    tooltipShowing = true;
+    showMenu(
+        context: context,
+        items: [TooltipPopup(key: UniqueKey(), tooltip: tooltip)],
+        position: RelativeRect.fromRect(
+            _tapPosition & const Size(40, 40), Offset.zero & overlay.size))
+        .then((int? delta) {
+      // do nothing, this will remove the tooltip.
+      tooltipShowing = false;
+      return;
+    });
+  }
 }
 
 class SettingPopup extends PopupMenuEntry<int> {
 
-  SettingPopup({required Key key}) : super(key: key);
+  const SettingPopup({required Key key}) : super(key: key);
 
   @override
   bool represents(int? n) => n == 1 || n == -1;
