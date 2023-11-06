@@ -132,6 +132,12 @@ class SecureStorage {
   final String _keySilverDouble = 'silverDouble';
   final String _keyGoldDouble = 'goldDouble';
   final String _keyFlutterOne = 'flutterOne';
+  final String _keyFlutterTwo = 'flutterTwo';
+  final String _keyFlutterThree = 'flutterThree';
+  final String _keyPipesOne = 'pipesOne';
+  final String _keyPipesTwo = 'pipesTwo';
+  final String _keyPipesThree = 'pipesThree';
+  final String _keyPerseverance = 'perseverance';
 
   Future setBronzeSingle(String bronzeSingle) async {
     await storage.write(key: _keyBronzeSingle, value: bronzeSingle);
@@ -182,6 +188,48 @@ class SecureStorage {
     return await storage.read(key: _keyFlutterOne);
   }
 
+  Future setFlutterTwo(String flutterTwo) async {
+    await storage.write(key: _keyFlutterTwo, value: flutterTwo);
+  }
+  Future<String?> getFlutterTwo() async {
+    return await storage.read(key: _keyFlutterTwo);
+  }
+
+  Future setFlutterThree(String flutterThree) async {
+    await storage.write(key: _keyFlutterThree, value: flutterThree);
+  }
+  Future<String?> getFlutterThree() async {
+    return await storage.read(key: _keyFlutterThree);
+  }
+
+  Future setPipesOne(String pipesOne) async {
+    await storage.write(key: _keyPipesOne, value: pipesOne);
+  }
+  Future<String?> getPipesOne() async {
+    return await storage.read(key: _keyPipesOne);
+  }
+
+  Future setPipesTwo(String pipesTwo) async {
+    await storage.write(key: _keyPipesTwo, value: pipesTwo);
+  }
+  Future<String?> getPipesTwo() async {
+    return await storage.read(key: _keyPipesTwo);
+  }
+
+  Future setPipesThree(String pipesThree) async {
+    await storage.write(key: _keyPipesThree, value: pipesThree);
+  }
+  Future<String?> getPipesThree() async {
+    return await storage.read(key: _keyPipesThree);
+  }
+
+  Future setPerseverance(String perseverance) async {
+    await storage.write(key: _keyPerseverance, value: perseverance);
+  }
+  Future<String?> getPerseverance() async {
+    return await storage.read(key: _keyPerseverance);
+  }
+
   Future logout() async {
     await storage.write(key: _keyAccessToken, value: null);
     await storage.write(key: _keyRefreshToken, value: null);
@@ -206,6 +254,12 @@ class SecureStorage {
     await storage.write(key: _keySilverDouble, value: null);
     await storage.write(key: _keyGoldDouble, value: null);
     await storage.write(key: _keyFlutterOne, value: null);
+    await storage.write(key: _keyFlutterTwo, value: null);
+    await storage.write(key: _keyFlutterThree, value: null);
+    await storage.write(key: _keyPipesOne, value: null);
+    await storage.write(key: _keyPipesTwo, value: null);
+    await storage.write(key: _keyPipesThree, value: null);
+    await storage.write(key: _keyPerseverance, value: null);
   }
 
 }

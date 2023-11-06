@@ -17,8 +17,15 @@ class UserAchievements {
   bool bronzeDouble = false;
   bool silverDouble = false;
   bool goldDouble = false;
+  bool flutterOne = false;
+  bool flutterTwo = false;
+  bool flutterThree = false;
+  bool pipesOne = false;
+  bool pipesTwo = false;
+  bool pipesThree = false;
+  bool perseverance = false;
 
-  int totalNumberOfAchievements = 7;
+  int totalNumberOfAchievements = 13;
   int totalAchievementsRetrieved = 0;
 
   late List<Achievement> allAchievementsAvailable;
@@ -32,6 +39,12 @@ class UserAchievements {
   late Achievement silverDoubleAchievement;
   late Achievement goldDoubleAchievement;
   late Achievement flutterOneAchievement;
+  late Achievement flutterTwoAchievement;
+  late Achievement flutterThreeAchievement;
+  late Achievement pipesOneAchievement;
+  late Achievement pipesTwoAchievement;
+  late Achievement pipesThreeAchievement;
+  late Achievement perseveranceAchievement;
 
   UserAchievements._internal() {
     // retrieve storage
@@ -84,6 +97,48 @@ class UserAchievements {
       }
       createAchievementList();
     });
+    secureStorage.getFlutterTwo().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        flutterTwo = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getFlutterThree().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        flutterThree = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getPipesOne().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        pipesOne = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getPipesTwo().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        pipesTwo = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getPipesThree().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        pipesThree = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getPerseverance().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        perseverance = bool.parse(value);
+      }
+      createAchievementList();
+    });
   }
 
   createAchievementList() {
@@ -126,9 +181,45 @@ class UserAchievements {
       );
       flutterOneAchievement = Achievement(
           achievementName: "flutterOne",
-          imageName: "bird_placeholder",
+          imageName: "flutter_one",
           tooltip: "You have fluttered your birds already more than a thousand times",
           achieved: flutterOne
+      );
+      flutterTwoAchievement = Achievement(
+          achievementName: "flutterTwo",
+          imageName: "flutter_two",
+          tooltip: "You have fluttered your birds already more than two thousand and give hundred times!",
+          achieved: flutterTwo
+      );
+      flutterThreeAchievement = Achievement(
+          achievementName: "flutterThree",
+          imageName: "flutter_three",
+          tooltip: "You have fluttered your birds already more than ten thousand times!!!",
+          achieved: flutterThree
+      );
+      pipesOneAchievement = Achievement(
+          achievementName: "pipesOne",
+          imageName: "pipes_one",
+          tooltip: "Your birds have passed a total of two hundred and fifty pipes",
+          achieved: pipesOne
+      );
+      pipesTwoAchievement = Achievement(
+          achievementName: "pipesTwo",
+          imageName: "pipes_two",
+          tooltip: "Your birds have passed a total of one thousand pipes!",
+          achieved: pipesTwo
+      );
+      pipesThreeAchievement = Achievement(
+          achievementName: "pipesThree",
+          imageName: "pipes_three",
+          tooltip: "Your birds have passed a total of five thousand pipes!",
+          achieved: pipesThree
+      );
+      perseveranceAchievement = Achievement(
+          achievementName: "perseverance",
+          imageName: "bird_placeholder",
+          tooltip: "You kept playing the game even after crashing 50 times in a single session!",
+          achieved: perseverance
       );
       allAchievementsAvailable = [
         bronzeSingleAchievement,
@@ -137,7 +228,13 @@ class UserAchievements {
         bronzeDoubleAchievement,
         silverDoubleAchievement,
         goldDoubleAchievement,
-        flutterOneAchievement
+        flutterOneAchievement,
+        flutterTwoAchievement,
+        flutterThreeAchievement,
+        pipesOneAchievement,
+        pipesTwoAchievement,
+        pipesThreeAchievement,
+        perseveranceAchievement
       ];
     }
   }
@@ -154,6 +251,12 @@ class UserAchievements {
     silverDouble = false;
     goldDouble = false;
     flutterOne = false;
+    flutterTwo = false;
+    flutterThree = false;
+    pipesOne = false;
+    pipesTwo = false;
+    pipesThree = false;
+    perseverance = false;
     secureStorage.setBronzeSingle("false");
     secureStorage.setSilverSingle("false");
     secureStorage.setGoldSingle("false");
@@ -161,6 +264,12 @@ class UserAchievements {
     secureStorage.setSilverDouble("false");
     secureStorage.setGoldDouble("false");
     secureStorage.setFlutterOne("false");
+    secureStorage.setFlutterTwo("false");
+    secureStorage.setFlutterThree("false");
+    secureStorage.setPipesOne("false");
+    secureStorage.setPipesTwo("false");
+    secureStorage.setPipesThree("false");
+    secureStorage.setPerseverance("false");
     bronzeSingleAchievement.achieved = false;
     silverSingleAchievement.achieved = false;
     goldSingleAchievement.achieved = false;
@@ -168,6 +277,12 @@ class UserAchievements {
     silverDoubleAchievement.achieved = false;
     goldDoubleAchievement.achieved = false;
     flutterOneAchievement.achieved = false;
+    flutterTwoAchievement.achieved = false;
+    flutterThreeAchievement.achieved = false;
+    pipesOneAchievement.achieved = false;
+    pipesTwoAchievement.achieved = false;
+    pipesThreeAchievement.achieved = false;
+    perseveranceAchievement.achieved = false;
   }
 
   getBronzeSingle() {
@@ -224,7 +339,6 @@ class UserAchievements {
     secureStorage.setGoldDouble(goldDouble.toString());
   }
 
-  bool flutterOne = false;
   getFlutterOne() {
     return flutterOne;
   }
@@ -232,6 +346,60 @@ class UserAchievements {
     flutterOne = true;
     flutterOneAchievement.achieved = true;
     secureStorage.setFlutterOne(flutterOne.toString());
+  }
+
+  getFlutterTwo() {
+    return flutterTwo;
+  }
+  achievedFlutterTwo() async {
+    flutterTwo = true;
+    flutterTwoAchievement.achieved = true;
+    secureStorage.setFlutterTwo(flutterTwo.toString());
+  }
+
+  getFlutterThree() {
+    return flutterThree;
+  }
+  achievedFlutterThree() async {
+    flutterThree = true;
+    flutterThreeAchievement.achieved = true;
+    secureStorage.setFlutterThree(flutterThree.toString());
+  }
+
+  getPipesOne() {
+    return pipesOne;
+  }
+  achievedPipesOne() async {
+    pipesOne = true;
+    pipesOneAchievement.achieved = true;
+    secureStorage.setPipesOne(pipesOne.toString());
+  }
+
+  getPipesTwo() {
+    return pipesTwo;
+  }
+  achievedPipesTwo() async {
+    pipesTwo = true;
+    pipesTwoAchievement.achieved = true;
+    secureStorage.setPipesTwo(pipesTwo.toString());
+  }
+
+  getPipesThree() {
+    return pipesThree;
+  }
+  achievedPipesThree() async {
+    pipesThree = true;
+    pipesThreeAchievement.achieved = true;
+    secureStorage.setPipesThree(pipesThree.toString());
+  }
+
+  getPerseverance() {
+    return perseverance;
+  }
+  achievedPerseverance() async {
+    perseverance = true;
+    perseveranceAchievement.achieved = true;
+    secureStorage.setPerseverance(perseverance.toString());
   }
 
   List<Achievement> getAchievementsAvailable() {
@@ -255,7 +423,14 @@ class UserAchievements {
         goldSingle,
         bronzeDouble,
         silverDouble,
-        goldDouble
+        goldDouble,
+        flutterOne,
+        flutterTwo,
+        flutterThree,
+        pipesOne,
+        pipesTwo,
+        pipesThree,
+        perseverance
     );
   }
 }
@@ -268,8 +443,15 @@ class Achievements {
   bool bronzeDouble = false;
   bool silverDouble = false;
   bool goldDouble = false;
+  bool flutterOne = false;
+  bool flutterTwo = false;
+  bool flutterThree = false;
+  bool pipesOne = false;
+  bool pipesTwo = false;
+  bool pipesThree = false;
+  bool perseverance = false;
 
-  Achievements(this.bronzeSingle, this.silverSingle, this.goldSingle, this.bronzeDouble, this.silverDouble, this.goldDouble);
+  Achievements(this.bronzeSingle, this.silverSingle, this.goldSingle, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance);
 
   Achievements.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("bronze_single")) {
@@ -289,6 +471,27 @@ class Achievements {
     }
     if (json.containsKey("gold_double")) {
       goldDouble = json["gold_double"];
+    }
+    if (json.containsKey("flutter_one")) {
+      flutterOne = json["flutter_one"];
+    }
+    if (json.containsKey("flutter_two")) {
+      flutterTwo = json["flutter_two"];
+    }
+    if (json.containsKey("flutter_three")) {
+      flutterThree = json["flutter_three"];
+    }
+    if (json.containsKey("pipes_one")) {
+      pipesOne = json["pipes_one"];
+    }
+    if (json.containsKey("pipes_two")) {
+      pipesTwo = json["pipes_two"];
+    }
+    if (json.containsKey("pipes_three")) {
+      pipesThree = json["pipes_three"];
+    }
+    if (json.containsKey("perseverance")) {
+      perseverance = json["perseverance"];
     }
   }
 
@@ -312,6 +515,27 @@ class Achievements {
     }
     if (goldDouble) {
       json['gold_double'] = goldDouble;
+    }
+    if (flutterOne) {
+      json['flutter_one'] = flutterOne;
+    }
+    if (flutterTwo) {
+      json['flutter_two'] = flutterTwo;
+    }
+    if (flutterThree) {
+      json['flutter_three'] = flutterThree;
+    }
+    if (pipesOne) {
+      json['pipes_one'] = pipesOne;
+    }
+    if (pipesTwo) {
+      json['pipes_two'] = pipesTwo;
+    }
+    if (pipesThree) {
+      json['pipes_three'] = pipesThree;
+    }
+    if (perseverance) {
+      json['perseverance'] = perseverance;
     }
     return json;
   }
@@ -356,5 +580,54 @@ class Achievements {
   }
   setGoldDouble(bool goldDouble) {
     this.goldDouble = goldDouble;
+  }
+
+  bool getFlutterOne() {
+    return flutterOne;
+  }
+  setFlutterOne(bool flutterOne) {
+    this.flutterOne = flutterOne;
+  }
+
+  bool getFlutterTwo() {
+    return flutterTwo;
+  }
+  setFlutterTwo(bool flutterTwo) {
+    this.flutterTwo = flutterTwo;
+  }
+
+  bool getFlutterThree() {
+    return flutterThree;
+  }
+  setFlutterThree(bool flutterThree) {
+    this.flutterThree = flutterThree;
+  }
+
+  bool getPipesOne() {
+    return pipesOne;
+  }
+  setPipesOne(bool pipesOne) {
+    this.pipesOne = pipesOne;
+  }
+
+  bool getPipesTwo() {
+    return pipesTwo;
+  }
+  setPipesTwo(bool pipesTwo) {
+    this.pipesTwo = pipesTwo;
+  }
+
+  bool getPipesThree() {
+    return pipesThree;
+  }
+  setPipesThree(bool pipesThree) {
+    this.pipesThree = pipesThree;
+  }
+
+  bool getPerseverance() {
+    return perseverance;
+  }
+  setPerseverance(bool perseverance) {
+    this.perseverance = perseverance;
   }
 }

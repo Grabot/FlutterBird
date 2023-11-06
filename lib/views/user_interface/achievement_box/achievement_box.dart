@@ -30,7 +30,6 @@ class AchievementBox extends StatefulWidget {
 class AchievementBoxState extends State<AchievementBox> {
 
   // Used if any text fields are added to the profile.
-  final FocusNode _focusAchievementBox = FocusNode();
   late AchievementBoxChangeNotifier achievementBoxChangeNotifier;
 
   Settings settings = Settings();
@@ -53,8 +52,6 @@ class AchievementBoxState extends State<AchievementBox> {
     achievementBoxChangeNotifier.addListener(achievementBoxChangeListener);
 
     currentUser = settings.getUser();
-
-    // _focusAchievementBox.addListener(_onFocusChange);
 
     _controller.addListener(() {
       checkTopBottomScroll();
@@ -108,10 +105,6 @@ class AchievementBoxState extends State<AchievementBox> {
       setState(() {});
     }
   }
-
-  // _onFocusChange() {
-  //   widget.game.achievementBoxFocus(_focusAchievementBox.hasFocus);
-  // }
 
   Widget achievementItem(Achievement achievement, double achievementWindowWidth, double achievementSize, double fontSize) {
     double marginWidth = 20;

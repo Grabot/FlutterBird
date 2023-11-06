@@ -142,6 +142,48 @@ getAchievements(LoginResponse loginResponse, int userId) {
       achievements.setGoldDouble(userAchievements.getGoldDouble());
       updateAchievements = true;
     }
+    if (achievements.getFlutterOne() && !userAchievements.getFlutterOne()) {
+      userAchievements.achievedFlutterOne();
+    } else if (!achievements.getFlutterOne() && userAchievements.getFlutterOne()) {
+      achievements.setFlutterOne(userAchievements.getFlutterOne());
+      updateAchievements = true;
+    }
+    if (achievements.getFlutterTwo() && !userAchievements.getFlutterTwo()) {
+      userAchievements.achievedFlutterTwo();
+    } else if (!achievements.getFlutterTwo() && userAchievements.getFlutterTwo()) {
+      achievements.setFlutterTwo(userAchievements.getFlutterTwo());
+      updateAchievements = true;
+    }
+    if (achievements.getFlutterThree() && !userAchievements.getFlutterThree()) {
+      userAchievements.achievedFlutterThree();
+    } else if (!achievements.getFlutterThree() && userAchievements.getFlutterThree()) {
+      achievements.setFlutterThree(userAchievements.getFlutterThree());
+      updateAchievements = true;
+    }
+    if (achievements.getPipesOne() && !userAchievements.getPipesOne()) {
+      userAchievements.achievedPipesOne();
+    } else if (!achievements.getPipesOne() && userAchievements.getPipesOne()) {
+      achievements.setPipesOne(userAchievements.getPipesOne());
+      updateAchievements = true;
+    }
+    if (achievements.getPipesTwo() && !userAchievements.getPipesTwo()) {
+      userAchievements.achievedPipesTwo();
+    } else if (!achievements.getPipesTwo() && userAchievements.getPipesTwo()) {
+      achievements.setPipesTwo(userAchievements.getPipesTwo());
+      updateAchievements = true;
+    }
+    if (achievements.getPipesThree() && !userAchievements.getPipesThree()) {
+      userAchievements.achievedPipesThree();
+    } else if (!achievements.getPipesThree() && userAchievements.getPipesThree()) {
+      achievements.setPipesThree(userAchievements.getPipesThree());
+      updateAchievements = true;
+    }
+    if (achievements.getPerseverance() && !userAchievements.getPerseverance()) {
+      userAchievements.achievedPerseverance();
+    } else if (!achievements.getPerseverance() && userAchievements.getPerseverance()) {
+      achievements.setPerseverance(userAchievements.getPerseverance());
+      updateAchievements = true;
+    }
 
     if (updateAchievements) {
       AuthServiceFlutterBird().updateAchievements(achievements).then((result) {

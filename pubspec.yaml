@@ -140,6 +140,12 @@ flutter:
     - assets/images/achievements/double_bird_gold_medal.png
     - assets/images/achievements/double_bird_silver_medal.png
     - assets/images/achievements/double_bird_bronze_medal.png
+    - assets/images/achievements/flutter_one.png
+    - assets/images/achievements/flutter_two.png
+    - assets/images/achievements/flutter_three.png
+    - assets/images/achievements/pipes_one.png
+    - assets/images/achievements/pipes_two.png
+    - assets/images/achievements/pipes_three.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

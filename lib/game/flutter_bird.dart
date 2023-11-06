@@ -80,6 +80,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   int flutters = 0;
   int pipesCleared = 0;
+  int gameOvers = 0;
 
   bool dataLoaded = false;
   late Vector2 initialPosBird1;
@@ -250,37 +251,87 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   checkingAchievements() {
     // First check the medal achievements
-    if (twoPlayers) {
-      if (score >= 10 && !userAchievements.getBronzeDouble()) {
-        userAchievements.achievedBronzeDouble();
-        scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeDoubleAchievement);
+    if (!twoPlayers) {
+      if (!userAchievements.getBronzeSingle()) {
+        if (score >= 10) {
+          userAchievements.achievedBronzeSingle();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeSingleAchievement);
+        }
       }
-      if (score >= 25 && !userAchievements.getSilverDouble()) {
-        userAchievements.achievedSilverDouble();
-        scoreScreenChangeNotifier.addAchievement(userAchievements.silverDoubleAchievement);
+      if (!userAchievements.getSilverSingle()) {
+        if (score >= 25) {
+          userAchievements.achievedSilverSingle();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.silverSingleAchievement);
+        }
       }
-      if (score >= 100 && !userAchievements.getGoldDouble()) {
-        userAchievements.achievedGoldDouble();
-        scoreScreenChangeNotifier.addAchievement(userAchievements.goldDoubleAchievement);
+      if (!userAchievements.getGoldSingle()) {
+        if (score >= 100) {
+          userAchievements.achievedGoldSingle();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.goldSingleAchievement);
+        }
       }
     } else {
-      if (score >= 1 && !userAchievements.getBronzeSingle()) {
-        userAchievements.achievedBronzeSingle();
-        scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeSingleAchievement);
+      if (!userAchievements.getBronzeDouble()) {
+        if (score >= 10) {
+          userAchievements.achievedBronzeDouble();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeDoubleAchievement);
+        }
       }
-      if (score >= 25 && !userAchievements.getSilverSingle()) {
-        userAchievements.achievedSilverSingle();
-        scoreScreenChangeNotifier.addAchievement(userAchievements.silverSingleAchievement);
+      if (!userAchievements.getSilverDouble()) {
+        if (score >= 25) {
+          userAchievements.achievedSilverDouble();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.silverDoubleAchievement);
+        }
       }
-      if (score >= 100 && !userAchievements.getGoldSingle()) {
-        userAchievements.achievedGoldSingle();
-        scoreScreenChangeNotifier.addAchievement(userAchievements.goldSingleAchievement);
+      if (!userAchievements.getGoldDouble()) {
+        if (score >= 100) {
+          userAchievements.achievedGoldDouble();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.goldDoubleAchievement);
+        }
       }
     }
     // Then check the play achievements
-    if (userScore.getTotalFlutters() > 4 && !userAchievements.getFlutterOne()) {
-      userAchievements.achievedFlutterOne();
-      scoreScreenChangeNotifier.addAchievement(userAchievements.flutterOneAchievement);
+    if (!userAchievements.getFlutterOne()) {
+      if (userScore.getTotalFlutters() > 1000) {
+        userAchievements.achievedFlutterOne();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.flutterOneAchievement);
+      }
+    }
+    if (!userAchievements.getFlutterTwo()) {
+      if (userScore.getTotalFlutters() > 2500) {
+        userAchievements.achievedFlutterTwo();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.flutterTwoAchievement);
+      }
+    }
+    if (!userAchievements.getFlutterThree()) {
+      if (userScore.getTotalFlutters() > 10000) {
+        userAchievements.achievedFlutterThree();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.flutterThreeAchievement);
+      }
+    }
+    if (!userAchievements.getPipesOne()) {
+      if (userScore.getTotalPipesCleared() > 250) {
+        userAchievements.achievedPipesOne();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.pipesOneAchievement);
+      }
+    }
+    if (!userAchievements.getPipesTwo()) {
+      if (userScore.getTotalPipesCleared() > 1000) {
+        userAchievements.achievedPipesTwo();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.pipesTwoAchievement);
+      }
+    }
+    if (!userAchievements.getPipesThree()) {
+      if (userScore.getTotalPipesCleared() > 5000) {
+        userAchievements.achievedPipesThree();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.pipesThreeAchievement);
+      }
+    }
+    if (!userAchievements.getPerseverance()) {
+      if (gameOvers >= 50) {
+        userAchievements.achievedPerseverance();
+        scoreScreenChangeNotifier.addAchievement(userAchievements.perseveranceAchievement);
+      }
     }
     User? currentUser = settings.getUser();
     if (currentUser != null) {
@@ -300,6 +351,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         hitPool.start(volume: soundVolume);
         diePool.start(volume: soundVolume);
       }
+      gameOvers += 1;
       death = true;
       gameStarted = false;
       gameEnded = true;
