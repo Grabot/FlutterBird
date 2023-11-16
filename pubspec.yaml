@@ -134,18 +134,25 @@ flutter:
     - assets/images/ui/game_settings/player/1_bird.png
     - assets/images/ui/game_settings/player/2_birds.png
     - assets/images/achievements/bird_placeholder.png
-    - assets/images/achievements/single_bird_gold_medal.png
-    - assets/images/achievements/single_bird_silver_medal.png
-    - assets/images/achievements/single_bird_bronze_medal.png
-    - assets/images/achievements/double_bird_gold_medal.png
-    - assets/images/achievements/double_bird_silver_medal.png
-    - assets/images/achievements/double_bird_bronze_medal.png
-    - assets/images/achievements/flutter_one.png
-    - assets/images/achievements/flutter_two.png
-    - assets/images/achievements/flutter_three.png
+    - assets/images/achievements/bronze_double.png
+    - assets/images/achievements/bronze_single.png
+    - assets/images/achievements/gold_double.png
+    - assets/images/achievements/gold_single.png
+    - assets/images/achievements/leaderboard.png
+    - assets/images/achievements/midnight.png
+    - assets/images/achievements/perseverance.png
     - assets/images/achievements/pipes_one.png
-    - assets/images/achievements/pipes_two.png
     - assets/images/achievements/pipes_three.png
+    - assets/images/achievements/pipes_two.png
+    - assets/images/achievements/platforms.png
+    - assets/images/achievements/silver_double.png
+    - assets/images/achievements/silver_single.png
+    - assets/images/achievements/winged_warrior.png
+    - assets/images/achievements/wings_one.png
+    - assets/images/achievements/wings_three.png
+    - assets/images/achievements/wings_two.png
+    - assets/images/achievements/wood_double.png
+    - assets/images/achievements/wood_single.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

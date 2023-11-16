@@ -125,9 +125,11 @@ class SecureStorage {
     return await storage.read(key: _keySound);
   }
 
+  final String _keyWoodSingle = 'bronzeSingle';
   final String _keyBronzeSingle = 'bronzeSingle';
   final String _keySilverSingle = 'silverSingle';
   final String _keyGoldSingle = 'goldSingle';
+  final String _keyWoodDouble = 'bronzeDouble';
   final String _keyBronzeDouble = 'bronzeDouble';
   final String _keySilverDouble = 'silverDouble';
   final String _keyGoldDouble = 'goldDouble';
@@ -138,6 +140,15 @@ class SecureStorage {
   final String _keyPipesTwo = 'pipesTwo';
   final String _keyPipesThree = 'pipesThree';
   final String _keyPerseverance = 'perseverance';
+  final String _keyNightOwl = 'nightOwl';
+  final String _keyWingedWarrior = 'wingedWarrior';
+
+  Future setWoodSingle(String woodSingle) async {
+    await storage.write(key: _keyWoodSingle, value: woodSingle);
+  }
+  Future<String?> getWoodSingle() async {
+    return await storage.read(key: _keyWoodSingle);
+  }
 
   Future setBronzeSingle(String bronzeSingle) async {
     await storage.write(key: _keyBronzeSingle, value: bronzeSingle);
@@ -158,6 +169,13 @@ class SecureStorage {
   }
   Future<String?> getGoldSingle() async {
     return await storage.read(key: _keyGoldSingle);
+  }
+
+  Future setWoodDouble(String woodDouble) async {
+    await storage.write(key: _keyWoodDouble, value: woodDouble);
+  }
+  Future<String?> getWoodDouble() async {
+    return await storage.read(key: _keyWoodDouble);
   }
 
   Future setBronzeDouble(String bronzeDouble) async {
@@ -230,6 +248,20 @@ class SecureStorage {
     return await storage.read(key: _keyPerseverance);
   }
 
+  Future setNightOwl(String nightOwl) async {
+    await storage.write(key: _keyNightOwl, value: nightOwl);
+  }
+  Future<String?> getNightOwl() async {
+    return await storage.read(key: _keyNightOwl);
+  }
+
+  Future setWingedWarrior(String wingedWarrior) async {
+    await storage.write(key: _keyWingedWarrior, value: wingedWarrior);
+  }
+  Future<String?> getWingedWarrior() async {
+    return await storage.read(key: _keyWingedWarrior);
+  }
+
   Future logout() async {
     await storage.write(key: _keyAccessToken, value: null);
     await storage.write(key: _keyRefreshToken, value: null);
@@ -247,10 +279,12 @@ class SecureStorage {
     await storage.write(key: _keyPlayerType, value: null);
     await storage.write(key: _keySound, value: null);
 
+    await storage.write(key: _keyWoodSingle, value: null);
     await storage.write(key: _keyBronzeSingle, value: null);
     await storage.write(key: _keySilverSingle, value: null);
     await storage.write(key: _keyGoldSingle, value: null);
     await storage.write(key: _keyBronzeDouble, value: null);
+    await storage.write(key: _keyWoodDouble, value: null);
     await storage.write(key: _keySilverDouble, value: null);
     await storage.write(key: _keyGoldDouble, value: null);
     await storage.write(key: _keyFlutterOne, value: null);
@@ -260,6 +294,24 @@ class SecureStorage {
     await storage.write(key: _keyPipesTwo, value: null);
     await storage.write(key: _keyPipesThree, value: null);
     await storage.write(key: _keyPerseverance, value: null);
+    await storage.write(key: _keyNightOwl, value: null);
+    await storage.write(key: _keyWingedWarrior, value: null);
   }
 
+  final String _keyPreviousDay = 'wingedWarrior';
+  final String _keyDaysInARow = 'daysInARow';
+
+  Future setPreviousDay(String previousDay) async {
+    await storage.write(key: _keyPreviousDay, value: previousDay);
+  }
+  Future<String?> getPreviousDay() async {
+    return await storage.read(key: _keyPreviousDay);
+  }
+
+  Future setDaysInARow(String daysInARow) async {
+    await storage.write(key: _keyDaysInARow, value: daysInARow);
+  }
+  Future<String?> getDaysInARow() async {
+    return await storage.read(key: _keyDaysInARow);
+  }
 }

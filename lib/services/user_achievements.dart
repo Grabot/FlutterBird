@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/util/web_storage.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
+import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
 
 class UserAchievements {
   static final UserAchievements _instance = UserAchievements._internal();
 
+  bool woodSingle = false;
   bool bronzeSingle = false;
   bool silverSingle = false;
   bool goldSingle = false;
+  bool woodDouble = false;
   bool bronzeDouble = false;
   bool silverDouble = false;
   bool goldDouble = false;
@@ -24,17 +27,21 @@ class UserAchievements {
   bool pipesTwo = false;
   bool pipesThree = false;
   bool perseverance = false;
+  bool nightOwl = false;
+  bool wingedWarrior = false;
 
-  int totalNumberOfAchievements = 13;
+  int totalNumberOfAchievements = 15;
   int totalAchievementsRetrieved = 0;
 
   late List<Achievement> allAchievementsAvailable;
 
   SecureStorage secureStorage = SecureStorage();
 
+  late Achievement woodSingleAchievement;
   late Achievement bronzeSingleAchievement;
   late Achievement silverSingleAchievement;
   late Achievement goldSingleAchievement;
+  late Achievement woodDoubleAchievement;
   late Achievement bronzeDoubleAchievement;
   late Achievement silverDoubleAchievement;
   late Achievement goldDoubleAchievement;
@@ -45,9 +52,18 @@ class UserAchievements {
   late Achievement pipesTwoAchievement;
   late Achievement pipesThreeAchievement;
   late Achievement perseveranceAchievement;
+  late Achievement nightOwlAchievement;
+  late Achievement wingedWarriorAchievement;
 
   UserAchievements._internal() {
     // retrieve storage
+    secureStorage.getWoodSingle().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        woodSingle = bool.parse(value);
+      }
+      createAchievementList();
+    });
     secureStorage.getBronzeSingle().then((value) {
       totalAchievementsRetrieved += 1;
       if (value != null) {
@@ -66,6 +82,13 @@ class UserAchievements {
       totalAchievementsRetrieved += 1;
       if (value != null) {
         goldSingle = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getWoodDouble().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        woodDouble = bool.parse(value);
       }
       createAchievementList();
     });
@@ -139,61 +162,87 @@ class UserAchievements {
       }
       createAchievementList();
     });
+    secureStorage.getNightOwl().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        nightOwl = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    secureStorage.getWingedWarrior().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        wingedWarrior = bool.parse(value);
+      }
+      createAchievementList();
+    });
   }
 
   createAchievementList() {
     if (totalAchievementsRetrieved == totalNumberOfAchievements) {
+      woodSingleAchievement = Achievement(
+          achievementName: "woodSingle",
+          imageName: "wood_single",
+          tooltip: "got more than 10 points in single player",
+          achieved: woodSingle
+      );
       bronzeSingleAchievement = Achievement(
           achievementName: "bronzeSingle",
-          imageName: "single_bird_bronze_medal",
-          tooltip: "got more than 10 points in single player",
+          imageName: "bronze_single",
+          tooltip: "got more than 25 points in single player",
           achieved: bronzeSingle
       );
       silverSingleAchievement = Achievement(
           achievementName: "silverSingle",
-          imageName: "single_bird_silver_medal",
-          tooltip: "got more than 25 points in single player!",
+          imageName: "silver_single",
+          tooltip: "got more than 50 points in single player!",
           achieved: silverSingle
       );
       goldSingleAchievement = Achievement(
           achievementName: "goldSingle",
-          imageName: "single_bird_gold_medal",
+          imageName: "gold_single",
           tooltip: "got more than 100 points in single player!!!",
           achieved: goldSingle
       );
+      woodDoubleAchievement = Achievement(
+          achievementName: "woodDouble",
+          imageName: "wood_double",
+          tooltip: "got more than 10 points with 2 players",
+          achieved: woodDouble
+      );
       bronzeDoubleAchievement = Achievement(
           achievementName: "bronzeDouble",
-          imageName: "double_bird_bronze_medal",
-          tooltip: "got more than 10 points with 2 players",
+          imageName: "bronze_double",
+          tooltip: "got more than 25 points with 2 players",
           achieved: bronzeDouble
       );
       silverDoubleAchievement = Achievement(
           achievementName: "silverDouble",
-          imageName: "double_bird_silver_medal",
-          tooltip: "got more than 25 points with 2 players!",
+          imageName: "silver_double",
+          tooltip: "got more than 50 points with 2 players!",
           achieved: silverDouble
       );
       goldDoubleAchievement = Achievement(
           achievementName: "goldDouble",
-          imageName: "double_bird_gold_medal",
+          imageName: "gold_double",
           tooltip: "got more than 100 points with 2 players!!!",
           achieved: goldDouble
       );
       flutterOneAchievement = Achievement(
           achievementName: "flutterOne",
-          imageName: "flutter_one",
+          imageName: "wings_one",
           tooltip: "You have fluttered your birds already more than a thousand times",
           achieved: flutterOne
       );
       flutterTwoAchievement = Achievement(
           achievementName: "flutterTwo",
-          imageName: "flutter_two",
+          imageName: "wings_two",
           tooltip: "You have fluttered your birds already more than two thousand and give hundred times!",
           achieved: flutterTwo
       );
       flutterThreeAchievement = Achievement(
           achievementName: "flutterThree",
-          imageName: "flutter_three",
+          imageName: "wings_three",
           tooltip: "You have fluttered your birds already more than ten thousand times!!!",
           achieved: flutterThree
       );
@@ -217,14 +266,28 @@ class UserAchievements {
       );
       perseveranceAchievement = Achievement(
           achievementName: "perseverance",
-          imageName: "bird_placeholder",
+          imageName: "perseverance",
           tooltip: "You kept playing the game even after crashing 50 times in a single session!",
           achieved: perseverance
       );
+      nightOwlAchievement = Achievement(
+          achievementName: "nightOwl",
+          imageName: "midnight",
+          tooltip: "You scored more than 20 points between 12:00 AM and 3:00 AM!",
+          achieved: nightOwl
+      );
+      wingedWarriorAchievement = Achievement(
+          achievementName: "wingedWarrior",
+          imageName: "winged_warrior",
+          tooltip: "You have played Flutterbird for 7 days in a row!",
+          achieved: wingedWarrior
+      );
       allAchievementsAvailable = [
+        woodSingleAchievement,
         bronzeSingleAchievement,
         silverSingleAchievement,
         goldSingleAchievement,
+        woodDoubleAchievement,
         bronzeDoubleAchievement,
         silverDoubleAchievement,
         goldDoubleAchievement,
@@ -234,7 +297,9 @@ class UserAchievements {
         pipesOneAchievement,
         pipesTwoAchievement,
         pipesThreeAchievement,
-        perseveranceAchievement
+        perseveranceAchievement,
+        nightOwlAchievement,
+        wingedWarriorAchievement
       ];
     }
   }
@@ -244,9 +309,11 @@ class UserAchievements {
   }
 
   logout() {
+    woodSingle = false;
     bronzeSingle = false;
     silverSingle = false;
     goldSingle = false;
+    woodDouble = false;
     bronzeDouble = false;
     silverDouble = false;
     goldDouble = false;
@@ -257,9 +324,13 @@ class UserAchievements {
     pipesTwo = false;
     pipesThree = false;
     perseverance = false;
+    nightOwl = false;
+    wingedWarrior = false;
+    secureStorage.setWoodSingle("false");
     secureStorage.setBronzeSingle("false");
     secureStorage.setSilverSingle("false");
     secureStorage.setGoldSingle("false");
+    secureStorage.setWoodDouble("false");
     secureStorage.setBronzeDouble("false");
     secureStorage.setSilverDouble("false");
     secureStorage.setGoldDouble("false");
@@ -270,9 +341,13 @@ class UserAchievements {
     secureStorage.setPipesTwo("false");
     secureStorage.setPipesThree("false");
     secureStorage.setPerseverance("false");
+    secureStorage.setNightOwl("false");
+    secureStorage.setWingedWarrior("false");
+    woodSingleAchievement.achieved = false;
     bronzeSingleAchievement.achieved = false;
     silverSingleAchievement.achieved = false;
     goldSingleAchievement.achieved = false;
+    woodDoubleAchievement.achieved = false;
     bronzeDoubleAchievement.achieved = false;
     silverDoubleAchievement.achieved = false;
     goldDoubleAchievement.achieved = false;
@@ -283,6 +358,17 @@ class UserAchievements {
     pipesTwoAchievement.achieved = false;
     pipesThreeAchievement.achieved = false;
     perseveranceAchievement.achieved = false;
+    nightOwlAchievement.achieved = false;
+    wingedWarriorAchievement.achieved = false;
+  }
+
+  getWoodSingle() {
+    return woodSingle;
+  }
+  achievedWoodSingle() async {
+    this.woodSingle = true;
+    woodSingleAchievement.achieved = true;
+    secureStorage.setWoodSingle(woodSingle.toString());
   }
 
   getBronzeSingle() {
@@ -310,6 +396,15 @@ class UserAchievements {
     goldSingle = true;
     goldSingleAchievement.achieved = true;
     secureStorage.setGoldSingle(goldSingle.toString());
+  }
+
+  getWoodDouble() {
+    return woodDouble;
+  }
+  achievedWoodDouble() async {
+    woodDouble = true;
+    woodDoubleAchievement.achieved = true;
+    secureStorage.setWoodDouble(woodDouble.toString());
   }
 
   getBronzeDouble() {
@@ -402,6 +497,24 @@ class UserAchievements {
     secureStorage.setPerseverance(perseverance.toString());
   }
 
+  getNightOwl() {
+    return nightOwl;
+  }
+  achievedNightOwl() async {
+    nightOwl = true;
+    nightOwlAchievement.achieved = true;
+    secureStorage.setNightOwl(nightOwl.toString());
+  }
+
+  getWingedWarrior() {
+    return wingedWarrior;
+  }
+  achievedWingedWarrior() async {
+    wingedWarrior = true;
+    wingedWarriorAchievement.achieved = true;
+    secureStorage.setWingedWarrior(wingedWarrior.toString());
+  }
+
   List<Achievement> getAchievementsAvailable() {
     return allAchievementsAvailable;
   }
@@ -418,9 +531,11 @@ class UserAchievements {
 
   Achievements getAchievements() {
     return Achievements(
+        woodSingle,
         bronzeSingle,
         silverSingle,
         goldSingle,
+        woodDouble,
         bronzeDouble,
         silverDouble,
         goldDouble,
@@ -430,16 +545,77 @@ class UserAchievements {
         pipesOne,
         pipesTwo,
         pipesThree,
-        perseverance
+        perseverance,
+        nightOwl,
+        wingedWarrior
     );
+  }
+
+  bool _isNumeric(String? str) {
+    if(str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
+  }
+
+  checkWingedWarrior(ScoreScreenChangeNotifier scoreScreenChangeNotifier) {
+    secureStorage.getPreviousDay().then((value) {
+      if (value == null) {
+        // Set the previous day to today. We just store the day, that should be sufficient.
+        secureStorage.setPreviousDay(DateTime.now().day.toString());
+      } else {
+        if (_isNumeric(value)) {
+          int storedPreviousDay = int.parse(value);
+          int currentDay = DateTime.now().day;
+          int yesterday = DateTime.now().subtract(const Duration(days:1)).day;
+          if (storedPreviousDay == currentDay) {
+            // Do nothing, we already played today.
+          } else {
+            // It's a different day so we update the previous day so it can check it tomorrow.
+            secureStorage.setPreviousDay(DateTime.now().day.toString());
+            // the stored and previous day is different.
+            // The stored has to be yesterday.
+            // Otherwise the user played on a different day besides yesterday.
+            if (storedPreviousDay == yesterday) {
+              // We can increase the daysInARow counter
+              secureStorage.getDaysInARow().then((value) {
+                if (value== null) {
+                  secureStorage.setDaysInARow("1");
+                } else {
+                  int daysInARow = int.parse(value) + 1;
+                  secureStorage.setDaysInARow(daysInARow.toString());
+                  if (daysInARow == 7) {
+                    // 7 days in a row, you won the achievement.
+                    achievedWingedWarrior();
+                    scoreScreenChangeNotifier.addAchievement(wingedWarriorAchievement);
+                    scoreScreenChangeNotifier.notify();
+                  }
+                }
+              });
+            } else {
+              // The user did not play yesterday, so we reset the counter.
+              // It's possible that the user plays once a month for 10 months
+              // with the days being sequential such that it will get this
+              // achievement. We don't really mind this edge case.
+              secureStorage.setDaysInARow("1");
+            }
+          }
+        } else {
+          // If the previous day is not numeric, than something went wrong but we fix it here.
+          secureStorage.setPreviousDay(DateTime.now().day.toString());
+        }
+      }
+    });
   }
 }
 
 class Achievements {
 
+  bool woodSingle = false;
   bool bronzeSingle = false;
   bool silverSingle = false;
   bool goldSingle = false;
+  bool woodDouble = false;
   bool bronzeDouble = false;
   bool silverDouble = false;
   bool goldDouble = false;
@@ -450,10 +626,15 @@ class Achievements {
   bool pipesTwo = false;
   bool pipesThree = false;
   bool perseverance = false;
+  bool nightOwl = false;
+  bool wingedWarrior = false;
 
-  Achievements(this.bronzeSingle, this.silverSingle, this.goldSingle, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance);
+  Achievements(this.woodSingle, this.bronzeSingle, this.silverSingle, this.goldSingle, this.woodDouble, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance, this.nightOwl, this.wingedWarrior);
 
   Achievements.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey("wood_single")) {
+      woodSingle = json["wood_single"];
+    }
     if (json.containsKey("bronze_single")) {
       bronzeSingle = json["bronze_single"];
     }
@@ -462,6 +643,9 @@ class Achievements {
     }
     if (json.containsKey("gold_single")) {
       goldSingle = json["gold_single"];
+    }
+    if (json.containsKey("wood_double")) {
+      woodDouble = json["wood_double"];
     }
     if (json.containsKey("bronze_double")) {
       bronzeDouble = json["bronze_double"];
@@ -493,11 +677,20 @@ class Achievements {
     if (json.containsKey("perseverance")) {
       perseverance = json["perseverance"];
     }
+    if (json.containsKey("night_owl")) {
+      nightOwl = json["night_owl"];
+    }
+    if (json.containsKey("winged_warrior")) {
+      wingedWarrior = json["winged_warrior"];
+    }
   }
 
   Map<String, dynamic> toJson() {
     var json = <String, dynamic>{};
 
+    if (woodSingle) {
+      json['wood_single'] = woodSingle;
+    }
     if (bronzeSingle) {
       json['bronze_single'] = bronzeSingle;
     }
@@ -506,6 +699,9 @@ class Achievements {
     }
     if (goldSingle) {
       json['gold_single'] = goldSingle;
+    }
+    if (woodDouble) {
+      json['wood_double'] = woodDouble;
     }
     if (bronzeDouble) {
       json['bronze_double'] = bronzeDouble;
@@ -537,7 +733,20 @@ class Achievements {
     if (perseverance) {
       json['perseverance'] = perseverance;
     }
+    if (nightOwl) {
+      json['night_owl'] = nightOwl;
+    }
+    if (wingedWarrior) {
+      json['winged_warrior'] = wingedWarrior;
+    }
     return json;
+  }
+
+  bool getWoodSingle() {
+    return woodSingle;
+  }
+  setWoodSingle(bool woodSingle) {
+    this.woodSingle = woodSingle;
   }
 
   bool getBronzeSingle() {
@@ -559,6 +768,13 @@ class Achievements {
   }
   setGoldSingle(bool goldSingle) {
     this.goldSingle = goldSingle;
+  }
+
+  bool getWoodDouble() {
+    return woodDouble;
+  }
+  setWoodDouble(bool woodDouble) {
+    this.woodDouble = woodDouble;
   }
 
   bool getBronzeDouble() {
@@ -629,5 +845,19 @@ class Achievements {
   }
   setPerseverance(bool perseverance) {
     this.perseverance = perseverance;
+  }
+
+  bool getNightOwl() {
+    return nightOwl;
+  }
+  setNightOwl(bool nightOwl) {
+    this.nightOwl = nightOwl;
+  }
+
+  bool getWingedWarrior() {
+    return wingedWarrior;
+  }
+  setWingedWarrior(bool wingedWarrior) {
+    this.wingedWarrior = wingedWarrior;
   }
 }

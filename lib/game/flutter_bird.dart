@@ -81,6 +81,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   int flutters = 0;
   int pipesCleared = 0;
   int gameOvers = 0;
+  int nightTimeScore = 0;
 
   bool dataLoaded = false;
   late Vector2 initialPosBird1;
@@ -252,14 +253,20 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   checkingAchievements() {
     // First check the medal achievements
     if (!twoPlayers) {
-      if (!userAchievements.getBronzeSingle()) {
+      if (!userAchievements.getWoodSingle()) {
         if (score >= 10) {
+          userAchievements.achievedWoodSingle();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.woodSingleAchievement);
+        }
+      }
+      if (!userAchievements.getBronzeSingle()) {
+        if (score >= 25) {
           userAchievements.achievedBronzeSingle();
           scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeSingleAchievement);
         }
       }
       if (!userAchievements.getSilverSingle()) {
-        if (score >= 25) {
+        if (score >= 50) {
           userAchievements.achievedSilverSingle();
           scoreScreenChangeNotifier.addAchievement(userAchievements.silverSingleAchievement);
         }
@@ -271,14 +278,20 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         }
       }
     } else {
-      if (!userAchievements.getBronzeDouble()) {
+      if (!userAchievements.getWoodDouble()) {
         if (score >= 10) {
+          userAchievements.achievedWoodDouble();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.woodDoubleAchievement);
+        }
+      }
+      if (!userAchievements.getBronzeDouble()) {
+        if (score >= 25) {
           userAchievements.achievedBronzeDouble();
           scoreScreenChangeNotifier.addAchievement(userAchievements.bronzeDoubleAchievement);
         }
       }
       if (!userAchievements.getSilverDouble()) {
-        if (score >= 25) {
+        if (score >= 50) {
           userAchievements.achievedSilverDouble();
           scoreScreenChangeNotifier.addAchievement(userAchievements.silverDoubleAchievement);
         }
@@ -333,6 +346,21 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         scoreScreenChangeNotifier.addAchievement(userAchievements.perseveranceAchievement);
       }
     }
+    DateTime current = DateTime.now();
+    if (!userAchievements.getNightOwl()) {
+      if (current.hour >= 0 && current.hour <= 2) {
+        // It is after midnight so check if the user got the night owl achievement
+        nightTimeScore += score;
+        if (nightTimeScore > 20) {
+          userAchievements.achievedNightOwl();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.nightOwlAchievement);
+        }
+      }
+    }
+    if (!userAchievements.getWingedWarrior()) {
+      userAchievements.checkWingedWarrior(scoreScreenChangeNotifier);
+    }
+    // TODO: 10 days in a row achievement
     User? currentUser = settings.getUser();
     if (currentUser != null) {
       if (scoreScreenChangeNotifier.getAchievementEarned().isNotEmpty) {
