@@ -68,7 +68,7 @@ class LoginResponse {
             // The user has achieved the platform achievement
             UserAchievements userAchievements = UserAchievements();
             if (!userAchievements.getPlatforms()) {
-              UserAchievements().achievedPlatforms();
+              userAchievements.achievedPlatforms();
             }
           }
         }

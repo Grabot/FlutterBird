@@ -30,9 +30,14 @@ class UserAchievements {
   bool nightOwl = false;
   bool wingedWarrior = false;
   bool platforms = false;
-  // You achieve it when you log in, you later show the achievement
+  bool leaderboard = false;
+  // You achieve the platforms achievement when you log in,
+  // you are later show the achievement.
   // We use this variable to check if we just achieved it.
   bool justAchievedPlatforms = false;
+
+  int lastDayPlayed = -1;
+  int daysInARow = 0;
 
   int totalNumberOfAchievements = 15;
   int totalAchievementsRetrieved = 0;
@@ -59,6 +64,7 @@ class UserAchievements {
   late Achievement nightOwlAchievement;
   late Achievement wingedWarriorAchievement;
   late Achievement platformsAchievement;
+  late Achievement leaderboardAchievement;
 
   UserAchievements._internal() {
     // retrieve storage
@@ -188,6 +194,24 @@ class UserAchievements {
       }
       createAchievementList();
     });
+    secureStorage.getLeaderboard().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        leaderboard = bool.parse(value);
+      }
+      createAchievementList();
+    });
+    // achievement assistance values
+    secureStorage.getLastDayPlayed().then((value) {
+      if (value != null) {
+        lastDayPlayed = int.parse(value);
+      }
+    });
+    secureStorage.getDaysInARow().then((value) {
+      if (value != null) {
+        daysInARow = int.parse(value);
+      }
+    });
   }
 
   createAchievementList() {
@@ -300,6 +324,12 @@ class UserAchievements {
           tooltip: "You have played Flutterbird on the web at flutterbird.eu and also on IOS or Android!",
           achieved: platforms
       );
+      leaderboardAchievement = Achievement(
+          achievementName: "leaderboard",
+          imageName: "leaderboard",
+          tooltip: "You have reached the top 3 on the daily leaderboard!\n(Has to be logged in to achieve this)",
+          achieved: leaderboard
+      );
       allAchievementsAvailable = [
         woodSingleAchievement,
         bronzeSingleAchievement,
@@ -318,7 +348,8 @@ class UserAchievements {
         perseveranceAchievement,
         nightOwlAchievement,
         wingedWarriorAchievement,
-        platformsAchievement
+        platformsAchievement,
+        leaderboardAchievement
       ];
     }
   }
@@ -346,6 +377,9 @@ class UserAchievements {
     nightOwl = false;
     wingedWarrior = false;
     platforms = false;
+    leaderboard = false;
+    lastDayPlayed = -1;
+    daysInARow = 0;
     secureStorage.setWoodSingle("false");
     secureStorage.setBronzeSingle("false");
     secureStorage.setSilverSingle("false");
@@ -364,6 +398,9 @@ class UserAchievements {
     secureStorage.setNightOwl("false");
     secureStorage.setWingedWarrior("false");
     secureStorage.setPlatforms("false");
+    secureStorage.setLeaderboard("false");
+    secureStorage.setLastDayPlayed("-1");
+    secureStorage.setDaysInARow("0");
     woodSingleAchievement.achieved = false;
     bronzeSingleAchievement.achieved = false;
     silverSingleAchievement.achieved = false;
@@ -382,6 +419,7 @@ class UserAchievements {
     nightOwlAchievement.achieved = false;
     wingedWarriorAchievement.achieved = false;
     platformsAchievement.achieved = false;
+    leaderboardAchievement.achieved = false;
   }
 
   getWoodSingle() {
@@ -557,6 +595,29 @@ class UserAchievements {
     justAchievedPlatforms = false;
   }
 
+  getLeaderboard() {
+    return leaderboard;
+  }
+  achievedLeaderboard() async {
+    leaderboard = true;
+    leaderboardAchievement.achieved = true;
+    secureStorage.setLeaderboard(leaderboard.toString());
+  }
+
+  getLastDayPlayed() {
+    return lastDayPlayed;
+  }
+  setLastDayPlayed(int lastDayPlayed) {
+    this.lastDayPlayed = lastDayPlayed;
+  }
+
+  getDaysInARow() {
+    return daysInARow;
+  }
+  setDaysInARow(int daysInARow) {
+    this.daysInARow = daysInARow;
+  }
+
   List<Achievement> getAchievementsAvailable() {
     return allAchievementsAvailable;
   }
@@ -590,65 +651,55 @@ class UserAchievements {
         perseverance,
         nightOwl,
         wingedWarrior,
-        platforms
+        platforms,
+        leaderboard,
+        lastDayPlayed,
+        daysInARow
     );
   }
 
-  bool _isNumeric(String? str) {
-    if(str == null) {
-      return false;
-    }
-    return double.tryParse(str) != null;
-  }
-
   checkWingedWarrior(ScoreScreenChangeNotifier scoreScreenChangeNotifier) {
-    secureStorage.getPreviousDay().then((value) {
-      if (value == null) {
-        // Set the previous day to today. We just store the day, that should be sufficient.
-        secureStorage.setPreviousDay(DateTime.now().day.toString());
+    if (lastDayPlayed == -1) {
+      // Set the previous day to today. We just store the day, that should be sufficient.
+      lastDayPlayed = DateTime.now().day;
+      secureStorage.setLastDayPlayed(lastDayPlayed.toString());
+    } else {
+      int storedPreviousDay = lastDayPlayed;
+      int currentDay = DateTime.now().day;
+      int yesterday = DateTime.now().subtract(const Duration(days:1)).day;
+      if (storedPreviousDay == currentDay) {
+        // Do nothing, we already played today.
       } else {
-        if (_isNumeric(value)) {
-          int storedPreviousDay = int.parse(value);
-          int currentDay = DateTime.now().day;
-          int yesterday = DateTime.now().subtract(const Duration(days:1)).day;
-          if (storedPreviousDay == currentDay) {
-            // Do nothing, we already played today.
-          } else {
-            // It's a different day so we update the previous day so it can check it tomorrow.
-            secureStorage.setPreviousDay(DateTime.now().day.toString());
-            // the stored and previous day is different.
-            // The stored has to be yesterday.
-            // Otherwise the user played on a different day besides yesterday.
-            if (storedPreviousDay == yesterday) {
-              // We can increase the daysInARow counter
-              secureStorage.getDaysInARow().then((value) {
-                if (value== null) {
-                  secureStorage.setDaysInARow("1");
-                } else {
-                  int daysInARow = int.parse(value) + 1;
-                  secureStorage.setDaysInARow(daysInARow.toString());
-                  if (daysInARow == 7) {
-                    // 7 days in a row, you won the achievement.
-                    achievedWingedWarrior();
-                    scoreScreenChangeNotifier.addAchievement(wingedWarriorAchievement);
-                    scoreScreenChangeNotifier.notify();
-                  }
-                }
-              });
-            } else {
-              // The user did not play yesterday, so we reset the counter.
-              // It's possible that the user plays once a month for 10 months
-              // with the days being sequential such that it will get this
-              // achievement. We don't really mind this edge case.
-              secureStorage.setDaysInARow("1");
-            }
+        // It's a different day so we update the previous day so it can check it tomorrow.
+        lastDayPlayed = DateTime.now().day;
+        secureStorage.setLastDayPlayed(lastDayPlayed.toString());
+        // the stored and previous day is different.
+        // The stored has to be yesterday.
+        // Otherwise the user played on a different day besides yesterday.
+        if (storedPreviousDay == yesterday) {
+          print("adding a day!");
+          // We can increase the daysInARow counter
+          daysInARow += 1;
+          secureStorage.setDaysInARow(daysInARow.toString());
+          if (daysInARow >= 7) {
+            print("achieved!!!!");
+            // 7 days in a row, you won the achievement.
+            achievedWingedWarrior();
+            scoreScreenChangeNotifier.addAchievement(wingedWarriorAchievement);
+            scoreScreenChangeNotifier.notify();
           }
+          return true;
         } else {
-          // If the previous day is not numeric, than something went wrong but we fix it here.
-          secureStorage.setPreviousDay(DateTime.now().day.toString());
+          print("resetting days in a row.");
+          // The user did not play yesterday, so we reset the counter.
+          // It's possible that the user plays once a month for 10 months
+          // with the days being sequential such that it will get this
+          // achievement. We don't really mind this edge case.
+          secureStorage.setDaysInARow("1");
         }
       }
-    });
+    }
+    return false;
   }
 }
 
@@ -672,8 +723,12 @@ class Achievements {
   bool nightOwl = false;
   bool wingedWarrior = false;
   bool platforms = false;
+  bool leaderboard = false;
 
-  Achievements(this.woodSingle, this.bronzeSingle, this.silverSingle, this.goldSingle, this.woodDouble, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance, this.nightOwl, this.wingedWarrior, this.platforms);
+  int lastDayPlayed = -1;
+  int daysInARow = 0;
+
+  Achievements(this.woodSingle, this.bronzeSingle, this.silverSingle, this.goldSingle, this.woodDouble, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance, this.nightOwl, this.wingedWarrior, this.platforms, this.leaderboard, this.lastDayPlayed, this.daysInARow);
 
   Achievements.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("wood_single")) {
@@ -729,6 +784,15 @@ class Achievements {
     }
     if (json.containsKey("platforms")) {
       platforms = json["platforms"];
+    }
+    if (json.containsKey("leaderboard")) {
+      leaderboard = json["leaderboard"];
+    }
+    if (json.containsKey("last_day_played")) {
+      lastDayPlayed = json["last_day_played"];
+    }
+    if (json.containsKey("days_in_a_row")) {
+      daysInARow = json["days_in_a_row"];
     }
   }
 
@@ -788,6 +852,15 @@ class Achievements {
     }
     if (platforms) {
       json['platforms'] = platforms;
+    }
+    if (leaderboard) {
+      json['leaderboard'] = leaderboard;
+    }
+    if (lastDayPlayed != "") {
+      json['last_day_played'] = lastDayPlayed;
+    }
+    if (daysInARow != 0) {
+      json['days_in_a_row'] = daysInARow;
     }
     return json;
   }
@@ -916,5 +989,26 @@ class Achievements {
   }
   setPlatforms(bool platforms) {
     this.platforms = platforms;
+  }
+
+  bool getLeaderboard() {
+    return leaderboard;
+  }
+  setLeaderboard(bool leaderboard) {
+    this.leaderboard = leaderboard;
+  }
+
+  int getLastDayPlayed() {
+    return lastDayPlayed;
+  }
+  setLastDayPlayed(int lastDayPlayed) {
+    this.lastDayPlayed = lastDayPlayed;
+  }
+
+  int getDaysInARow() {
+    return daysInARow;
+  }
+  setDaysInARow(int daysInARow) {
+    this.daysInARow = daysInARow;
   }
 }

@@ -155,13 +155,13 @@ class ScoreScreenState extends State<ScoreScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: show.length,
           itemBuilder: (context, index) {
-            return achievementTile(context, show[index], medalWidth/4);
+            return achievementTile(context, show[index], medalHeight);
           },
         )
     );
   }
 
-  Widget achievementsEarnedWidget(double medalWidth, double medalHeight) {
+  Widget achievementsEarnedList(double medalWidth, double medalHeight) {
     List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
     return Container(
       width: medalWidth,
@@ -216,7 +216,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                   )
               )
           ),
-          achievementsEarnedWidget(medalWidth, achievementEarnedHeight),
+          achievementsEarnedList(medalWidth, achievementEarnedHeight),
           Container(
               height: textHeight,
               width: medalWidth,

@@ -357,8 +357,11 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         }
       }
     }
+    bool updatedWingedWarrior = false;
     if (!userAchievements.getWingedWarrior()) {
-      userAchievements.checkWingedWarrior(scoreScreenChangeNotifier);
+      if (userAchievements.checkWingedWarrior(scoreScreenChangeNotifier)) {
+        updatedWingedWarrior = true;
+      }
     }
     if (userAchievements.checkPlatforms()) {
       scoreScreenChangeNotifier.addAchievement(userAchievements.platformsAchievement);
@@ -366,7 +369,13 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     }
     User? currentUser = settings.getUser();
     if (currentUser != null) {
-      if (scoreScreenChangeNotifier.getAchievementEarned().isNotEmpty) {
+      if (!userAchievements.getLeaderboard()) {
+        if (settings.checkIfTop3(twoPlayers, score)) {
+          userAchievements.achievedLeaderboard();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.leaderboardAchievement);
+        }
+      }
+      if (scoreScreenChangeNotifier.getAchievementEarned().isNotEmpty || updatedWingedWarrior) {
         AuthServiceFlutterBird().updateAchievements(userAchievements.getAchievements()).then((result) {
           if (result.getResult()) {
             // we have updated the score in the db. Do nothing
@@ -557,18 +566,20 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
           // update leaderboard score
           User? currentUser = Settings().getUser();
           if (currentUser != null) {
-            if (!twoPlayers) {
-              AuthServiceLeaderboard().updateLeaderboardOnePlayer(score).then((value) {
-                if (value.getResult()) {
-                  showToastMessage("${value.getMessage()} for one player");
-                }
-              });
-            } else {
-              AuthServiceLeaderboard().updateLeaderboardTwoPlayers(score).then((value) {
-                if (value.getResult()) {
-                  showToastMessage("${value.getMessage()} for two players");
-                }
-              });
+            if (settings.checkIfTop10(twoPlayers, score)) {
+              if (!twoPlayers) {
+                AuthServiceLeaderboard().updateLeaderboardOnePlayer(score).then((value) {
+                  if (value.getResult()) {
+                    // do nothing, should be updated with socket connection
+                  }
+                });
+              } else {
+                AuthServiceLeaderboard().updateLeaderboardTwoPlayers(score).then((value) {
+                  if (value.getResult()) {
+                    // do nothing, should be updated with socket connection
+                  }
+                });
+              }
             }
           }
         }
@@ -694,6 +705,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   settingsChangeListener() {
     if (gameSettings.getPlayerType() != 0 && !twoPlayers) {
+      settings.getLeaderBoardsTwoPlayer();
       twoPlayers = true;
 
       birdSize.y = (size.y / 10000) * 466;
@@ -707,6 +719,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       clearPipes();
     }
     if (gameSettings.getPlayerType() != 1 && twoPlayers) {
+      settings.getLeaderBoardsOnePlayer();
       twoPlayers = false;
       remove(bird2);
       remove(birdOutlineBird2);
@@ -733,6 +746,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       clearPipes();
     } else {
       twoPlayers = true;
+      settings.getLeaderBoardsTwoPlayer();
 
       birdSize.y = (size.y / 10000) * 466;
       birdSize.x = (birdSize.y / 12) * 17;

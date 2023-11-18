@@ -132,16 +132,16 @@ class Settings extends ChangeNotifier {
         DateTime monthAgo = now.subtract(const Duration(days: 31));
         DateTime yearAgo = now.subtract(const Duration(days: 365));
         for (Rank rank in value) {
-          if (rank.timestamp.isAfter(dayAgo)) {
+          if (rank.getTimestamp().isAfter(dayAgo)) {
             rankingsOnePlayerDay.add(rank);
           }
-          if (rank.timestamp.isAfter(weekAgo)) {
+          if (rank.getTimestamp().isAfter(weekAgo)) {
             rankingsOnePlayerWeek.add(rank);
           }
-          if (rank.timestamp.isAfter(monthAgo)) {
+          if (rank.getTimestamp().isAfter(monthAgo)) {
             rankingsOnePlayerMonth.add(rank);
           }
-          if (rank.timestamp.isAfter(yearAgo)) {
+          if (rank.getTimestamp().isAfter(yearAgo)) {
             rankingsOnePlayerYear.add(rank);
           }
           rankingsOnePlayerAll.add(rank);
@@ -175,16 +175,16 @@ class Settings extends ChangeNotifier {
             // already in the lists
             continue;
           }
-          if (rank.timestamp.isAfter(dayAgo)) {
+          if (rank.getTimestamp().isAfter(dayAgo)) {
             rankingsTwoPlayerDay.add(rank);
           }
-          if (rank.timestamp.isAfter(weekAgo)) {
+          if (rank.getTimestamp().isAfter(weekAgo)) {
             rankingsTwoPlayerWeek.add(rank);
           }
-          if (rank.timestamp.isAfter(monthAgo)) {
+          if (rank.getTimestamp().isAfter(monthAgo)) {
             rankingsTwoPlayerMonth.add(rank);
           }
-          if (rank.timestamp.isAfter(yearAgo)) {
+          if (rank.getTimestamp().isAfter(yearAgo)) {
             rankingsTwoPlayerYear.add(rank);
           }
           rankingsTwoPlayerAll.add(rank);
@@ -205,7 +205,7 @@ class Settings extends ChangeNotifier {
     listToSort.sort((a, b) {
       int compare = b.score.compareTo(a.score);
       if (compare == 0) {
-        return a.timestamp.compareTo(b.timestamp);
+        return a.getTimestamp().compareTo(b.getTimestamp());
       } else {
         return compare;
       }
@@ -340,5 +340,43 @@ class Settings extends ChangeNotifier {
 
   Uint8List? getAvatar() {
     return avatar;
+  }
+
+  bool checkIfTop3(bool twoPlayer, int score) {
+    if (twoPlayer) {
+      if (rankingsTwoPlayerDay.length < 3) {
+        return true;
+      }
+      if (score > rankingsTwoPlayerDay[2].getScore()) {
+        return true;
+      }
+    } else {
+      if (rankingsOnePlayerDay.length < 3) {
+        return true;
+      }
+      if (score > rankingsOnePlayerDay[2].getScore()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool checkIfTop10(bool twoPlayer, int score) {
+    if (twoPlayer) {
+      if (rankingsTwoPlayerDay.length < 10) {
+        return true;
+      }
+      if (score > rankingsTwoPlayerDay[9].getScore()) {
+        return true;
+      }
+    } else {
+      if (rankingsOnePlayerDay.length < 10) {
+        return true;
+      }
+      if (score > rankingsOnePlayerDay[9].getScore()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

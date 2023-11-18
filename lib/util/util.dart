@@ -214,6 +214,20 @@ getAchievements(LoginResponse loginResponse, int userId) {
       achievements.setPlatforms(userAchievements.getPlatforms());
       updateAchievements = true;
     }
+    if (achievements.getLeaderboard() && !userAchievements.getLeaderboard()) {
+      userAchievements.achievedLeaderboard();
+    } else if (!achievements.getLeaderboard() && userAchievements.getLeaderboard()) {
+      achievements.setLeaderboard(userAchievements.getLeaderboard());
+      updateAchievements = true;
+    }
+
+    // achievement helper variables
+    if (achievements.getLastDayPlayed() != userAchievements.getLastDayPlayed()) {
+      userAchievements.setLastDayPlayed(achievements.getLastDayPlayed());
+    }
+    if (achievements.getDaysInARow() != userAchievements.getDaysInARow()) {
+      userAchievements.setDaysInARow(achievements.getDaysInARow());
+    }
 
     if (updateAchievements) {
       AuthServiceFlutterBird().updateAchievements(achievements).then((result) {

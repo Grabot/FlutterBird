@@ -143,6 +143,7 @@ class SecureStorage {
   final String _keyNightOwl = 'nightOwl';
   final String _keyWingedWarrior = 'wingedWarrior';
   final String _keyPlatforms = 'wingedWarrior';
+  final String _keyLeaderboard = 'wingedWarrior';
 
   Future setWoodSingle(String woodSingle) async {
     await storage.write(key: _keyWoodSingle, value: woodSingle);
@@ -270,6 +271,13 @@ class SecureStorage {
     return await storage.read(key: _keyPlatforms);
   }
 
+  Future setLeaderboard(String leaderboard) async {
+    await storage.write(key: _keyLeaderboard, value: leaderboard);
+  }
+  Future<String?> getLeaderboard() async {
+    return await storage.read(key: _keyLeaderboard);
+  }
+
   Future logout() async {
     await storage.write(key: _keyAccessToken, value: null);
     await storage.write(key: _keyRefreshToken, value: null);
@@ -305,18 +313,19 @@ class SecureStorage {
     await storage.write(key: _keyNightOwl, value: null);
     await storage.write(key: _keyWingedWarrior, value: null);
     await storage.write(key: _keyPlatforms, value: null);
-    await storage.write(key: _keyPreviousDay, value: null);
+    await storage.write(key: _keyLeaderboard, value: null);
+    await storage.write(key: _keyLastDayPlayed, value: null);
     await storage.write(key: _keyDaysInARow, value: null);
   }
 
-  final String _keyPreviousDay = 'wingedWarrior';
+  final String _keyLastDayPlayed = 'lastDayPlayed';
   final String _keyDaysInARow = 'daysInARow';
 
-  Future setPreviousDay(String previousDay) async {
-    await storage.write(key: _keyPreviousDay, value: previousDay);
+  Future setLastDayPlayed(String lastDayPlayed) async {
+    await storage.write(key: _keyLastDayPlayed, value: lastDayPlayed);
   }
-  Future<String?> getPreviousDay() async {
-    return await storage.read(key: _keyPreviousDay);
+  Future<String?> getLastDayPlayed() async {
+    return await storage.read(key: _keyLastDayPlayed);
   }
 
   Future setDaysInARow(String daysInARow) async {

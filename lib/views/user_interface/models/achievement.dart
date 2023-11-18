@@ -13,12 +13,19 @@ class Achievement {
     required this.achieved,
   });
 
-  bool equals(Achievement other) {
-    return this.achievementName == other.getAchievementName()
-        && this.imageName == other.getImagePath()
-        && this.tooltip == other.getTooltip()
-        && this.achieved == other.getAchieved();
+  @override
+  bool operator ==(Object other) {
+    if (other is Achievement) {
+      return this.achievementName == other.getAchievementName()
+          && this.imageName == other.getImagePath()
+          && this.tooltip == other.getTooltip()
+          && this.achieved == other.getAchieved();
+    }
+    return false;
   }
+
+  @override
+  int get hashCode => achievementName.hashCode ^ imageName.hashCode ^ tooltip.hashCode ^ achieved.hashCode;
 
   getAchievementName() {
     return achievementName;
