@@ -23,7 +23,6 @@ class AuthApi {
           baseUrl: apiUrlV1_0,
           receiveTimeout: const Duration(milliseconds: 15000),
           connectTimeout: const Duration(milliseconds: 15000),
-          sendTimeout: const Duration(milliseconds: 15000),
         )
     );
 
@@ -74,7 +73,6 @@ class AppInterceptors extends Interceptor {
                   baseUrl: apiUrlV1_0,
                   receiveTimeout: const Duration(milliseconds: 15000),
                   connectTimeout: const Duration(milliseconds: 15000),
-                  sendTimeout: const Duration(milliseconds: 15000),
                 )
             ).post(endPoint,
                 options: Options(headers: {

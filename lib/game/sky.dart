@@ -6,7 +6,7 @@ import 'package:flame/parallax.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 
 
-class Sky extends ParallaxComponent<FlutterBird> {
+class Sky extends ParallaxComponent<FlutterBird> with HasGameRef<FlutterBird> {
 
   int backgroundType = 0;
 

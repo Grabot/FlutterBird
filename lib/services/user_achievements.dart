@@ -29,6 +29,10 @@ class UserAchievements {
   bool perseverance = false;
   bool nightOwl = false;
   bool wingedWarrior = false;
+  bool platforms = false;
+  // You achieve it when you log in, you later show the achievement
+  // We use this variable to check if we just achieved it.
+  bool justAchievedPlatforms = false;
 
   int totalNumberOfAchievements = 15;
   int totalAchievementsRetrieved = 0;
@@ -54,6 +58,7 @@ class UserAchievements {
   late Achievement perseveranceAchievement;
   late Achievement nightOwlAchievement;
   late Achievement wingedWarriorAchievement;
+  late Achievement platformsAchievement;
 
   UserAchievements._internal() {
     // retrieve storage
@@ -176,6 +181,13 @@ class UserAchievements {
       }
       createAchievementList();
     });
+    secureStorage.getPlatforms().then((value) {
+      totalAchievementsRetrieved += 1;
+      if (value != null) {
+        platforms = bool.parse(value);
+      }
+      createAchievementList();
+    });
   }
 
   createAchievementList() {
@@ -237,7 +249,7 @@ class UserAchievements {
       flutterTwoAchievement = Achievement(
           achievementName: "flutterTwo",
           imageName: "wings_two",
-          tooltip: "You have fluttered your birds already more than two thousand and give hundred times!",
+          tooltip: "You have fluttered your birds already more than two thousand and five hundred times!",
           achieved: flutterTwo
       );
       flutterThreeAchievement = Achievement(
@@ -273,7 +285,7 @@ class UserAchievements {
       nightOwlAchievement = Achievement(
           achievementName: "nightOwl",
           imageName: "midnight",
-          tooltip: "You scored more than 20 points between 12:00 AM and 3:00 AM!",
+          tooltip: "You scored more than 20 points in a single session between 12:00 AM and 3:00 AM!",
           achieved: nightOwl
       );
       wingedWarriorAchievement = Achievement(
@@ -281,6 +293,12 @@ class UserAchievements {
           imageName: "winged_warrior",
           tooltip: "You have played Flutterbird for 7 days in a row!",
           achieved: wingedWarrior
+      );
+      platformsAchievement = Achievement(
+          achievementName: "platforms",
+          imageName: "platforms",
+          tooltip: "You have played Flutterbird on the web at flutterbird.eu and also on IOS or Android!",
+          achieved: platforms
       );
       allAchievementsAvailable = [
         woodSingleAchievement,
@@ -299,7 +317,8 @@ class UserAchievements {
         pipesThreeAchievement,
         perseveranceAchievement,
         nightOwlAchievement,
-        wingedWarriorAchievement
+        wingedWarriorAchievement,
+        platformsAchievement
       ];
     }
   }
@@ -326,6 +345,7 @@ class UserAchievements {
     perseverance = false;
     nightOwl = false;
     wingedWarrior = false;
+    platforms = false;
     secureStorage.setWoodSingle("false");
     secureStorage.setBronzeSingle("false");
     secureStorage.setSilverSingle("false");
@@ -343,6 +363,7 @@ class UserAchievements {
     secureStorage.setPerseverance("false");
     secureStorage.setNightOwl("false");
     secureStorage.setWingedWarrior("false");
+    secureStorage.setPlatforms("false");
     woodSingleAchievement.achieved = false;
     bronzeSingleAchievement.achieved = false;
     silverSingleAchievement.achieved = false;
@@ -360,6 +381,7 @@ class UserAchievements {
     perseveranceAchievement.achieved = false;
     nightOwlAchievement.achieved = false;
     wingedWarriorAchievement.achieved = false;
+    platformsAchievement.achieved = false;
   }
 
   getWoodSingle() {
@@ -515,6 +537,26 @@ class UserAchievements {
     secureStorage.setWingedWarrior(wingedWarrior.toString());
   }
 
+  getPlatforms() {
+    return platforms;
+  }
+  setPlatforms(bool platforms) {
+    this.platforms = platforms;
+  }
+  achievedPlatforms() async {
+    platforms = true;
+    justAchievedPlatforms = true;
+    platformsAchievement.achieved = true;
+    secureStorage.setPlatforms(platforms.toString());
+  }
+
+  checkPlatforms() {
+    return justAchievedPlatforms;
+  }
+  platformsAchievementShown() {
+    justAchievedPlatforms = false;
+  }
+
   List<Achievement> getAchievementsAvailable() {
     return allAchievementsAvailable;
   }
@@ -547,7 +589,8 @@ class UserAchievements {
         pipesThree,
         perseverance,
         nightOwl,
-        wingedWarrior
+        wingedWarrior,
+        platforms
     );
   }
 
@@ -628,8 +671,9 @@ class Achievements {
   bool perseverance = false;
   bool nightOwl = false;
   bool wingedWarrior = false;
+  bool platforms = false;
 
-  Achievements(this.woodSingle, this.bronzeSingle, this.silverSingle, this.goldSingle, this.woodDouble, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance, this.nightOwl, this.wingedWarrior);
+  Achievements(this.woodSingle, this.bronzeSingle, this.silverSingle, this.goldSingle, this.woodDouble, this.bronzeDouble, this.silverDouble, this.goldDouble, this.flutterOne, this.flutterTwo, this.flutterThree, this.pipesOne, this.pipesTwo, this.pipesThree, this.perseverance, this.nightOwl, this.wingedWarrior, this.platforms);
 
   Achievements.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("wood_single")) {
@@ -682,6 +726,9 @@ class Achievements {
     }
     if (json.containsKey("winged_warrior")) {
       wingedWarrior = json["winged_warrior"];
+    }
+    if (json.containsKey("platforms")) {
+      platforms = json["platforms"];
     }
   }
 
@@ -738,6 +785,9 @@ class Achievements {
     }
     if (wingedWarrior) {
       json['winged_warrior'] = wingedWarrior;
+    }
+    if (platforms) {
+      json['platforms'] = platforms;
     }
     return json;
   }
@@ -859,5 +909,12 @@ class Achievements {
   }
   setWingedWarrior(bool wingedWarrior) {
     this.wingedWarrior = wingedWarrior;
+  }
+
+  bool getPlatforms() {
+    return platforms;
+  }
+  setPlatforms(bool platforms) {
+    this.platforms = platforms;
   }
 }

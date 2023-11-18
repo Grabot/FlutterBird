@@ -360,7 +360,10 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     if (!userAchievements.getWingedWarrior()) {
       userAchievements.checkWingedWarrior(scoreScreenChangeNotifier);
     }
-    // TODO: 10 days in a row achievement
+    if (userAchievements.checkPlatforms()) {
+      scoreScreenChangeNotifier.addAchievement(userAchievements.platformsAchievement);
+      userAchievements.platformsAchievementShown();
+    }
     User? currentUser = settings.getUser();
     if (currentUser != null) {
       if (scoreScreenChangeNotifier.getAchievementEarned().isNotEmpty) {

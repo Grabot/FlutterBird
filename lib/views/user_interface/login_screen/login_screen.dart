@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bird/constants/url_base.dart';
@@ -121,7 +122,12 @@ class LoginScreenState extends State<LoginScreen> {
       String emailOrUserName = emailOrUsernameController.text;
       String password = password1Controller.text;
       AuthServiceLogin authServiceLogin = AuthServiceLogin();
-      authServiceLogin.getLogin(LoginRequest(emailOrUserName, password)).then((loginResponse) {
+      bool isWeb = false;
+      if (kIsWeb) {
+        isWeb = true;
+      }
+      LoginRequest loginRequest = LoginRequest(emailOrUserName, password, isWeb);
+      authServiceLogin.getLogin(loginRequest).then((loginResponse) {
         if (loginResponse.getResult()) {
           ScoreScreenChangeNotifier().notify();
           goBack();
@@ -146,7 +152,12 @@ class LoginScreenState extends State<LoginScreen> {
       String userName = usernameController.text;
       String password = password2Controller.text;
       AuthServiceLogin authService = AuthServiceLogin();
-      authService.getRegister(RegisterRequest(email, userName, password)).then((loginResponse) {
+      bool isWeb = false;
+      if (kIsWeb) {
+        isWeb = true;
+      }
+      RegisterRequest registerRequest = RegisterRequest(email, userName, password, isWeb);
+      authService.getRegister(registerRequest).then((loginResponse) {
         if (loginResponse.getResult()) {
           ScoreScreenChangeNotifier().notify();
           goBack();

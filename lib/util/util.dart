@@ -106,6 +106,12 @@ getAchievements(LoginResponse loginResponse, int userId) {
   Achievements? achievements = loginResponse.getAchievements();
   if (achievements != null) {
     bool updateAchievements = false;
+    if (achievements.getWoodSingle() && !userAchievements.getWoodSingle()) {
+      userAchievements.achievedWoodSingle();
+    } else if (!achievements.getWoodSingle() && userAchievements.getWoodSingle()) {
+      achievements.setWoodSingle(userAchievements.getWoodSingle());
+      updateAchievements = true;
+    }
     if (achievements.getBronzeSingle() && !userAchievements.getBronzeSingle()) {
       userAchievements.achievedBronzeSingle();
     } else if (!achievements.getBronzeSingle() && userAchievements.getBronzeSingle()) {
@@ -122,6 +128,12 @@ getAchievements(LoginResponse loginResponse, int userId) {
       userAchievements.achievedGoldSingle();
     } else if (!achievements.getGoldSingle() && userAchievements.getGoldSingle()) {
       achievements.setGoldSingle(userAchievements.getGoldSingle());
+      updateAchievements = true;
+    }
+    if (achievements.getWoodDouble() && !userAchievements.getWoodDouble()) {
+      userAchievements.achievedWoodDouble();
+    } else if (!achievements.getWoodDouble() && userAchievements.getWoodDouble()) {
+      achievements.setWoodDouble(userAchievements.getWoodDouble());
       updateAchievements = true;
     }
     if (achievements.getBronzeDouble() && !userAchievements.getBronzeDouble()) {
@@ -182,6 +194,24 @@ getAchievements(LoginResponse loginResponse, int userId) {
       userAchievements.achievedPerseverance();
     } else if (!achievements.getPerseverance() && userAchievements.getPerseverance()) {
       achievements.setPerseverance(userAchievements.getPerseverance());
+      updateAchievements = true;
+    }
+    if (achievements.getNightOwl() && !userAchievements.getNightOwl()) {
+      userAchievements.achievedNightOwl();
+    } else if (!achievements.getNightOwl() && userAchievements.getNightOwl()) {
+      achievements.setNightOwl(userAchievements.getNightOwl());
+      updateAchievements = true;
+    }
+    if (achievements.getWingedWarrior() && !userAchievements.getWingedWarrior()) {
+      userAchievements.achievedWingedWarrior();
+    } else if (!achievements.getWingedWarrior() && userAchievements.getWingedWarrior()) {
+      achievements.setWingedWarrior(userAchievements.getWingedWarrior());
+      updateAchievements = true;
+    }
+    if (achievements.getPlatforms() && !userAchievements.getPlatforms()) {
+      userAchievements.setPlatforms(true);
+    } else if (!achievements.getPlatforms() && userAchievements.getPlatforms()) {
+      achievements.setPlatforms(userAchievements.getPlatforms());
       updateAchievements = true;
     }
 

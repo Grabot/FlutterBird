@@ -4,24 +4,9 @@ import 'package:flutter_bird/util/util.dart';
 class LoginRequest {
   late String emailOrUserName;
   late String password;
+  late bool isWeb;
 
-  LoginRequest(this.emailOrUserName, this.password);
-
-  setEmail(String emailOrUserName) {
-    this.emailOrUserName = emailOrUserName;
-  }
-
-  String getEmailOrUserName() {
-    return emailOrUserName;
-  }
-
-  setPassword(String password) {
-    this.password = password;
-  }
-
-  String getPassword() {
-    return password;
-  }
+  LoginRequest(this.emailOrUserName, this.password, this.isWeb);
 
   @override
   Map<String, dynamic> toJson() {
@@ -34,6 +19,7 @@ class LoginRequest {
     }
 
     json['password'] = password;
+    json['is_web'] = isWeb;
     return json;
   }
 }

@@ -142,6 +142,7 @@ class SecureStorage {
   final String _keyPerseverance = 'perseverance';
   final String _keyNightOwl = 'nightOwl';
   final String _keyWingedWarrior = 'wingedWarrior';
+  final String _keyPlatforms = 'wingedWarrior';
 
   Future setWoodSingle(String woodSingle) async {
     await storage.write(key: _keyWoodSingle, value: woodSingle);
@@ -262,6 +263,13 @@ class SecureStorage {
     return await storage.read(key: _keyWingedWarrior);
   }
 
+  Future setPlatforms(String platforms) async {
+    await storage.write(key: _keyPlatforms, value: platforms);
+  }
+  Future<String?> getPlatforms() async {
+    return await storage.read(key: _keyPlatforms);
+  }
+
   Future logout() async {
     await storage.write(key: _keyAccessToken, value: null);
     await storage.write(key: _keyRefreshToken, value: null);
@@ -296,6 +304,9 @@ class SecureStorage {
     await storage.write(key: _keyPerseverance, value: null);
     await storage.write(key: _keyNightOwl, value: null);
     await storage.write(key: _keyWingedWarrior, value: null);
+    await storage.write(key: _keyPlatforms, value: null);
+    await storage.write(key: _keyPreviousDay, value: null);
+    await storage.write(key: _keyDaysInARow, value: null);
   }
 
   final String _keyPreviousDay = 'wingedWarrior';

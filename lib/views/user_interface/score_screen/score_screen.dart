@@ -130,6 +130,7 @@ class ScoreScreenState extends State<ScoreScreen> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
           ),
+          padding: EdgeInsets.zero,
           physics: earnedAchievements.length <= 12
               ? const NeverScrollableScrollPhysics()  // no scrolling with less than 12 items
               : const AlwaysScrollableScrollPhysics(),
@@ -149,7 +150,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     show.removeWhere((item) => achievementsEarned.contains(item));
     return Container(
         width: medalWidth,
-        height: medalWidth/4,
+        height: medalHeight,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: show.length,
@@ -178,12 +179,13 @@ class ScoreScreenState extends State<ScoreScreen> {
   Widget achievementsList(double medalWidth, double medalHeight, double fontSize) {
     List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
     double achievementGridHeight = medalHeight;
+    double textHeight = achievementGridHeight / 10;
     if (achievementsEarned.isEmpty) {
       // no new achievements earned, show only the achievements owned.
       return Column(
           children: [
             Container(
-                height: 30,
+                height: textHeight,
                 width: medalWidth,
                 child: Text(
                     "Achievements owned",
@@ -194,14 +196,16 @@ class ScoreScreenState extends State<ScoreScreen> {
                     )
                 )
             ),
-            achievementsOwnedGrid(medalWidth, achievementGridHeight - 30)
+            achievementsOwnedGrid(medalWidth, achievementGridHeight - textHeight)
           ]
       );
     } else {
+      double achievementEarnedHeight = ((achievementGridHeight / 3) * 2) - textHeight;
+      double achievementOwnedHeight = (achievementGridHeight / 3) - textHeight;
       return Column(
         children: [
           Container(
-              height: 30,
+              height: textHeight,
               width: medalWidth,
               child: Text(
                   "New achievements!",
@@ -212,9 +216,9 @@ class ScoreScreenState extends State<ScoreScreen> {
                   )
               )
           ),
-          achievementsEarnedWidget(medalWidth, (achievementGridHeight / 2) - 30),
+          achievementsEarnedWidget(medalWidth, achievementEarnedHeight),
           Container(
-              height: 30,
+              height: textHeight,
               width: medalWidth,
               child: Text(
                   "Achievements owned",
@@ -225,7 +229,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                   )
               )
           ),
-          achievementsOwnedList(medalWidth, (achievementGridHeight / 2) - 30),
+          achievementsOwnedList(medalWidth, achievementOwnedHeight),
         ],
       );
     }

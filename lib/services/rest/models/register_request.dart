@@ -3,32 +3,9 @@ class RegisterRequest {
   late String email;
   late String userName;
   late String password;
+  late bool isWeb;
 
-  RegisterRequest(this.email, this.userName, this.password);
-
-  setEmail(String email) {
-    this.email = email;
-  }
-
-  String getEmail() {
-    return email;
-  }
-
-  setUserName(String userName) {
-    this.userName = userName;
-  }
-
-  String getUserName() {
-    return userName;
-  }
-
-  setPassword(String password) {
-    this.password = password;
-  }
-
-  String getPassword() {
-    return password;
-  }
+  RegisterRequest(this.email, this.userName, this.password, this.isWeb);
 
   @override
   Map<String, dynamic> toJson() {
@@ -37,6 +14,7 @@ class RegisterRequest {
     json['email'] = email;
     json['user_name'] = userName;
     json['password'] = password;
+    json['is_web'] = isWeb;
 
     return json;
   }
