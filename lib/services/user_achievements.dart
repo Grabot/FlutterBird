@@ -217,117 +217,117 @@ class UserAchievements {
   createAchievementList() {
     if (totalAchievementsRetrieved == totalNumberOfAchievements) {
       woodSingleAchievement = Achievement(
-          achievementName: "woodSingle",
+          achievementName: "Wood single",
           imageName: "wood_single",
           tooltip: "got more than 10 points in single player",
           achieved: woodSingle
       );
       bronzeSingleAchievement = Achievement(
-          achievementName: "bronzeSingle",
+          achievementName: "Bronze single",
           imageName: "bronze_single",
           tooltip: "got more than 25 points in single player",
           achieved: bronzeSingle
       );
       silverSingleAchievement = Achievement(
-          achievementName: "silverSingle",
+          achievementName: "Silver single",
           imageName: "silver_single",
           tooltip: "got more than 50 points in single player!",
           achieved: silverSingle
       );
       goldSingleAchievement = Achievement(
-          achievementName: "goldSingle",
+          achievementName: "Gold single",
           imageName: "gold_single",
           tooltip: "got more than 100 points in single player!!!",
           achieved: goldSingle
       );
       woodDoubleAchievement = Achievement(
-          achievementName: "woodDouble",
+          achievementName: "Wood double",
           imageName: "wood_double",
           tooltip: "got more than 10 points with 2 players",
           achieved: woodDouble
       );
       bronzeDoubleAchievement = Achievement(
-          achievementName: "bronzeDouble",
+          achievementName: "Bronze double",
           imageName: "bronze_double",
           tooltip: "got more than 25 points with 2 players",
           achieved: bronzeDouble
       );
       silverDoubleAchievement = Achievement(
-          achievementName: "silverDouble",
+          achievementName: "Silver double",
           imageName: "silver_double",
           tooltip: "got more than 50 points with 2 players!",
           achieved: silverDouble
       );
       goldDoubleAchievement = Achievement(
-          achievementName: "goldDouble",
+          achievementName: "Gold double",
           imageName: "gold_double",
           tooltip: "got more than 100 points with 2 players!!!",
           achieved: goldDouble
       );
       flutterOneAchievement = Achievement(
-          achievementName: "flutterOne",
+          achievementName: "Flutter one",
           imageName: "wings_one",
           tooltip: "You have fluttered your birds already more than a thousand times",
           achieved: flutterOne
       );
       flutterTwoAchievement = Achievement(
-          achievementName: "flutterTwo",
+          achievementName: "Flutter two",
           imageName: "wings_two",
           tooltip: "You have fluttered your birds already more than two thousand and five hundred times!",
           achieved: flutterTwo
       );
       flutterThreeAchievement = Achievement(
-          achievementName: "flutterThree",
+          achievementName: "Flutter three",
           imageName: "wings_three",
           tooltip: "You have fluttered your birds already more than ten thousand times!!!",
           achieved: flutterThree
       );
       pipesOneAchievement = Achievement(
-          achievementName: "pipesOne",
+          achievementName: "Pipes one",
           imageName: "pipes_one",
           tooltip: "Your birds have passed a total of two hundred and fifty pipes",
           achieved: pipesOne
       );
       pipesTwoAchievement = Achievement(
-          achievementName: "pipesTwo",
+          achievementName: "Pipes two",
           imageName: "pipes_two",
           tooltip: "Your birds have passed a total of one thousand pipes!",
           achieved: pipesTwo
       );
       pipesThreeAchievement = Achievement(
-          achievementName: "pipesThree",
+          achievementName: "Pipes three",
           imageName: "pipes_three",
           tooltip: "Your birds have passed a total of five thousand pipes!",
           achieved: pipesThree
       );
       perseveranceAchievement = Achievement(
-          achievementName: "perseverance",
+          achievementName: "Perseverance",
           imageName: "perseverance",
           tooltip: "You kept playing the game even after crashing 50 times in a single session!",
           achieved: perseverance
       );
       nightOwlAchievement = Achievement(
-          achievementName: "nightOwl",
+          achievementName: "Night owl",
           imageName: "midnight",
           tooltip: "You scored more than 20 points in a single session between 12:00 AM and 3:00 AM!",
           achieved: nightOwl
       );
       wingedWarriorAchievement = Achievement(
-          achievementName: "wingedWarrior",
+          achievementName: "Winged warrior",
           imageName: "winged_warrior",
           tooltip: "You have played Flutterbird for 7 days in a row!",
           achieved: wingedWarrior
       );
       platformsAchievement = Achievement(
-          achievementName: "platforms",
+          achievementName: "Platforms",
           imageName: "platforms",
           tooltip: "You have played Flutterbird on the web at flutterbird.eu and also on IOS or Android!",
           achieved: platforms
       );
       leaderboardAchievement = Achievement(
-          achievementName: "leaderboard",
+          achievementName: "Leaderboard",
           imageName: "leaderboard",
-          tooltip: "You have reached the top 3 on the daily leaderboard!\n(Has to be logged in to achieve this)",
+          tooltip: "You have reached the top 3 on the daily leaderboard!\n(Must be logged in to achieve this)",
           achieved: leaderboard
       );
       allAchievementsAvailable = [

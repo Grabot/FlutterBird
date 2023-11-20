@@ -123,6 +123,7 @@ class ProfileBoxState extends State<ProfileBox> {
     if (mounted) {
       if (!showProfile && profileChangeNotifier.getProfileVisible()) {
         showProfile = true;
+        print("profile show");
       }
       if (showProfile && !profileChangeNotifier.getProfileVisible()) {
         showProfile = false;
@@ -151,8 +152,10 @@ class ProfileBoxState extends State<ProfileBox> {
       width = totalWidth - 50;
       height = totalHeight - 250;
       normalMode = false;
-      double newHeightScaleFont = width / 800;
-      fontSize = 16 * newHeightScaleFont;
+      // double newHeightScaleFont = width / 800;
+      // fontSize = 16 * newHeightScaleFont;
+      // print("height: $height");
+      // fontSize = 16;
     }
     double headerHeight = 40;
 
@@ -317,6 +320,7 @@ class ProfileBoxState extends State<ProfileBox> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 8,
             ),
+            padding: EdgeInsets.zero,
             itemCount: achievedAchievements.length,
             itemBuilder: (context, index) {
               return achievementTile(context, achievedAchievements[index], (achievementWidth/8));
@@ -345,8 +349,8 @@ class ProfileBoxState extends State<ProfileBox> {
           width: width/2,
           height: fontSize,
           child: Text(
-            'Check all available achievements',
-            style: simpleTextStyle(fontSize),
+            'Check all achievements',
+            style: simpleTextStyle(fontSize*0.7),
           ),
         ),
       ),

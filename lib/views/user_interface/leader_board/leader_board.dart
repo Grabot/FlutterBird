@@ -163,7 +163,10 @@ class LeaderBoardState extends State<LeaderBoard> {
               width: dayRowWidth,
               height: timeRankingHeight-10,
               color: selectedTimeRanking == 0 ? Colors.green[200] : Colors.transparent,
-              child: Text("Day", style: TextStyle(fontSize: fontSize)),
+              child: Text(
+                  "Day",
+                  style: TextStyle(fontSize: (fontSize/4)*3)
+              ),
             ),
           ),
           InkWell(
@@ -179,7 +182,10 @@ class LeaderBoardState extends State<LeaderBoard> {
               width: weekRowWidth,
               height: timeRankingHeight-10,
               color: selectedTimeRanking == 1 ? Colors.green[200] : Colors.transparent,
-              child: Text("Week", style: TextStyle(fontSize: fontSize)),
+              child: Text(
+                  "Week",
+                  style: TextStyle(fontSize: (fontSize/4)*3)
+              ),
             ),
           ),
           InkWell(
@@ -195,7 +201,10 @@ class LeaderBoardState extends State<LeaderBoard> {
               width: monthRowWidth,
               height: timeRankingHeight-10,
               color: selectedTimeRanking == 2 ? Colors.green[200] : Colors.transparent,
-              child: Text("Month", style: TextStyle(fontSize: fontSize)),
+              child: Text(
+                  "Month",
+                  style: TextStyle(fontSize: (fontSize/4)*3)
+              ),
             ),
           ),
           InkWell(
@@ -211,7 +220,10 @@ class LeaderBoardState extends State<LeaderBoard> {
               width: yearRowWidth,
               height: timeRankingHeight-10,
               color: selectedTimeRanking == 3 ? Colors.green[200] : Colors.transparent,
-              child: Text("Year", style: TextStyle(fontSize: fontSize)),
+              child: Text(
+                  "Year",
+                  style: TextStyle(fontSize: (fontSize/4)*3)
+              ),
             ),
           ),
           InkWell(
@@ -227,7 +239,10 @@ class LeaderBoardState extends State<LeaderBoard> {
               width: allTimeRowWidth,
               height: timeRankingHeight-10,
               color: selectedTimeRanking == 4 ? Colors.green[200] : Colors.transparent,
-              child: Text("All Time", style: TextStyle(fontSize: fontSize)),
+              child: Text(
+                  "All Time",
+                  style: TextStyle(fontSize: (fontSize/4)*3)
+              ),
             ),
           ),
         ],
@@ -252,28 +267,40 @@ class LeaderBoardState extends State<LeaderBoard> {
             width: rankRowWidth,
             height: headerRowHeight-10,
             color: Colors.blue[200],
-            child: Text("Rank", style: TextStyle(fontSize: fontSize)),
+            child: Text(
+                "Rank",
+                style: TextStyle(fontSize: (fontSize/4)*3)
+            ),
           ),
           Container(
             alignment: Alignment.center,
             width: nameRowWidth,
             height: headerRowHeight-10,
             color: Colors.blue[200],
-            child: Text("Name", style: TextStyle(fontSize: fontSize)),
+            child: Text(
+                "Name",
+                style: TextStyle(fontSize: (fontSize/4)*3)
+            ),
           ),
           Container(
             alignment: Alignment.center,
             width: scoreRowWidth,
             height: headerRowHeight-10,
             color: Colors.blue[200],
-            child: Text("Score", style: TextStyle(fontSize: fontSize)),
+            child: Text(
+                "Score",
+                style: TextStyle(fontSize: (fontSize/4)*3)
+            ),
           ),
           Container(
             alignment: Alignment.center,
             width: achievedAtWidth,
             height: headerRowHeight-10,
             color: Colors.blue[200],
-            child: Text("Achieved at", style: TextStyle(fontSize: fontSize)),
+            child: Text(
+                "Achieved at",
+                style: TextStyle(fontSize: (fontSize/4)*3)
+            ),
           ),
         ],
       ),
@@ -346,10 +373,10 @@ class LeaderBoardState extends State<LeaderBoard> {
                 DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
                 style: userRank.getMe()
                     ? TextStyle(
-                  fontSize: fontSize,
+                  fontSize: (fontSize/4)*3,
                   fontWeight: FontWeight.bold,
                 )
-                    : TextStyle(fontSize: fontSize),
+                    : TextStyle(fontSize: (fontSize/4)*3)
             ),
           ),
         ],
@@ -516,8 +543,8 @@ class LeaderBoardState extends State<LeaderBoard> {
     double fontSize = 18 * heightScale;
     if (width < (leaderBoardWidth + (leaderBoardWidth/10))) {
       leaderBoardWidth = width-(leaderBoardWidth/10);
-      double newHeightScaleFont = width / 800;
-      fontSize = 18 * newHeightScaleFont;
+      // double newHeightScaleFont = width / 800;
+      // fontSize = 18 * newHeightScaleFont;
       // leaderBoardHeight = (height/10)*8;
     }
     return Column(

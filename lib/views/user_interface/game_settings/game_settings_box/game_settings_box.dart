@@ -497,8 +497,8 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
       width = totalWidth - 50;
       height = totalHeight - 250;
       normalMode = false;
-      double newHeightScaleFont = width / 800;
-      fontSize = 20 * newHeightScaleFont;
+      // double newHeightScaleFont = width / 800;
+      // fontSize = 20 * newHeightScaleFont;
     }
     double headerHeight = 40;
 

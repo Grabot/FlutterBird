@@ -6,6 +6,7 @@ import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
+import 'package:flutter_bird/views/user_interface/achievement_close_up/achievement_close_up_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
@@ -46,6 +47,9 @@ class AchievementBoxState extends State<AchievementBox> {
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
 
+  int numberOfAchievementsAchieved = 0;
+  int totalOfAchievements = 0;
+
   @override
   void initState() {
     achievementBoxChangeNotifier = AchievementBoxChangeNotifier();
@@ -53,6 +57,7 @@ class AchievementBoxState extends State<AchievementBox> {
 
     currentUser = settings.getUser();
 
+    totalOfAchievements = userAchievements.getAchievementsAvailable().length;
     _controller.addListener(() {
       checkTopBottomScroll();
     });
@@ -98,6 +103,8 @@ class AchievementBoxState extends State<AchievementBox> {
     if (mounted) {
       if (!showAchievementBox && achievementBoxChangeNotifier.getAchievementBoxVisible()) {
         showAchievementBox = true;
+        print("achievement normal show");
+        numberOfAchievementsAchieved = userAchievements.achievedAchievementList().length;
       }
       if (showAchievementBox && !achievementBoxChangeNotifier.getAchievementBoxVisible()) {
         showAchievementBox = false;
@@ -106,42 +113,53 @@ class AchievementBoxState extends State<AchievementBox> {
     }
   }
 
+  tappedAchievements(Achievement achievement) {
+    print("tapped achievement");
+    AchievementCloseUpChangeNotifier achievementCloseUpChangeNotifier = AchievementCloseUpChangeNotifier();
+    achievementCloseUpChangeNotifier.setAchievement(achievement);
+    achievementCloseUpChangeNotifier.setAchievementCloseUpVisible(true);
+    achievementBoxChangeNotifier.setAchievementBoxVisible(false);
+  }
+
   Widget achievementItem(Achievement achievement, double achievementWindowWidth, double achievementSize, double fontSize) {
     double marginWidth = 20;
-    return Container(
-      width: achievementWindowWidth,
-      height: achievementSize,
-      child: Row(
-        children: [
-          ChangeColors(
-            saturation: achievement.achieved ? 0 : -1,
-            child: Image.asset(
-              achievement.getImagePath(),
-              width: achievementSize,
-              height: achievementSize,
-              gaplessPlayback: true,
-              fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        tappedAchievements(achievement);
+      },
+      child: SizedBox(
+        width: achievementWindowWidth,
+        height: achievementSize,
+        child: Row(
+          children: [
+            ChangeColors(
+              saturation: achievement.achieved ? 0 : -1,
+              child: Image.asset(
+                achievement.getImagePath(),
+                width: achievementSize,
+                height: achievementSize,
+                gaplessPlayback: true,
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-          SizedBox(width: 10),
-          Container(
-              width: achievementWindowWidth - achievementSize - marginWidth - 10,
-              child: Text.rich(
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  TextSpan(
-                    text: achievement.getTooltip(),
-                    style: simpleTextStyle(fontSize),
-                  ),
-              )
-          ),
-        ],
-      )
+            SizedBox(width: 10),
+            Container(
+                width: achievementWindowWidth - achievementSize - marginWidth - 10,
+                child: Text.rich(
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    TextSpan(
+                      text: achievement.getTooltip(),
+                      style: simpleTextStyle(fontSize*0.8),
+                    ),
+                )
+            ),
+          ],
+        )
+      ),
     );
   }
 
-  int numberOfAchievementsAchieved = 0;
-  int totalOfAchievements = 0;
   Widget achievementTableHeader(double achievementWindowWidth, double fontSize) {
     return Row(
       children: [
@@ -167,12 +185,13 @@ class AchievementBoxState extends State<AchievementBox> {
     double achievementSize = 100;
     int itemCount = userAchievements.getAchievementsAvailable().length;
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.only(left: 10, right: 10),
       width: achievementWindowWidth,
       height: achievementSize * itemCount,
       child: ListView.builder(
         physics: NeverScrollableScrollPhysics(),  // scrolling done in SingleScrollView
         itemCount: itemCount,
+        padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           return achievementItem(userAchievements.getAchievementsAvailable()[index], achievementWindowWidth, achievementSize, fontSize);
         },
@@ -235,8 +254,6 @@ class AchievementBoxState extends State<AchievementBox> {
       width = totalWidth - 50;
       height = totalHeight - 250;
       normalMode = false;
-      double newHeightScaleFont = width / 800;
-      fontSize = 16 * newHeightScaleFont;
     }
     double headerHeight = 40;
 

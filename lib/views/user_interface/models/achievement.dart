@@ -17,7 +17,7 @@ class Achievement {
   bool operator ==(Object other) {
     if (other is Achievement) {
       return this.achievementName == other.getAchievementName()
-          && this.imageName == other.getImagePath()
+          && this.imageName == other.getImageName()
           && this.tooltip == other.getTooltip()
           && this.achieved == other.getAchieved();
     }
@@ -29,6 +29,10 @@ class Achievement {
 
   getAchievementName() {
     return achievementName;
+  }
+
+  getImageName() {
+    return imageName;
   }
 
   getImagePath() {

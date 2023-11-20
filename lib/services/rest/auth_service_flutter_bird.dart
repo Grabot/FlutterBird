@@ -32,36 +32,14 @@ class AuthServiceFlutterBird {
   Future<BaseResponse> updateUserScore(int? singleBirdScore, int? doubleBirdScore, Score score) async {
     String endPoint = "score/update";
     // We'll find the user using the token.
-    Map<String, dynamic> data = {};
-    if (singleBirdScore != null && doubleBirdScore != null) {
-      data = {
-        "best_score_single_bird": singleBirdScore,
-        "best_score_double_bird": doubleBirdScore,
-        "total_flutters": score.getTotalFlutters(),
-        "total_pipes_cleared": score.getTotalPipesCleared(),
-        "total_games": score.getTotalGames(),
-      };
-    } else if (singleBirdScore != null) {
-      data = {
-        "best_score_single_bird": singleBirdScore,
-        "total_flutters": score.getTotalFlutters(),
-        "total_pipes_cleared": score.getTotalPipesCleared(),
-        "total_games": score.getTotalGames(),
-      };
-    } else if (doubleBirdScore != null) {
-      data = {
-        "best_score_double_bird": doubleBirdScore,
-        "total_flutters": score.getTotalFlutters(),
-        "total_pipes_cleared": score.getTotalPipesCleared(),
-        "total_games": score.getTotalGames(),
-      };
-    } else {
-      data = {
-        "total_flutters": score.getTotalFlutters(),
-        "total_pipes_cleared": score.getTotalPipesCleared(),
-        "total_games": score.getTotalGames(),
-      };
-    }
+    Map<String, dynamic> data = {
+      if (singleBirdScore != null) "best_score_single_bird": singleBirdScore,
+      if (doubleBirdScore != null) "best_score_double_bird": doubleBirdScore,
+      "total_flutters": score.getTotalFlutters(),
+      "total_pipes_cleared": score.getTotalPipesCleared(),
+      "total_games": score.getTotalGames(),
+    };
+
     var response = await AuthApi().dio.post(endPoint,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",

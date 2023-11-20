@@ -227,8 +227,8 @@ class ProfileOverviewState extends State<ProfileOverview> {
       profileOverviewWidth += 5;
       profileOverviewHeight = 50;
       normalMode = false;
-      double newHeightScaleFont = profileOverviewWidth / 800;
-      fontSize = 16 * newHeightScaleFont;
+      // double newHeightScaleFont = profileOverviewWidth / 800;
+      // fontSize = 16 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.topRight,

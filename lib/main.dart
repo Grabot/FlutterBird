@@ -17,6 +17,7 @@ import 'services/settings.dart';
 import 'services/socket_services.dart';
 import 'services/user_score.dart';
 import 'views/password_reset_page.dart';
+import 'views/user_interface/achievement_close_up/achievement_close_up_box.dart';
 import 'views/user_interface/change_avatar_box/change_avatar_box.dart';
 import 'views/user_interface/game_settings/game_settings_box/game_settings_box.dart';
 import 'views/user_interface/game_settings/game_settings_buttons/game_settings_buttons.dart';
@@ -59,6 +60,7 @@ Future<void> main() async {
           'gameSettingsBox': _gameSettingsBoxBuilder,
           'areYouSureBox': _areYouSureBoxBuilder,
           'achievementBox': _achievementBoxBuilder,
+          'achievementCloseUpBox': _achievementCloseUpBoxBuilder,
         },
         initialActiveOverlays: const [
           'scoreScreen',
@@ -71,6 +73,7 @@ Future<void> main() async {
           'areYouSureBox',
           'leaderBoard',
           'achievementBox',
+          'achievementCloseUpBox',
         ],
       )
   );
@@ -161,6 +164,10 @@ Widget _areYouSureBoxBuilder(BuildContext buildContext, FlutterBird game) {
 
 Widget _achievementBoxBuilder(BuildContext buildContext, FlutterBird game) {
   return AchievementBox(key: UniqueKey(), game: game);
+}
+
+Widget _achievementCloseUpBoxBuilder(BuildContext buildContext, FlutterBird game) {
+  return AchievementCloseUpBox(key: UniqueKey(), game: game);
 }
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {

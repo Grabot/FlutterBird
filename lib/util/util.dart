@@ -91,7 +91,6 @@ getScore(LoginResponse loginResponse, int userId) {
     }
 
     if (updateScore) {
-      // TODO: Add double bird score once it's on the score object
       AuthServiceFlutterBird().updateUserScore(score.getBestScoreSingleBird(), score.getBestScoreDoubleBird(), score).then((result) {
         if (result.getResult()) {
           // we have updated the score in the db. Do nothing.
@@ -106,6 +105,13 @@ getAchievements(LoginResponse loginResponse, int userId) {
   Achievements? achievements = loginResponse.getAchievements();
   if (achievements != null) {
     bool updateAchievements = false;
+    // Check if the user has achieved achievements that they don't have locally
+    // This can happen if the user has logged in on another device.
+    // It also checks if they have an achievement locally
+    // that they don't have on the server. This can happen if they haven't
+    // played in a while and then returned. They than remain logged out and play
+    // Any achievement that they get is stored locally.
+    // If they then log in they still get the achievement.
     if (achievements.getWoodSingle() && !userAchievements.getWoodSingle()) {
       userAchievements.achievedWoodSingle();
     } else if (!achievements.getWoodSingle() && userAchievements.getWoodSingle()) {

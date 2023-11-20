@@ -231,8 +231,8 @@ class _PasswordResetState extends State<PasswordReset> {
     if (totalWidth <= 800) {
       width = totalWidth - 50;
       height = totalHeight - 250;
-      double newHeightScaleFont = width / 800;
-      fontSize = 16 * newHeightScaleFont;
+      // double newHeightScaleFont = width / 800;
+      // fontSize = 16 * newHeightScaleFont;
     }
 
     return Container(

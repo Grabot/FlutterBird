@@ -209,6 +209,8 @@ class LoginScreenState extends State<LoginScreen> {
       if (showLoginScreen && !loginScreenChangeNotifier.getLoginScreenVisible()) {
         setState(() {
           showLoginScreen = false;
+          signUpMode = 0;
+          passwordResetSend = false;
         });
       }
     }
@@ -386,7 +388,7 @@ class LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   "Reset your password",
-                  style: TextStyle(color: Colors.white, fontSize: fontSize*2),
+                  style: TextStyle(color: Colors.white, fontSize: fontSize*1.5),
                 ),
               ],
             ),
@@ -485,7 +487,10 @@ class LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   "Create Account",
-                  style: TextStyle(color: Colors.white, fontSize: fontSize*2),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fontSize*1.5
+                  ),
                 ),
                 Row(
                   children: [
@@ -499,12 +504,15 @@ class LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           "Log In",
-                          style: TextStyle(color: Colors.blue, fontSize: fontSize),
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: fontSize*0.8
+                          ),
                         )
                     ),
                     Text(
                         " instead?",
-                        style: TextStyle(fontSize: fontSize)
+                        style: TextStyle(fontSize: fontSize*0.8)
                     )
                   ],
                 ),
@@ -621,7 +629,9 @@ class LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   "Login",
-                  style: TextStyle(color: Colors.white, fontSize: fontSize*2),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fontSize*1.5),
                 ),
                 Row(
                   children: [
@@ -635,12 +645,15 @@ class LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           "Create new Account",
-                          style: TextStyle(color: Colors.blue, fontSize: fontSize),
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: fontSize*0.8
+                          ),
                         )
                     ),
                     Text(
                         " instead?",
-                        style: TextStyle(fontSize: fontSize)
+                        style: TextStyle(fontSize: fontSize*0.8)
                     )
                   ],
                 ),
@@ -725,7 +738,7 @@ class LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           "Forgot password?",
-                          style: TextStyle(color: Colors.blue, fontSize: fontSize),
+                          style: TextStyle(color: Colors.blue, fontSize: fontSize*0.8),
                         )
                     ),
                   ],
@@ -799,8 +812,8 @@ class LoginScreenState extends State<LoginScreen> {
       width = MediaQuery.of(context).size.width - 50;
       height = MediaQuery.of(context).size.height - 150;
       loginBoxSize = 50;
-      double newHeightScaleFont = width / 800;
-      fontSize = 16 * newHeightScaleFont;
+      // double newHeightScaleFont = width / 800;
+      // fontSize = 16 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.center,

@@ -293,7 +293,7 @@ class ScoreScreenState extends State<ScoreScreen> {
           Text(
             "${scoreScreenChangeNotifier.getScore()}",
             style: TextStyle(
-              fontSize: fontSize*3,
+              fontSize: fontSize*2,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = (scoreWidth / 30)
@@ -304,7 +304,7 @@ class ScoreScreenState extends State<ScoreScreen> {
             "${scoreScreenChangeNotifier.getScore()}",
             style: TextStyle(
               color: Colors.white,
-              fontSize: fontSize*3,
+              fontSize: fontSize*2,
             ),
           ),
         ]
@@ -340,7 +340,7 @@ class ScoreScreenState extends State<ScoreScreen> {
             Text(
               "${userScore.getBestScoreDoubleBird()}",
               style: TextStyle(
-                fontSize: fontSize*3,
+                fontSize: fontSize*2,
                 foreground: Paint()
                   ..style = PaintingStyle.stroke
                   ..strokeWidth = (scoreWidth / 30)
@@ -351,7 +351,7 @@ class ScoreScreenState extends State<ScoreScreen> {
               "${userScore.getBestScoreDoubleBird()}",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: fontSize*3,
+                fontSize: fontSize*2,
               ),
             ),
           ]
@@ -370,7 +370,7 @@ class ScoreScreenState extends State<ScoreScreen> {
           Text(
             "${userScore.getBestScoreSingleBird()}",
             style: TextStyle(
-              fontSize: fontSize*3,
+              fontSize: fontSize*2,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = (scoreWidth / 30)
@@ -381,7 +381,7 @@ class ScoreScreenState extends State<ScoreScreen> {
             "${userScore.getBestScoreSingleBird()}",
             style: TextStyle(
               color: Colors.white,
-              fontSize: fontSize*3,
+              fontSize: fontSize*2,
             ),
           ),
         ]
@@ -619,8 +619,8 @@ class ScoreScreenState extends State<ScoreScreen> {
     double fontSize = 20 * heightScale;
     if (width < scoreWidth) {
       scoreWidth = width-100;
-      double newHeightScaleFont = width / 800;
-      fontSize = 20 * newHeightScaleFont;
+      // double newHeightScaleFont = width / 800;
+      fontSize = 12 * heightScale;
     }
 
     return Column(
