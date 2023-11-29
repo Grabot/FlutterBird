@@ -519,7 +519,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                   nextScreen(false);
                 },
                 child: Container(
-                  width: scoreWidth/4,
+                  width: scoreWidth/3,
                   height: scoreWidth/20,
                   color: Colors.blue,
                   child: Center(
@@ -539,31 +539,12 @@ class ScoreScreenState extends State<ScoreScreen> {
                   nextScreen(true);
                 },
                 child: Container(
-                  width: scoreWidth/4,
+                  width: scoreWidth/3,
                   height: scoreWidth/20,
                   color: Colors.blue,
                   child: Center(
                     child: Text(
                       'Leaderboard',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: fontSize),
-                    ),
-                  ),
-                )
-            ),
-          ),
-          Container(
-            child: TextButton(
-                onPressed: () {
-                  // TODO: implement the share functionality.
-                },
-                child: Container(
-                  width: scoreWidth/4,
-                  height: scoreWidth/20,
-                  color: Colors.blue,
-                  child: Center(
-                    child: Text(
-                      'Share',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: fontSize),
                     ),

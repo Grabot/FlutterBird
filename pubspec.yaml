@@ -105,7 +105,6 @@ flutter:
     - assets/images/message_web.png
     - assets/images/gameover.png
     - assets/images/leaderboard_image.png
-    - assets/images/brocast_transparent.png
     - assets/images/reddit_button.png
     - assets/images/google_button.png
     - assets/images/github_button.png
@@ -153,6 +152,8 @@ flutter:
     - assets/images/achievements/wings_two.png
     - assets/images/achievements/wood_double.png
     - assets/images/achievements/wood_single.png
+    - assets/images/flutterbird_icon.png
+    - assets/images/flutterbird_logo.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

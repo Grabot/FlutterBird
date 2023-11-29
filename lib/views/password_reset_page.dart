@@ -40,21 +40,22 @@ class _PasswordResetState extends State<PasswordReset> {
     super.initState();
     // String baseUrl = Uri.base.toString();
     // String path = Uri.base.path;
-    accessToken = Uri.base.queryParameters["access_token"];
-    refreshToken = Uri.base.queryParameters["refresh_token"];
-
-    if (accessToken != null && refreshToken != null) {
-      // Check if the token from the mail is still valid.
-      AuthServiceLogin().passwordResetCheck(accessToken!, refreshToken!).then((passwordResetResponse) {
-        setState(() {
-          invalid = !passwordResetResponse.getResult();
-        });
-      });
-    } else {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _navigationService.navigateTo(routes.HomeRoute);
-      });
-    }
+    // accessToken = Uri.base.queryParameters["access_token"];
+    // refreshToken = Uri.base.queryParameters["refresh_token"];
+    //
+    // if (accessToken != null && refreshToken != null) {
+    //   // Check if the token from the mail is still valid.
+    //   AuthServiceLogin().passwordResetCheck(accessToken!, refreshToken!).then((passwordResetResponse) {
+    //     setState(() {
+    //       invalid = !passwordResetResponse.getResult();
+    //     });
+    //   });
+    // } else {
+    //   SchedulerBinding.instance.addPostFrameCallback((_) {
+    //     _navigationService.navigateTo(routes.HomeRoute);
+    //   });
+    // }
+    invalid = false;
   }
 
   resetPassword() {
@@ -80,9 +81,10 @@ class _PasswordResetState extends State<PasswordReset> {
       child: Column(
         children: [
           Container(
+              padding: EdgeInsets.only(left: 200, right: 200, top: 20),
               alignment: Alignment.center,
               child: Image.asset(
-                  "assets/images/brocast_transparent.png")
+                  "assets/images/flutterbird_logo.png")
           ),
           Text(
             "Invalid link",
@@ -110,9 +112,10 @@ class _PasswordResetState extends State<PasswordReset> {
         child: Column(
           children: [
             Container(
+                padding: EdgeInsets.only(left: 200, right: 200, top: 20),
                 alignment: Alignment.center,
                 child: Image.asset(
-                    "assets/images/brocast_transparent.png")
+                    "assets/images/flutterbird_logo.png")
             ),
             Text(
               "Reset your password",
@@ -175,9 +178,10 @@ class _PasswordResetState extends State<PasswordReset> {
             child: Column(
                 children: [
                 Container(
-                alignment: Alignment.center,
-                child: Image.asset(
-                    "assets/images/brocast_transparent.png")
+                    padding: EdgeInsets.only(left: 200, right: 200, top: 20),
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                    "assets/images/flutterbird_logo.png")
             ),
             Text(
               "Password Changed!",

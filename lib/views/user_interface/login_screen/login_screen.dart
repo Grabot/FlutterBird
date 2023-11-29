@@ -777,8 +777,9 @@ class LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 Container(
+                    padding: EdgeInsets.only(left: 200, right: 200, top: 20),
                     alignment: Alignment.center,
-                    child: Image.asset("assets/images/brocast_transparent.png")
+                    child: Image.asset("assets/images/flutterbird_logo.png")
                 ),
                 signUpMode == 0 ? login(width - (30 * 2), fontSize) : Container(),
                 signUpMode == 1 ? register(width - (30 * 2), fontSize) : Container(),

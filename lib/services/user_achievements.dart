@@ -321,7 +321,7 @@ class UserAchievements {
       platformsAchievement = Achievement(
           achievementName: "Platforms",
           imageName: "platforms",
-          tooltip: "You have played Flutterbird on the web at flutterbird.eu and also on IOS or Android!",
+          tooltip: "You have played Flutterbird on the web at flutterbird.eu and also on IOS or Android!\n(Must be logged in to achieve this)",
           achieved: platforms
       );
       leaderboardAchievement = Achievement(
