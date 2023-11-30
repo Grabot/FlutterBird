@@ -777,7 +777,7 @@ class LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.only(left: 200, right: 200, top: 20),
+                    padding: EdgeInsets.only(left: width/4, right: width/4, top: 20),
                     alignment: Alignment.center,
                     child: Image.asset("assets/images/flutterbird_logo.png")
                 ),

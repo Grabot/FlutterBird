@@ -299,6 +299,26 @@ class ProfileBoxState extends State<ProfileBox> {
     );
   }
 
+  Widget platformWidget(double width, double fontSize) {
+    return Container(
+      width: width,
+      child: Row(
+        children: [
+          Expanded(
+              child: Text.rich(
+                  TextSpan(
+                      text: kIsWeb
+                          ? "Also try Flutterbird on Android or IOS!"
+                          : "Also try Flutterbird in your browser on flutterbird.eu",
+                      style: simpleTextStyle(fontSize)
+                  )
+              )
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget achievementsWidget(double achievementWidth, double fontSize) {
     List<Achievement> achievedAchievements = userAchievements.achievedAchievementList();
     // If the length of achievementsGot is bigger than 8, 16, 24 or 32, add another row to the height
@@ -313,7 +333,7 @@ class ProfileBoxState extends State<ProfileBox> {
             style: simpleTextStyle(fontSize),
           ),
         ),
-        Container(
+        achievedAchievements.isNotEmpty ? Container(
           width: achievementWidth,
           height: achievementHeight,
           child: GridView.builder(
@@ -325,6 +345,12 @@ class ProfileBoxState extends State<ProfileBox> {
             itemBuilder: (context, index) {
               return achievementTile(context, achievedAchievements[index], (achievementWidth/8));
             },
+          ),
+        ) : Container(
+          width: achievementWidth,
+          child: Text(
+            "No achievements yet!",
+            style: simpleTextStyle(fontSize),
           ),
         ),
         SizedBox(height: 10),
@@ -367,8 +393,31 @@ class ProfileBoxState extends State<ProfileBox> {
           profileAvatar(widthAvatar, fontSize),
           SizedBox(height: 20),
           userStats(width, fontSize),
+          SizedBox(height: 40),
+          achievementsWidget(width, fontSize),
           SizedBox(height: 20),
-          expandedText(width, "Save your progress across multiple platforms by logging in!", fontSize, false),
+          platformWidget(width, fontSize),
+          SizedBox(height: 20),
+          logInWidget(width, fontSize, false),
+        ]
+    );
+  }
+
+  Widget logInWidget(double width, double fontSize, bool normalMode) {
+    if (normalMode) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            height: 50,
+            alignment: Alignment.center,
+            child: Text(
+                "Save your progress by logging in!",
+                textAlign: TextAlign.center,
+                style: simpleTextStyle(fontSize)
+            ),
+          ),
+          SizedBox(width: 10),
           Container(
             alignment: Alignment.center,
             child: ElevatedButton(
@@ -381,7 +430,7 @@ class ProfileBoxState extends State<ProfileBox> {
               style: buttonStyle(false, Colors.blue),
               child: Container(
                 alignment: Alignment.center,
-                width: width/2,
+                width: width / 4,
                 height: fontSize,
                 child: Text(
                   'Log in',
@@ -390,29 +439,45 @@ class ProfileBoxState extends State<ProfileBox> {
               ),
             ),
           ),
-          SizedBox(height: 20),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
           Container(
-            width: width,
-            child: Row(
-              children: [
-                Expanded(
-                    child: Text.rich(
-                        TextSpan(
-                            text: kIsWeb
-                                ? "Also try Flutterbird on Android or IOS!"
-                                : "Also try Flutterbird in your browser on flutterbird.eu",
-                            style: simpleTextStyle(fontSize)
-                        )
-                    )
-                ),
-              ],
+            alignment: Alignment.center,
+            child: Text(
+                "Save your progress by logging in!",
+                textAlign: TextAlign.center,
+                style: simpleTextStyle(fontSize)
             ),
           ),
-          SizedBox(height: 10),
-          achievementsWidget(width, fontSize),
-          SizedBox(height: 40),
-        ]
-    );
+          Container(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  profileChangeNotifier.setProfileVisible(false);
+                  LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                });
+              },
+              style: buttonStyle(false, Colors.blue),
+              child: Container(
+                alignment: Alignment.center,
+                width: width / 4,
+                height: fontSize,
+                child: Text(
+                  'Log in',
+                  style: simpleTextStyle(fontSize),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20)
+        ],
+      );
+    }
   }
 
   Widget nobodyLoggedInNormal(double width, double fontSize) {
@@ -426,63 +491,12 @@ class ProfileBoxState extends State<ProfileBox> {
             userStats((width - 300 - 20), fontSize),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              height: 50,
-              alignment: Alignment.center,
-              child: Text(
-                  "Save your progress by logging in!",
-                  textAlign: TextAlign.center,
-                  style: simpleTextStyle(fontSize)
-              ),
-            ),
-            SizedBox(width: 10),
-            Container(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    profileChangeNotifier.setProfileVisible(false);
-                    LoginScreenChangeNotifier().setLoginScreenVisible(true);
-                  });
-                },
-                style: buttonStyle(false, Colors.blue),
-                child: Container(
-                  alignment: Alignment.center,
-                  width: width/4,
-                  height: fontSize,
-                  child: Text(
-                    'Log in',
-                    style: simpleTextStyle(fontSize),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 40),
-        Container(
-          width: width,
-          child: Row(
-            children: [
-              Expanded(
-                  child: Text.rich(
-                      TextSpan(
-                          text: kIsWeb
-                              ? "Also try Flutterbird on Android or IOS!"
-                              : "Also try Flutterbird in your browser on flutterbird.eu",
-                          style: simpleTextStyle(fontSize)
-                      )
-                  )
-              ),
-            ],
-          ),
-        ),
         SizedBox(height: 40),
         achievementsWidget(width, fontSize),
         SizedBox(height: 40),
+        platformWidget(width, fontSize),
+        SizedBox(height: 40),
+        logInWidget(width, fontSize, true),
       ],
     );
   }
@@ -500,23 +514,8 @@ class ProfileBoxState extends State<ProfileBox> {
         ),
         SizedBox(height: 10),
         achievementsWidget(width, fontSize),
-        Container(
-          width: width,
-          child: Row(
-            children: [
-              Expanded(
-                  child: Text.rich(
-                      TextSpan(
-                          text: kIsWeb
-                              ? "Also try Flutterbird on Android or IOS!"
-                              : "Also try Flutterbird in your browser on flutterbird.eu",
-                          style: simpleTextStyle(fontSize)
-                      )
-                  )
-              ),
-            ],
-          ),
-        ),
+        SizedBox(height: 10),
+        platformWidget(width, fontSize),
         SizedBox(height: 40),
       ]
     );
@@ -721,24 +720,10 @@ class ProfileBoxState extends State<ProfileBox> {
         profileAvatar(widthAvatar, fontSize),
         SizedBox(height: 20),
         userStats(width, fontSize),
-        SizedBox(height: 20),
-        Container(
-          width: width,
-          child: Row(
-            children: [
-              Expanded(
-                  child: Text.rich(
-                      TextSpan(
-                          text: kIsWeb
-                              ? "Also try Flutterbird on Android or IOS!"
-                              : "Also try Flutterbird in your browser on flutterbird.eu",
-                          style: simpleTextStyle(fontSize)
-                      )
-                  )
-              ),
-            ],
-          ),
-        ),
+        SizedBox(height: 10),
+        achievementsWidget(width, fontSize),
+        SizedBox(height: 10),
+        platformWidget(width, fontSize),
         SizedBox(height: 40),
       ],
     );
