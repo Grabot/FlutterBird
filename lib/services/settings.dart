@@ -50,7 +50,10 @@ class Settings extends ChangeNotifier {
       });
     }
     // check for stored tokens to automatically log in.
-    String path = Uri.base.path;
+    checkRoutes(Uri.base.path);
+  }
+
+  checkRoutes(String path) async {
     if (path != routes.BirdAccessRoute || path != routes.PasswordResetRoute) {
       WidgetsFlutterBinding.ensureInitialized();
       WidgetsBinding.instance.addPostFrameCallback((_){
@@ -59,6 +62,7 @@ class Settings extends ChangeNotifier {
       });
     }
   }
+
   Future<bool> accessTokenLogin(String accessToken) async {
     try {
       LoginResponse loginResponse = await AuthServiceLogin().getTokenLogin(accessToken);

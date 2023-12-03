@@ -20,6 +20,10 @@ class UserScore {
 
   UserScore._internal() {
     // retrieve storage
+    retrieveStorage();
+  }
+
+  retrieveStorage() async {
     secureStorage.getTotalFlutters().then((value) {
       if (value != null) {
         totalFlutters = int.parse(value);
@@ -45,14 +49,6 @@ class UserScore {
         bestScoreDoubleBird = int.parse(value);
       }
     });
-  }
-
-  updateStoreStorage() {
-    secureStorage.setTotalFlutters(totalFlutters.toString());
-    secureStorage.setTotalPipes(totalPipesCleared.toString());
-    secureStorage.setTotalGames(totalGames.toString());
-    secureStorage.setBestScoreSingleBird(bestScoreSingleBird.toString());
-    secureStorage.setBestScoreDoubleBird(bestScoreDoubleBird.toString());
   }
 
   factory UserScore() {

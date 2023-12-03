@@ -298,10 +298,10 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
   }
 
   List<String> flutterBirdImagePath = [
-    'assets/images/ui/game_settings/bird/bird_green.png',
-    'assets/images/ui/game_settings/bird/bird_yellow.png',
     'assets/images/ui/game_settings/bird/bird_red.png',
     'assets/images/ui/game_settings/bird/bird_blue.png',
+    'assets/images/ui/game_settings/bird/bird_green.png',
+    'assets/images/ui/game_settings/bird/bird_yellow.png',
     'assets/images/ui/game_settings/bird/bird_white.png',
     'assets/images/ui/game_settings/bird/bird_black.png',
   ];

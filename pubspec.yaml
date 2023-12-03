@@ -48,6 +48,7 @@ dependencies:
   url_launcher: ^6.2.1
   linked_scroll_controller: ^0.2.0
   themed: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,14 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+flutter_launcher_icons:
+  ios: true
+  android: true
+  image_path_android: "assets/images/game_icon.png"
+  image_path_ios: "assets/images/game_icon.png"
+  adaptive_icon_background: "assets/images/game_icon.png"
+  adaptive_icon_foreground: "assets/images/game_icon.png"
+
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -99,10 +108,11 @@ flutter:
     - assets/images/flutter_green.png
     - assets/images/flutter_white.png
     - assets/images/flutter_black.png
-    - assets/images/bird_outline.png
     - assets/images/bird_outline_animation.png
-    - assets/images/message_phone.png
-    - assets/images/message_web.png
+    - assets/images/message_phone_single.png
+    - assets/images/message_phone_double.png
+    - assets/images/message_web_single.png
+    - assets/images/message_web_double.png
     - assets/images/gameover.png
     - assets/images/leaderboard_image.png
     - assets/images/reddit_button.png
@@ -154,6 +164,7 @@ flutter:
     - assets/images/achievements/wood_single.png
     - assets/images/flutterbird_icon.png
     - assets/images/flutterbird_logo.png
+    - assets/images/game_icon.png
     - assets/audio/die.wav
     - assets/audio/hit.wav
     - assets/audio/point.wav

@@ -123,7 +123,6 @@ class ProfileBoxState extends State<ProfileBox> {
     if (mounted) {
       if (!showProfile && profileChangeNotifier.getProfileVisible()) {
         showProfile = true;
-        print("profile show");
       }
       if (showProfile && !profileChangeNotifier.getProfileVisible()) {
         showProfile = false;
@@ -154,7 +153,6 @@ class ProfileBoxState extends State<ProfileBox> {
       normalMode = false;
       // double newHeightScaleFont = width / 800;
       // fontSize = 16 * newHeightScaleFont;
-      // print("height: $height");
       // fontSize = 16;
     }
     double headerHeight = 40;

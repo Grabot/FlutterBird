@@ -89,6 +89,8 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   int pipeBird1Priority = 0;
   int pipeBird2Priority = 2;
 
+  bool spaceBarUsed = false;
+
   Vector2 birdSize = Vector2(85, 60);
 
   @override
@@ -221,10 +223,18 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   Future<void> onTapUp(int pointerId, TapUpInfo tapUpInfo) async {
     Vector2 screenPos = tapUpInfo.eventPosition.global;
     if (twoPlayers) {
-      if (screenPos.x > size.x / 2) {
+      // If the user has pressed the space bar
+      // than the user can click anywhere for the first bird
+      if (spaceBarUsed) {
         birdInteraction(bird1);
       } else {
-        birdInteraction(bird2);
+        // If the user is not using the space bar we will decide they are
+        // behind a mobile. Left side is left bird, right side is right bird.
+        if (screenPos.x > size.x / 2) {
+          birdInteraction(bird1);
+        } else {
+          birdInteraction(bird2);
+        }
       }
     } else {
       birdInteraction(bird1);
@@ -242,15 +252,21 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       return KeyEventResult.ignored;
     } else {
       if (event.logicalKey == LogicalKeyboardKey.space && isKeyDown) {
+        // If the user has pressed the space bar even once,
+        // we will know they are behind a desktop
+        spaceBarUsed = true;
         if (twoPlayers) {
           birdInteraction(bird2);
+        } else {
+          // In single bird mode you can use the mouse click or the space bar.
+          birdInteraction(bird1);
         }
       }
       return KeyEventResult.handled;
     }
   }
 
-  checkingAchievements() {
+  checkingAchievements() async {
     // First check the medal achievements
     if (!twoPlayers) {
       if (!userAchievements.getWoodSingle()) {
@@ -707,6 +723,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     if (gameSettings.getPlayerType() != 0 && !twoPlayers) {
       settings.getLeaderBoardsTwoPlayer();
       twoPlayers = true;
+      helpMessage.updateMessageImage(size);
 
       birdSize.y = (size.y / 10000) * 466;
       birdSize.x = (birdSize.y / 12) * 17;
@@ -721,6 +738,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     if (gameSettings.getPlayerType() != 1 && twoPlayers) {
       settings.getLeaderBoardsOnePlayer();
       twoPlayers = false;
+      helpMessage.updateMessageImage(size);
       remove(bird2);
       remove(birdOutlineBird2);
       clearPipes();
@@ -741,11 +759,13 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   changePlayer(int playerType) async {
     if (playerType == 0) {
       twoPlayers = false;
+      helpMessage.updateMessageImage(size);
       remove(bird2);
       remove(birdOutlineBird2);
       clearPipes();
     } else {
       twoPlayers = true;
+      helpMessage.updateMessageImage(size);
       settings.getLeaderBoardsTwoPlayer();
 
       birdSize.y = (size.y / 10000) * 466;

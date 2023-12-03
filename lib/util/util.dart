@@ -53,7 +53,7 @@ ButtonStyle buttonStyle(bool active, MaterialColor buttonColor) {
   );
 }
 
-getScore(LoginResponse loginResponse, int userId) {
+getScore(LoginResponse loginResponse, int userId) async {
   UserScore userScore = UserScore();
   Score? score = loginResponse.getScore();
   if (score != null) {
@@ -100,7 +100,7 @@ getScore(LoginResponse loginResponse, int userId) {
   }
 }
 
-getAchievements(LoginResponse loginResponse, int userId) {
+getAchievements(LoginResponse loginResponse, int userId) async {
   UserAchievements userAchievements = UserAchievements();
   Achievements? achievements = loginResponse.getAchievements();
   if (achievements != null) {
@@ -112,6 +112,7 @@ getAchievements(LoginResponse loginResponse, int userId) {
     // played in a while and then returned. They than remain logged out and play
     // Any achievement that they get is stored locally.
     // If they then log in they still get the achievement.
+    await Future.delayed(const Duration(milliseconds: 200));
     if (achievements.getWoodSingle() && !userAchievements.getWoodSingle()) {
       userAchievements.achievedWoodSingle();
     } else if (!achievements.getWoodSingle() && userAchievements.getWoodSingle()) {

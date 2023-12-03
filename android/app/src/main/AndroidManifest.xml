@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="flutterbird.eu.flutterBird">
    <application
-        android:label="flutterbird"
+        android:label="FlutterBird"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -534,7 +534,6 @@ class DotControl extends StatelessWidget {
 
 // decode orientation awared Image.
 image.Image _fromByteData(Uint8List data) {
-  print("from bytes mobile");
   return image.decodeImage(data)!;
 }
 

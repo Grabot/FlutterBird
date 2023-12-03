@@ -32,13 +32,13 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   Future<void> onLoad() async {
     gameSettings = GameSettings();
     if (birdType == 0) {
-      await loadBird("flutter_green.png");
-    } else if (birdType == 1) {
-      await loadBird("flutter_yellow.png");
-    } else if (birdType == 2) {
       await loadBird("flutter_red.png");
-    } else if (birdType == 3) {
+    } else if (birdType == 1) {
       await loadBird("flutter_blue.png");
+    } else if (birdType == 2) {
+      await loadBird("flutter_green.png");
+    } else if (birdType == 3) {
+      await loadBird("flutter_yellow.png");
     } else if (birdType == 4) {
       await loadBird("flutter_white.png");
     } else if (birdType == 5) {
@@ -222,16 +222,16 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   changeBird(int newBirdType) async {
     if (newBirdType == 0 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_green.png");
+      await loadBird("flutter_red.png");
     } else if (newBirdType == 1 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_yellow.png");
-    } else if (newBirdType == 2 && newBirdType != birdType) {
-      birdType = newBirdType;
-      await loadBird("flutter_red.png");
-    } else if (newBirdType == 3 && newBirdType != birdType) {
-      birdType = newBirdType;
       await loadBird("flutter_blue.png");
+    } else if (newBirdType == 2 && newBirdType != birdType) {
+      await loadBird("flutter_green.png");
+      birdType = newBirdType;
+    } else if (newBirdType == 3 && newBirdType != birdType) {
+      await loadBird("flutter_yellow.png");
+      birdType = newBirdType;
     } else if (newBirdType == 4 && newBirdType != birdType) {
       birdType = newBirdType;
       await loadBird("flutter_white.png");

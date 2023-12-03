@@ -103,7 +103,6 @@ class AchievementBoxState extends State<AchievementBox> {
     if (mounted) {
       if (!showAchievementBox && achievementBoxChangeNotifier.getAchievementBoxVisible()) {
         showAchievementBox = true;
-        print("achievement normal show");
         numberOfAchievementsAchieved = userAchievements.achievedAchievementList().length;
       }
       if (showAchievementBox && !achievementBoxChangeNotifier.getAchievementBoxVisible()) {
@@ -114,7 +113,6 @@ class AchievementBoxState extends State<AchievementBox> {
   }
 
   tappedAchievements(Achievement achievement) {
-    print("tapped achievement");
     AchievementCloseUpChangeNotifier achievementCloseUpChangeNotifier = AchievementCloseUpChangeNotifier();
     achievementCloseUpChangeNotifier.setAchievement(achievement);
     achievementCloseUpChangeNotifier.setAchievementCloseUpVisible(true);

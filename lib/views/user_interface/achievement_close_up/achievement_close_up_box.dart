@@ -87,7 +87,6 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
     if (mounted) {
       if (!showAchievementCloseUp && achievementCloseUpChangeNotifier.getAchievementCloseUpVisible()) {
         setState(() {
-          print("achievement close up show");
           closeUpAchievement = achievementCloseUpChangeNotifier.getAchievement();
           showAchievementCloseUp = true;
         });
