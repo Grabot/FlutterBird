@@ -9,8 +9,6 @@ import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/socket_services.dart';
 import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
-import 'package:flutter_bird/views/user_interface/models/achievement.dart';
-import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_box.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -326,7 +324,7 @@ logoutUser(Settings settings, NavigationService navigationService) async {
 }
 
 Widget expandedText(double width, String text, double fontSize, bool bold) {
-  return Container(
+  return SizedBox(
     width: width,
     child: Row(
         children: [

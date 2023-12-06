@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
-import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/util/util.dart';
@@ -78,17 +77,17 @@ class AreYouSureBoxState extends State<AreYouSureBox> {
         cancelButtonAction();
       },
       child: AlertDialog(
-        title: Text("Logout?"),
-        content: Text("Are you sure you want to logout?"),
+        title: const Text("Logout?"),
+        content: const Text("Are you sure you want to logout?"),
         actions: [
           ElevatedButton(
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
             onPressed:  () {
               cancelButtonAction();
             },
           ),
           ElevatedButton(
-            child: Text("Logout"),
+            child: const Text("Logout"),
             onPressed:  () {
               logoutAction();
             },

@@ -1,12 +1,9 @@
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
-import 'package:flutter_bird/locator.dart';
 import 'package:flutter_bird/models/user.dart';
-import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/rest/auth_service_setting.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_achievements.dart';
@@ -63,7 +60,7 @@ class ProfileBoxState extends State<ProfileBox> {
   final GlobalKey<FormState> passwordKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
 
@@ -157,7 +154,7 @@ class ProfileBoxState extends State<ProfileBox> {
     }
     double headerHeight = 40;
 
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: CustomPaint(
@@ -170,9 +167,9 @@ class ProfileBoxState extends State<ProfileBox> {
                     children:
                     [
                       profileHeader(width-80, headerHeight, fontSize),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       userInformationBox(width-80, fontSize, normalMode),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ]
                 ),
               )
@@ -253,7 +250,7 @@ class ProfileBoxState extends State<ProfileBox> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          margin: EdgeInsets.all(20),
+          margin: const EdgeInsets.all(20),
           child: settings.getUser() == null
               ? Text(
             "No user logged in",
@@ -288,16 +285,16 @@ class ProfileBoxState extends State<ProfileBox> {
       children: [
         expandedText(userStatsWidth, "Best score single bird: ", fontSize, false),
         expandedText(userStatsWidth, "${userScore.getBestScoreSingleBird()}", fontSize+6, true),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         expandedText(userStatsWidth, "Best score double bird: ", fontSize, false),
         expandedText(userStatsWidth, "${userScore.getBestScoreDoubleBird()}", fontSize+6, true),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         expandedText(userStatsWidth, "Number of games played: ", fontSize, false),
         expandedText(userStatsWidth, "${userScore.getTotalGames()}", fontSize+6, true),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         expandedText(userStatsWidth, "Total pipes cleared: ", fontSize, false),
         expandedText(userStatsWidth, "${userScore.getTotalPipesCleared()}", fontSize+6, true),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         expandedText(userStatsWidth, "Total wing flutters: ", fontSize, false),
         expandedText(userStatsWidth, "${userScore.getTotalFlutters()}", fontSize+6, true),
       ],
@@ -305,7 +302,7 @@ class ProfileBoxState extends State<ProfileBox> {
   }
 
   Widget platformWidget(double width, double fontSize) {
-    return Container(
+    return SizedBox(
       width: width,
       child: Row(
         children: [
@@ -334,7 +331,7 @@ class ProfileBoxState extends State<ProfileBox> {
     double achievementHeight = (achievementWidth/8) * multiplesOfEight;
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: achievementWidth,
           child: Text(
             "Achievements:",
@@ -344,11 +341,11 @@ class ProfileBoxState extends State<ProfileBox> {
             ),
           ),
         ),
-        achievedAchievements.isNotEmpty ? Container(
+        achievedAchievements.isNotEmpty ? SizedBox(
           width: achievementWidth,
           height: achievementHeight,
           child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 8,
             ),
             padding: EdgeInsets.zero,
@@ -357,7 +354,7 @@ class ProfileBoxState extends State<ProfileBox> {
               return achievementTile(context, achievedAchievements[index], (achievementWidth/8));
             },
           ),
-        ) : Container(
+        ) : SizedBox(
           width: achievementWidth,
           child: Text(
             "No achievements yet!",
@@ -367,9 +364,9 @@ class ProfileBoxState extends State<ProfileBox> {
             ),
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         checkAllAchievements(achievementWidth, fontSize),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
       ]
     );
   }
@@ -405,13 +402,13 @@ class ProfileBoxState extends State<ProfileBox> {
     return Column(
         children: [
           profileAvatar(widthAvatar, fontSize),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           userStats(width, fontSize),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           achievementsWidget(width, fontSize),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           platformWidget(width, fontSize),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           logInWidget(width, fontSize, false),
         ]
     );
@@ -497,7 +494,7 @@ class ProfileBoxState extends State<ProfileBox> {
               ),
             ),
           ),
-          SizedBox(height: 20)
+          const SizedBox(height: 20)
         ],
       );
     }
@@ -510,15 +507,15 @@ class ProfileBoxState extends State<ProfileBox> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             profileAvatar(300, fontSize),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             userStats((width - 300 - 20), fontSize),
           ],
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         achievementsWidget(width, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         platformWidget(width, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         logInWidget(width, fontSize, true),
       ],
     );
@@ -531,30 +528,30 @@ class ProfileBoxState extends State<ProfileBox> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               profileAvatar(300, fontSize),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               userStats((width - 300 - 20), fontSize),
             ]
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         achievementsWidget(width, fontSize),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         platformWidget(width, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
       ]
     );
   }
 
   Widget changeUserNameField(double avatarWidth, double fontSize) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.blueAccent)
       ),
       child: Container(
-        margin: EdgeInsets.all(4),
+        margin: const EdgeInsets.all(4),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 40,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -584,7 +581,7 @@ class ProfileBoxState extends State<ProfileBox> {
                       ? "Please enter a username if you want to change it"
                       : null;
                 },
-                scrollPadding: EdgeInsets.only(bottom: 120),
+                scrollPadding: const EdgeInsets.only(bottom: 120),
                 decoration: const InputDecoration(
                   hintText: "New username",
                   hintStyle: TextStyle(color: Colors.white54),
@@ -620,15 +617,15 @@ class ProfileBoxState extends State<ProfileBox> {
 
   Widget changePasswordField(double avatarWidth, double fontSize) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.blueAccent)
       ),
       child: Container(
-        margin: EdgeInsets.all(4),
+        margin: const EdgeInsets.all(4),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 40,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -658,14 +655,14 @@ class ProfileBoxState extends State<ProfileBox> {
                       ? "fill in new password"
                       : null;
                 },
-                scrollPadding: EdgeInsets.only(bottom: 120),
+                scrollPadding: const EdgeInsets.only(bottom: 120),
                 decoration: const InputDecoration(
                   hintText: "New password",
                   hintStyle: TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                 ),
                 obscureText: true,
-                autofillHints: [AutofillHints.newPassword],
+                autofillHints: const [AutofillHints.newPassword],
                 style: TextStyle(color: Colors.white, fontSize: fontSize),
               ),
             ),
@@ -698,7 +695,7 @@ class ProfileBoxState extends State<ProfileBox> {
     } else {
       userName = currentUser.getUserName();
     }
-    return Container(
+    return SizedBox(
         width: avatarWidth,
         child: Column(
             children: [
@@ -744,13 +741,13 @@ class ProfileBoxState extends State<ProfileBox> {
     return Column(
       children: [
         profileAvatar(widthAvatar, fontSize),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         userStats(width, fontSize),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         achievementsWidget(width, fontSize),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         platformWidget(width, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
       ],
     );
   }
@@ -978,8 +975,8 @@ Widget getPopupItems(BuildContext context) {
             onPressed: () {
               buttonChangeProfile(context);
             },
-            child: Row(
-              children:const [
+            child: const Row(
+              children:[
                 Text(
                   'Change avatar',
                   textAlign: TextAlign.left,
@@ -995,8 +992,8 @@ Widget getPopupItems(BuildContext context) {
             onPressed: () {
               buttonChangeUsername(context);
             },
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text(
                   "Change username",
                   textAlign: TextAlign.left,
@@ -1012,8 +1009,8 @@ Widget getPopupItems(BuildContext context) {
             onPressed: () {
               buttonChangePassword(context);
             },
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text(
                   "Change password",
                   textAlign: TextAlign.left,
@@ -1029,8 +1026,8 @@ Widget getPopupItems(BuildContext context) {
             onPressed: () {
               buttonLogout(context);
             },
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text(
                   "Logout",
                   textAlign: TextAlign.left,

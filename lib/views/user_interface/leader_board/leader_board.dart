@@ -33,7 +33,7 @@ class LeaderBoardState extends State<LeaderBoard> {
   AutoSizeGroup sizeGroupTimeRanking = AutoSizeGroup();
   AutoSizeGroup sizeGroupHeaderRow = AutoSizeGroup();
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopLeaderBoard = true;
   bool showBottomLeaderBoard = true;
 
@@ -119,7 +119,7 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardMessage(double heighScale) {
     double leaderBoardMessageWidth = 222 * heighScale * 1.5;
     double gameOverMessageHeight = 42 * heighScale * 1.5;
-    return Container(
+    return SizedBox(
         width: leaderBoardMessageWidth,
         height: gameOverMessageHeight,
         child: Image.asset(
@@ -148,7 +148,7 @@ class LeaderBoardState extends State<LeaderBoard> {
     double yearRowWidth = totalHeaderWidth/5;
     double allTimeRowWidth = totalHeaderWidth/5;
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
       width: leaderBoardWidth-20,
       height: timeRankingHeight-10,
       child: Row(
@@ -168,7 +168,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                 color: selectedTimeRanking == 0 ? Colors.green[200] : Colors.transparent,
                 child: AutoSizeText(
                   "Day",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFFcba830),
                     fontSize: 50,
                   ),
@@ -192,7 +192,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                 color: selectedTimeRanking == 1 ? Colors.green[200] : Colors.transparent,
                 child: AutoSizeText(
                   "Week",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFFcba830),
                     fontSize: 50,
                   ),
@@ -216,7 +216,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                 color: selectedTimeRanking == 2 ? Colors.green[200] : Colors.transparent,
                 child: AutoSizeText(
                   "Month",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFFcba830),
                     fontSize: 50,
                   ),
@@ -240,7 +240,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                 color: selectedTimeRanking == 3 ? Colors.green[200] : Colors.transparent,
                 child: AutoSizeText(
                   "Year",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFFcba830),
                     fontSize: 50,
                   ),
@@ -264,7 +264,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                 color: selectedTimeRanking == 4 ? Colors.green[200] : Colors.transparent,
                 child: AutoSizeText(
                   "All Time",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFFcba830),
                     fontSize: 50,
                   ),
@@ -285,7 +285,7 @@ class LeaderBoardState extends State<LeaderBoard> {
     double scoreRowWidth = totalHeaderWidth/6;
     double achievedAtWidth = totalHeaderWidth/3;
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       width: leaderBoardWidth-20,
       height: headerRowHeight-10,
       child: Row(
@@ -297,7 +297,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Rank",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFFcba830),
                   fontSize: 50,
                 ),
@@ -312,7 +312,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Name",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFFcba830),
                   fontSize: 50,
                 ),
@@ -327,7 +327,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Score",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFFcba830),
                   fontSize: 50,
                 ),
@@ -343,7 +343,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Achieved at",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFFcba830),
                   fontSize: 50,
                 ),
@@ -374,11 +374,11 @@ class LeaderBoardState extends State<LeaderBoard> {
             child: AutoSizeText(
               "${index + 1}",
               style: userRank.getMe()
-                  ? TextStyle(
+                  ? const TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.bold,
               )
-                  : TextStyle(fontSize: 50),
+                  : const TextStyle(fontSize: 50),
               maxLines: 1,
             )
           ),
@@ -408,11 +408,11 @@ class LeaderBoardState extends State<LeaderBoard> {
             child: AutoSizeText(
               "${userRank.getScore()}",
               style: userRank.getMe()
-                  ? TextStyle(
+                  ? const TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.bold,
               )
-                  : TextStyle(fontSize: 50),
+                  : const TextStyle(fontSize: 50),
               maxLines: 1,
             )
           ),
@@ -423,11 +423,11 @@ class LeaderBoardState extends State<LeaderBoard> {
             child: AutoSizeText(
               DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
               style: userRank.getMe()
-                  ? TextStyle(
+                  ? const TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.bold,
               )
-                  : TextStyle(fontSize: 50),
+                  : const TextStyle(fontSize: 50),
               maxLines: 2,
             )
             // child: Text(
@@ -476,11 +476,11 @@ class LeaderBoardState extends State<LeaderBoard> {
     if (rankingList.length < 10) {
       itemCount = rankingList.length;
     }
-    return Container(
+    return SizedBox(
       width: leaderBoardWidth-20,
       height: leaderBoardHeight,
       child: NotificationListener(
-        child: Container(
+        child: SizedBox(
           width: leaderBoardWidth,
           height: leaderBoardHeight,
           child: ListView.builder(
@@ -513,7 +513,7 @@ class LeaderBoardState extends State<LeaderBoard> {
 
   Widget leaderContent(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
     double onePlayerTwoPlayerOptionWidth = leaderBoardWidth/10;
-    return Container(
+    return SizedBox(
       width: leaderBoardWidth+onePlayerTwoPlayerOptionWidth,
       height: leaderBoardHeight,
       child: Row(
@@ -541,7 +541,7 @@ class LeaderBoardState extends State<LeaderBoard> {
       children: [
         CustomPaint(
           painter: BoxWindowPainter(showTop: true, showBottom: true),
-          child: Container(
+          child: SizedBox(
             width: onePlayerTwoPlayerOptionWidth,
             height: onePlayerTwoPlayerOptionWidth*2,
             child: Column(
@@ -557,7 +557,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                     }
                   },
                   child: Container(
-                    color: !twoPlayer ? Colors.green : Color(0xFFdcd587),
+                    color: !twoPlayer ? Colors.green : const Color(0xFFdcd587),
                     width: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     height: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     child: Image.asset(
@@ -576,7 +576,7 @@ class LeaderBoardState extends State<LeaderBoard> {
                     }
                   },
                   child: Container(
-                    color: twoPlayer ? Colors.green : Color(0xFFdcd587),
+                    color: twoPlayer ? Colors.green : const Color(0xFFdcd587),
                     width: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     height: onePlayerTwoPlayerOptionWidth-(2*onePlayerTwoPlayerOptionMargin),
                     child: Image.asset(

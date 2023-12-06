@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class TooltipPopup extends PopupMenuEntry<int> {
 
   final String tooltip;
-  TooltipPopup({
+  const TooltipPopup({
     required Key key,
     required this.tooltip,
   }) : super(key: key);

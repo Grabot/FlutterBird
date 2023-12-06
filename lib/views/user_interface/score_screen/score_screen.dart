@@ -8,7 +8,6 @@ import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
-import 'package:flutter_bird/views/user_interface/models/rank.dart';
 import 'package:flutter_bird/views/user_interface/leader_board/leader_board_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 
@@ -115,7 +114,7 @@ class ScoreScreenState extends State<ScoreScreen> {
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFcba830)
+          color: const Color(0xFFcba830)
         )
       ),
     );
@@ -123,11 +122,11 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   Widget achievementsOwnedGrid(double medalWidth, double medalHeight) {
     List earnedAchievements = userAchievements.achievedAchievementList();
-    return Container(
+    return SizedBox(
         width: medalWidth,
         height: medalHeight,
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
           ),
           padding: EdgeInsets.zero,
@@ -148,7 +147,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
     List show = ownedAchievements;
     show.removeWhere((item) => achievementsEarned.contains(item));
-    return Container(
+    return SizedBox(
         width: medalWidth,
         height: medalHeight,
         child: ListView.builder(
@@ -163,7 +162,7 @@ class ScoreScreenState extends State<ScoreScreen> {
 
   Widget achievementsEarnedList(double medalWidth, double medalHeight) {
     List achievementsEarned = scoreScreenChangeNotifier.getAchievementEarned();
-    return Container(
+    return SizedBox(
       width: medalWidth,
       height: medalHeight,
       child: ListView.builder(
@@ -184,7 +183,7 @@ class ScoreScreenState extends State<ScoreScreen> {
       // no new achievements earned, show only the achievements owned.
       return Column(
           children: [
-            Container(
+            SizedBox(
                 height: textHeight,
                 width: medalWidth,
                 child: Text(
@@ -192,7 +191,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                     style: TextStyle(
                         fontSize: (fontSize/4)*3,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFFcba830)
+                        color: const Color(0xFFcba830)
                     )
                 )
             ),
@@ -204,7 +203,7 @@ class ScoreScreenState extends State<ScoreScreen> {
       double achievementOwnedHeight = (achievementGridHeight / 3) - textHeight;
       return Column(
         children: [
-          Container(
+          SizedBox(
               height: textHeight,
               width: medalWidth,
               child: Text(
@@ -212,12 +211,12 @@ class ScoreScreenState extends State<ScoreScreen> {
                   style: TextStyle(
                       fontSize: (fontSize/4)*3,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFcba830)
+                      color: const Color(0xFFcba830)
                   )
               )
           ),
           achievementsEarnedList(medalWidth, achievementEarnedHeight),
-          Container(
+          SizedBox(
               height: textHeight,
               width: medalWidth,
               child: Text(
@@ -225,7 +224,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                   style: TextStyle(
                       fontSize: (fontSize/4)*3,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFcba830)
+                      color: const Color(0xFFcba830)
                   )
               )
           ),
@@ -259,7 +258,7 @@ class ScoreScreenState extends State<ScoreScreen> {
           style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFcba830)
+              color: const Color(0xFFcba830)
           )
       ),
     );
@@ -323,7 +322,7 @@ class ScoreScreenState extends State<ScoreScreen> {
         style: TextStyle(
           fontSize: fontSize*1.5,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFcba830)
+          color: const Color(0xFFcba830)
         )
       ),
     );
@@ -393,10 +392,10 @@ class ScoreScreenState extends State<ScoreScreen> {
     return Column(
       children: [
         expandedText(width, "Save your progress by logging in!", fontSize, false),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           children: [
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Container(
               alignment: Alignment.center,
               child: ElevatedButton(
@@ -418,8 +417,8 @@ class ScoreScreenState extends State<ScoreScreen> {
             ),
           ]
         ),
-        SizedBox(height: 10),
-        Container(
+        const SizedBox(height: 10),
+        SizedBox(
           width: width,
           child: Row(
             children: [
@@ -436,7 +435,7 @@ class ScoreScreenState extends State<ScoreScreen> {
             ],
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -452,7 +451,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     double scoreHeight = (rightWidth/12)*3;
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: totalHeight,
           child:
           Row(
@@ -493,7 +492,7 @@ class ScoreScreenState extends State<ScoreScreen> {
   Widget gameOverMessage(double heighScale) {
     double gameOverMessageWidth = 192 * heighScale * 1.5;
     double gameOverMessageHeight = 42 * heighScale * 1.5;
-    return Container(
+    return SizedBox(
       width: gameOverMessageWidth,
       height: gameOverMessageHeight,
       child: Image.asset(
@@ -507,7 +506,7 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   Widget userInteractionButtons(double scoreWidth, double fontSize) {
-    return Container(
+    return SizedBox(
       width: scoreWidth,
       height: 100,
       child: Row(
@@ -558,7 +557,7 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   Widget scoreContent(double scoreWidth, double fontSize, double heightScale) {
-    return Container(
+    return SizedBox(
       width: scoreWidth,
       height: scoreWidth/2,
       child: CustomPaint(

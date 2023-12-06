@@ -46,11 +46,11 @@ class Rank {
   @override
   bool operator ==(Object other) {
     if (other is Rank) {
-      return this.userName == other.getUserName()
-          && this.userId == other.getUserId()
-          && this.score == other.getScore()
-          && this.me == other.getMe()
-          && this.timestampString == other.getTimestampString();
+      return userName == other.getUserName()
+          && userId == other.getUserId()
+          && score == other.getScore()
+          && me == other.getMe()
+          && timestampString == other.getTimestampString();
     }
     return false;
   }

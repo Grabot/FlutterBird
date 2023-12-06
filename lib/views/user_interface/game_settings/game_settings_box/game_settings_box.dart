@@ -33,7 +33,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
   final NavigationService _navigationService = locator<NavigationService>();
 
   bool showGameSettings = false;
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
   bool normalMode = true;
@@ -116,7 +116,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             child: Text(
                 "Game settings",
                 style: simpleTextStyle(fontSize)
@@ -212,7 +212,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
                       Container(
                           height: heightDiff/2
                       ),
-                      Container(
+                      SizedBox(
                         width: imageWidth,
                         height: imageHeight,
                         child: Image.asset(
@@ -256,7 +256,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
                       ),
                       ChangeColors(
                         saturation: -1,
-                        child: Container(
+                        child: SizedBox(
                           width: imageWidth,
                           height: imageHeight,
                           child: Image.asset(
@@ -284,12 +284,12 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     if (imageSize > 100) {
       imageSize = 100;
     }
-    return Container(
+    return SizedBox(
       width: gameSettingsWidth,
       height: imageSize + 20,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: new List.generate(2, (int playerType) {
+        children: List.generate(2, (int playerType) {
           bool selected = gameSettings.getPlayerType() == playerType;
           return selectionButton(playerImagePath[playerType], imageSize, imageSize, playerType, 0, selected);
         }),
@@ -312,12 +312,12 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
       imageWidth = 100;
     }
     double imageHeight = imageWidth * 0.71;
-    return Container(
+    return SizedBox(
       width: gameSettingsWidth,
       height: imageWidth + 20,
       child: ListView(
           scrollDirection: Axis.horizontal,
-          children: new List.generate(flutterBirdImagePath.length, (int birdType1) {
+          children: List.generate(flutterBirdImagePath.length, (int birdType1) {
             bool selected = gameSettings.getBirdType1() == birdType1;
             return selectionButton(flutterBirdImagePath[birdType1], imageWidth, imageHeight, birdType1, 1, selected);
           }),
@@ -342,12 +342,12 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
         }
       }
     }
-    return Container(
+    return SizedBox(
       width: gameSettingsWidth,
       height: imageWidth + 20,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: new List.generate(flutterBirdImagePath.length, (int birdType2) {
+        children: List.generate(flutterBirdImagePath.length, (int birdType2) {
           bool selected = gameSettings.getBirdType2() == birdType2;
           if (gameSettings.getBirdType1() == birdType2) {
             return nonSelectionButton(flutterBirdImagePath[birdType2], imageWidth, imageHeight);
@@ -370,12 +370,12 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     if (imageSize > 100) {
       imageSize = 100;
     }
-    return Container(
+    return SizedBox(
       width: gameSettingsWidth,
       height: imageSize + 20,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: new List.generate(2, (int backgroundType) {
+        children: List.generate(2, (int backgroundType) {
           bool selected = gameSettings.getBackgroundType() == backgroundType;
           return selectionButton(backgroundImagePath[backgroundType], imageSize, imageSize, backgroundType, 3, selected);
         }),
@@ -393,16 +393,16 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
       children: [
         Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Text(
                   "Player selection",
                   style: simpleTextStyle(fontSize)
               ),
             ]
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         playerSelection(gameSettingsWidth, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
       ],
     );
   }
@@ -416,16 +416,16 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
         children: [
           Row(
               children: [
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Text(
                     flutterBirdText,
                     style: simpleTextStyle(fontSize)
                 ),
               ]
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           birdSelection1(gameSettingsWidth, fontSize),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
         ],
     );
   }
@@ -435,16 +435,16 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
       children: [
         Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Text(
                   "Flutter bird 2",
                   style: simpleTextStyle(fontSize)
               ),
             ]
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         birdSelection2(gameSettingsWidth, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
       ],
     );
   }
@@ -454,16 +454,16 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
       children: [
         Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Text(
                   "Background",
                   style: simpleTextStyle(fontSize)
               ),
             ]
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         backgroundSelection(gameSettingsWidth, fontSize),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
       ],
     );
   }
@@ -502,7 +502,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     }
     double headerHeight = 40;
 
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: CustomPaint(
@@ -515,7 +515,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
                       children:
                       [
                         gameSettingsHeader(width-80, headerHeight, fontSize),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         gameSettingContent(width-80, fontSize),
                       ]
                   ),

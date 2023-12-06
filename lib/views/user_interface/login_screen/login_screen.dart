@@ -11,10 +11,7 @@ import 'package:flutter_bird/services/rest/models/register_request.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
-import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
-import 'package:flutter_bird/views/user_interface/profile/profile_overview/profile_overview.dart';
 import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
-import 'package:flutter_bird/views/user_interface/ui_util/clear_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -49,17 +46,17 @@ class LoginScreenState extends State<LoginScreen> {
   final formKeyReset = GlobalKey<FormState>();
   final formKeyRegister = GlobalKey<FormState>();
 
-  TextEditingController emailOrUsernameController = new TextEditingController();
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController usernameController = new TextEditingController();
-  TextEditingController password1Controller = new TextEditingController();
-  TextEditingController password2Controller = new TextEditingController();
-  TextEditingController forgotPasswordEmailController = new TextEditingController();
+  TextEditingController emailOrUsernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController password1Controller = TextEditingController();
+  TextEditingController password2Controller = TextEditingController();
+  TextEditingController forgotPasswordEmailController = TextEditingController();
 
-  FocusNode _focusEmail = FocusNode();
-  FocusNode _focusPassword = FocusNode();
+  final FocusNode _focusEmail = FocusNode();
+  final FocusNode _focusPassword = FocusNode();
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
 
@@ -222,18 +219,18 @@ class LoginScreenState extends State<LoginScreen> {
         Row(
             children: [
               Expanded(
-                child: new Container(
+                child: Container(
                     margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                    child: Divider(
+                    child: const Divider(
                       color: Colors.white,
                       height: 36,
                     )),
               ),
-              Text("or"),
+              const Text("or"),
               Expanded(
-                child: new Container(
+                child: Container(
                     margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                    child: Divider(
+                    child: const Divider(
                       color: Colors.white,
                       height: 36,
                     )),
@@ -265,19 +262,19 @@ class LoginScreenState extends State<LoginScreen> {
         Row(
             children: [
               Expanded(
-                child: new Container(
+                child: Container(
                     margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                    child: Divider(
+                    child: const Divider(
                       color: Colors.white,
                       height: 36,
                     )),
               ),
-              signUpMode == 0 ? Text("or login with") : Container(),
-              signUpMode == 1 ? Text("or register with") : Container(),
+              signUpMode == 0 ? const Text("or login with") : Container(),
+              signUpMode == 1 ? const Text("or register with") : Container(),
               Expanded(
-                child: new Container(
+                child: Container(
                     margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                    child: Divider(
+                    child: const Divider(
                       color: Colors.white,
                       height: 36,
                     )),
@@ -308,7 +305,7 @@ class LoginScreenState extends State<LoginScreen> {
                   )
                 ]
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Column(
               children: [
                 InkWell(
@@ -330,7 +327,7 @@ class LoginScreenState extends State<LoginScreen> {
                 )
               ],
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Column(
                 children: [
                   InkWell(
@@ -365,7 +362,7 @@ class LoginScreenState extends State<LoginScreen> {
           "Check your email",
           style: TextStyle(color: Colors.white, fontSize: fontSize*2),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Column(
           children: [
             Text(
@@ -392,7 +389,7 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Column(
                 children: [
                   Text(
@@ -419,7 +416,7 @@ class LoginScreenState extends State<LoginScreen> {
                 },
                 scrollPadding: const EdgeInsets.only(bottom: 130),
                 controller: forgotPasswordEmailController,
-                autofillHints: [AutofillHints.email],
+                autofillHints: const [AutofillHints.email],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: "Roboto",
@@ -430,7 +427,7 @@ class LoginScreenState extends State<LoginScreen> {
                 textFieldInputDecoration("Email adddress"),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -535,7 +532,7 @@ class LoginScreenState extends State<LoginScreen> {
               scrollPadding: const EdgeInsets.only(bottom: 200),
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
-              autofillHints: [AutofillHints.email],
+              autofillHints: const [AutofillHints.email],
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: "Roboto",
@@ -560,7 +557,7 @@ class LoginScreenState extends State<LoginScreen> {
               },
               scrollPadding: const EdgeInsets.only(bottom: 150),
               keyboardType: TextInputType.name,
-              autofillHints: [AutofillHints.username],
+              autofillHints: const [AutofillHints.username],
               controller: usernameController,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -587,7 +584,7 @@ class LoginScreenState extends State<LoginScreen> {
               },
               scrollPadding: const EdgeInsets.only(bottom: 100),
               controller: password2Controller,
-              autofillHints: [AutofillHints.newPassword],
+              autofillHints: const [AutofillHints.newPassword],
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: "Roboto",
@@ -674,7 +671,7 @@ class LoginScreenState extends State<LoginScreen> {
                     focusNode: _focusEmail,
                     scrollPadding: const EdgeInsets.only(bottom: 160),
                     keyboardType: TextInputType.emailAddress,
-                    autofillHints: [
+                    autofillHints: const [
                       AutofillHints.email,
                       AutofillHints.username
                     ],
@@ -706,7 +703,7 @@ class LoginScreenState extends State<LoginScreen> {
                     },
                     scrollPadding: const EdgeInsets.only(bottom: 110),
                     focusNode: _focusPassword,
-                    autofillHints: [AutofillHints.password],
+                    autofillHints: const [AutofillHints.password],
                     onEditingComplete: () => TextInput.finishAutofillContext(),
                     controller: password1Controller,
                     textAlign: TextAlign.center,
@@ -721,7 +718,7 @@ class LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -773,7 +770,7 @@ class LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           controller: _controller,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
                 Container(
@@ -818,7 +815,7 @@ class LoginScreenState extends State<LoginScreen> {
     }
     return Align(
       alignment: FractionalOffset.center,
-      child: showLoginScreen ? Container(
+      child: showLoginScreen ? SizedBox(
           width: width,
           height: height,
           child: CustomPaint(

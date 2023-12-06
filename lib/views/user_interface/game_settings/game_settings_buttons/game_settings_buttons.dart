@@ -47,7 +47,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
     return SizedBox(
       child: Row(
           children: [
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Tooltip(
               message: "Show/Hide buttons",
               child: InkWell(
@@ -96,7 +96,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
     return SizedBox(
       child: Row(
           children: [
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Tooltip(
               message: "Sound settings",
               child: InkWell(
@@ -144,7 +144,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
     return SizedBox(
       child: Row(
           children: [
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Tooltip(
               message: "Game settings",
               child: InkWell(
@@ -157,7 +157,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
                   setState(() {
                     gameSettingsState = 2;
                     // ugly fix to set the button back.
-                    Future.delayed(Duration(milliseconds: 500), () {
+                    Future.delayed(const Duration(milliseconds: 500), () {
                       setState(() {
                         gameSettingsState = 0;
                       });
@@ -196,7 +196,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
         Container(
           height: profileHeight+20,
         ),
-        Container(
+        SizedBox(
           width: buttonWidth+20,
           height: buttonHeight,
           child: gameSettingsButton(buttonWidth),
@@ -204,7 +204,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
         Container(
           height: 20,
         ),
-        Container(
+        SizedBox(
           width: buttonWidth+20,
           height: buttonHeight,
           child: soundButton(buttonWidth),
@@ -212,7 +212,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
         Container(
           height: 20,
         ),
-        Container(
+        SizedBox(
           width: buttonWidth+20,
           height: buttonHeight,
           child: visibleButton(buttonWidth),
@@ -230,7 +230,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
           Container(
             height: profileHeight+10,
           ),
-          Container(
+          SizedBox(
             width: buttonWidth+20,
             height: buttonHeight,
             child: gameSettingsButton(buttonWidth),
@@ -238,7 +238,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
           Container(
             height: 10,
           ),
-          Container(
+          SizedBox(
             width: buttonWidth+20,
             height: buttonHeight,
             child: soundButton(buttonWidth),
@@ -246,7 +246,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
           Container(
             height: 10,
           ),
-          Container(
+          SizedBox(
             width: buttonWidth+20,
             height: buttonHeight,
             child: visibleButton(buttonWidth),
@@ -256,7 +256,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   }
 
   Widget hiddenButtonsMobile(double buttonWidth, double buttonHeight, double statusBarPadding) {
-    return Container(
+    return SizedBox(
       width: buttonWidth + 20,
       child: Column(
         children: [
@@ -266,7 +266,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
           Container(
               height: 10
           ),
-          Container(
+          SizedBox(
             width: buttonWidth+20,
             height: buttonHeight,
             child: visibleButton(buttonWidth),
@@ -277,14 +277,14 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   }
 
   Widget hiddenButtonsNormal(double buttonWidth, double buttonHeight, double statusBarPadding) {
-    return Container(
+    return SizedBox(
       width: buttonWidth + 20,
       child: Column(
           children: [
             Container(
                 height: 20
             ),
-            Container(
+            SizedBox(
               width: buttonWidth+20,
               height: buttonHeight,
               child: visibleButton(buttonWidth),
@@ -316,7 +316,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
     return Align(
       alignment: FractionalOffset.topRight,
       child: SingleChildScrollView(
-        child: showGameButtons ? Container(
+        child: showGameButtons ? SizedBox(
             width: buttonWidth + 20,
             height: combinedHeight + extraPadding,
             child: normalMode

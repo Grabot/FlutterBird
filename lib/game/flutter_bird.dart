@@ -17,7 +17,6 @@ import 'package:flutter_bird/services/rest/auth_service_leaderboard.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_achievements.dart';
 import 'package:flutter_bird/services/user_score.dart';
-import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
 import 'sky.dart';
 
@@ -126,13 +125,13 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     add(helpMessage);
     add(ScreenHitbox());
 
-    double pipe_width = (52 * heightScale) * 1.5;
-    pipeInterval = (pipeGap * heightScale) + pipe_width;
+    double pipeWidth = (52 * heightScale) * 1.5;
+    pipeInterval = (pipeGap * heightScale) + pipeWidth;
     pipeBuffer = size.x + pipeInterval;
 
     // We create a pipe off screen to the left,
     // this helps the creation of the pipes later for some reason
-    double pipeX = -pipe_width-50;
+    double pipeX = -pipeWidth-50;
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
       birdType: bird1.getBirdType(),
@@ -453,12 +452,12 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     lastPipeDuoBird1 = null;
     lastPipeDuoBird2 = null;
 
-    double pipe_width = (52 * heightScale) * 1.5;
-    pipeInterval = (pipeGap * heightScale) + pipe_width;
+    double pipeWidth = (52 * heightScale) * 1.5;
+    pipeInterval = (pipeGap * heightScale) + pipeWidth;
     pipeBuffer = size.x + pipeInterval;
     // We create a pipe off screen to the left,
     // this helps the creation of the pipes later for some reason
-    double pipeX = -pipe_width-50;
+    double pipeX = -pipeWidth-50;
     PipeDuo newPipeDuo = PipeDuo(
       position: Vector2(pipeX, 0),
       birdType: bird1.getBirdType(),
@@ -710,8 +709,8 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   @override
   void onGameResize(Vector2 gameSize) {
     heightScale = gameSize.y / 800;
-    double pipe_width = (52 * heightScale) * 1.5;
-    pipeInterval = (pipeGap * heightScale) + pipe_width;
+    double pipeWidth = (52 * heightScale) * 1.5;
+    pipeInterval = (pipeGap * heightScale) + pipeWidth;
     pipeBuffer = gameSize.x + pipeInterval;
 
     Vector2 initialPosBird2 = determineBirdPos(gameSize);

@@ -4,7 +4,6 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
 import 'package:flutter_bird/services/navigation_service.dart';
 import 'package:flutter_bird/services/settings.dart';
-import 'package:flutter_bird/services/socket_services.dart';
 import 'package:flutter_bird/util/render_avatar.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
@@ -70,21 +69,21 @@ class ProfileOverviewState extends State<ProfileOverview> {
   // Only show logout dialog when user presses back button
   showAlertDialog(BuildContext context) {  // set up the buttons
     Widget cancelButton = ElevatedButton(
-      child: Text("Cancel"),
+      child: const Text("Cancel"),
       onPressed:  () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = ElevatedButton(
-      child: Text("Logout"),
+      child: const Text("Logout"),
       onPressed:  () {
         Navigator.pop(context);
         logoutUser(Settings(), _navigationService);
       },
     );  // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Leave?"),
-      content: Text("Do you want to logout of Age of Gold?"),
+      title: const Text("Leave?"),
+      content: const Text("Do you want to logout of Age of Gold?"),
       actions: [
         cancelButton,
         continueButton,
@@ -162,7 +161,7 @@ class ProfileOverviewState extends State<ProfileOverview> {
             child: Row(
               children: [
                 getAvatar(profileOverviewHeight),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 SizedBox(
                   width: profileOverviewWidth - profileOverviewHeight - 5,
                   child: Text.rich(

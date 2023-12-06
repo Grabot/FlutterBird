@@ -19,26 +19,26 @@ class BoxWindowPainter extends CustomPainter {
     // always draw the left and right borders by drawing a line from top to bottom,
     // then the top and bottom line borders only if the scroll position is at the top or bottom
     final lineBottomOuter = [Offset(-5, size.height), Offset(size.width+5, size.height)];
-    final lineTopOuter = [Offset(-5, 0), Offset(size.width+5, 0)];
-    final lineLeftOuter = [Offset(0, 0), Offset(0, size.height)];
+    final lineTopOuter = [const Offset(-5, 0), Offset(size.width+5, 0)];
+    final lineLeftOuter = [const Offset(0, 0), Offset(0, size.height)];
     final lineRightOuter = [Offset(size.width, 0), Offset(size.width, size.height)];
-    final lineLeftShadow = [Offset(5, 3), Offset(5, size.height-3)];
+    final lineLeftShadow = [const Offset(5, 3), Offset(5, size.height-3)];
     final lineRightShadow = [Offset(size.width-5, 3), Offset(size.width-5, size.height-3)];
     final lineBottomShadow = [Offset(3, size.height-5), Offset(size.width-3, size.height-5)];
-    final lineTopShadow = [Offset(3, 5), Offset(size.width-3, 5)];
+    final lineTopShadow = [const Offset(3, 5), Offset(size.width-3, 5)];
 
     final rectBorderInner = Rect.fromLTWH(0, 0, size.width, size.height);
 
     final borderPaintOuter = Paint()
       ..strokeWidth = 10
-      ..color = Color(0xFFece4a9)
+      ..color = const Color(0xFFece4a9)
       ..style = PaintingStyle.stroke;
     final borderPaintLine = Paint()
       ..strokeWidth = 4
-      ..color = Color(0xFFd3aa33)
+      ..color = const Color(0xFFd3aa33)
       ..style = PaintingStyle.stroke;
     final borderPaintInner = Paint()
-      ..color = Color(0xFFdcd587)
+      ..color = const Color(0xFFdcd587)
       ..style = PaintingStyle.fill;
 
     canvas.drawRect(rectBorderInner, borderPaintInner);

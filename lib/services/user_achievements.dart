@@ -420,7 +420,7 @@ class UserAchievements {
     return woodSingle;
   }
   achievedWoodSingle() async {
-    this.woodSingle = true;
+    woodSingle = true;
     woodSingleAchievement.achieved = true;
     await secureStorage.setWoodSingle(woodSingle.toString());
   }
@@ -429,7 +429,7 @@ class UserAchievements {
     return bronzeSingle;
   }
   achievedBronzeSingle() async {
-    this.bronzeSingle = true;
+    bronzeSingle = true;
     bronzeSingleAchievement.achieved = true;
     await secureStorage.setBronzeSingle(bronzeSingle.toString());
   }

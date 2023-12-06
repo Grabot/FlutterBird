@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
@@ -77,7 +76,7 @@ class _PasswordResetState extends State<PasswordReset> {
 
   Widget invalidPasswordBox(double width, double fontSize) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
           Container(
@@ -106,7 +105,7 @@ class _PasswordResetState extends State<PasswordReset> {
 
   Widget enterNewPassword(double width, double fontSize) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Form(
         key: formKeyPasswordReset,
         child: Column(
@@ -121,12 +120,12 @@ class _PasswordResetState extends State<PasswordReset> {
               "Reset your password",
               style: TextStyle(color: Colors.white, fontSize: fontSize*2),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               "Enter a new password below to change your password.",
               style: TextStyle(color: Colors.white70, fontSize: fontSize),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               children: [
                 TextFormField(
@@ -140,14 +139,14 @@ class _PasswordResetState extends State<PasswordReset> {
                   },
                   textInputAction: TextInputAction.next,
                   controller: passwordReset1Controller,
-                  autofillHints: [AutofillHints.newPassword],
+                  autofillHints: const [AutofillHints.newPassword],
                   textAlign: TextAlign.center,
                   style: simpleTextStyle(fontSize),
                   decoration: textFieldInputDecoration("password"),
                 ),
               ],
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 resetPassword();
@@ -172,7 +171,7 @@ class _PasswordResetState extends State<PasswordReset> {
 
   Widget passwordHasBeenUpdated(double width, double fontSize) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Form(
             key: formKeyPasswordReset,
             child: Column(
@@ -188,13 +187,13 @@ class _PasswordResetState extends State<PasswordReset> {
               style: TextStyle(color: Colors.white, fontSize: fontSize*2),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               "Your password has been changed successfully!\nGo back to the game and log in with your new password",
               style: TextStyle(color: Colors.white70, fontSize: fontSize),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 backToLogin();

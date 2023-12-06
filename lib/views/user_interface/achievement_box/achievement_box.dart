@@ -3,7 +3,6 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/models/user.dart';
 import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/services/user_achievements.dart';
-import 'package:flutter_bird/services/user_score.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/achievement_close_up/achievement_close_up_change_notifier.dart';
@@ -43,7 +42,7 @@ class AchievementBoxState extends State<AchievementBox> {
   // used to get the position and place the dropdown in the right spot
   GlobalKey cancelKey = GlobalKey();
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
 
@@ -140,8 +139,8 @@ class AchievementBoxState extends State<AchievementBox> {
                 fit: BoxFit.fill,
               ),
             ),
-            SizedBox(width: 10),
-            Container(
+            const SizedBox(width: 10),
+            SizedBox(
                 width: achievementWindowWidth - achievementSize - marginWidth - 10,
                 child: Text.rich(
                     maxLines: 3,
@@ -164,15 +163,15 @@ class AchievementBoxState extends State<AchievementBox> {
   Widget achievementTableHeader(double achievementWindowWidth, double fontSize) {
     return Row(
       children: [
-        SizedBox(width: 10),
-        Container(
+        const SizedBox(width: 10),
+        SizedBox(
             width: achievementWindowWidth - 20,
             height: 50,
             child:Text.rich(
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               TextSpan(
-                text: "Total achievements achieved ${numberOfAchievementsAchieved}/${totalOfAchievements}",
+                text: "Total achievements achieved $numberOfAchievementsAchieved/$totalOfAchievements",
                 style: TextStyle(
                     color: const Color(0xFFcba830),
                     fontSize: fontSize*1.4
@@ -180,7 +179,7 @@ class AchievementBoxState extends State<AchievementBox> {
               ),
             )
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
       ],
     );
   }
@@ -189,11 +188,11 @@ class AchievementBoxState extends State<AchievementBox> {
     double achievementSize = 100;
     int itemCount = userAchievements.getAchievementsAvailable().length;
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       width: achievementWindowWidth,
       height: achievementSize * itemCount,
       child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),  // scrolling done in SingleScrollView
+        physics: const NeverScrollableScrollPhysics(),  // scrolling done in SingleScrollView
         itemCount: itemCount,
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
@@ -209,15 +208,15 @@ class AchievementBoxState extends State<AchievementBox> {
         Row(
             children:
             [
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               expandedText(achievementWindowWidth-20, "Save your achievements by creating an account!", fontSize, false),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
             ]
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Container(
                 alignment: Alignment.center,
                 child: ElevatedButton(
@@ -239,7 +238,7 @@ class AchievementBoxState extends State<AchievementBox> {
               ),
             ]
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
       ],
     );
   }
@@ -263,7 +262,7 @@ class AchievementBoxState extends State<AchievementBox> {
 
     User? currentUser = settings.getUser();
 
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: CustomPaint(
@@ -276,11 +275,11 @@ class AchievementBoxState extends State<AchievementBox> {
                     children:
                     [
                       achievementWindowHeader(width-80, headerHeight, fontSize),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       currentUser == null ? logInToGetAchievements(width, fontSize) : Container(),
                       achievementTableHeader(width, fontSize),
                       achievementList(width, fontSize),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ]
                 ),
               )
@@ -309,7 +308,7 @@ class AchievementBoxState extends State<AchievementBox> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          margin: EdgeInsets.all(20),
+          margin: const EdgeInsets.all(20),
           child: Text(
             "Achievement window",
             style: TextStyle(

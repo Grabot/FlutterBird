@@ -16,10 +16,10 @@ class Achievement {
   @override
   bool operator ==(Object other) {
     if (other is Achievement) {
-      return this.achievementName == other.getAchievementName()
-          && this.imageName == other.getImageName()
-          && this.tooltip == other.getTooltip()
-          && this.achieved == other.getAchieved();
+      return achievementName == other.getAchievementName()
+          && imageName == other.getImageName()
+          && tooltip == other.getTooltip()
+          && achieved == other.getAchieved();
     }
     return false;
   }

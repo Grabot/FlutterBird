@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
-import 'package:flutter_bird/locator.dart';
-import 'package:flutter_bird/models/user.dart';
-import 'package:flutter_bird/services/navigation_service.dart';
-import 'package:flutter_bird/services/settings.dart';
 import 'package:flutter_bird/util/box_window_painter.dart';
-import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/achievement_box/achievement_box_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/achievement_close_up/achievement_close_up_change_notifier.dart';
-import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/models/achievement.dart';
 import 'package:themed/themed.dart';
 
@@ -32,7 +26,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
 
   late AchievementCloseUpChangeNotifier achievementCloseUpChangeNotifier;
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
   bool showTopScoreScreen = true;
   bool showBottomScoreScreen = true;
 
@@ -117,7 +111,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               child: Text(
                 "Achievement",
                 style: TextStyle(
@@ -141,7 +135,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
 
   Widget achievementName(double fontSize) {
     return Container(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: Text(
         closeUpAchievement!.getAchievementName(),
         style: TextStyle(
@@ -182,7 +176,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
 
   Widget achievementInformation(double fontSize) {
     return Container(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: Text(
         closeUpAchievement!.getTooltip(),
         style: TextStyle(
@@ -223,7 +217,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
       onTapOutside: (tap) {
         cancelButtonAction();
       },
-      child: Container(
+      child: SizedBox(
         width:width,
         height: height,
         child: CustomPaint(
@@ -236,7 +230,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
                         children:
                         [
                           achievementWindowHeader(width-80, headerHeight, fontSize),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           closeUpAchievement != null ? achievementDetail(width, fontSize) : Container()
                         ]
                     ),
