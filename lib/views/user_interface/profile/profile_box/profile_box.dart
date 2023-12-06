@@ -172,6 +172,7 @@ class ProfileBoxState extends State<ProfileBox> {
                       profileHeader(width-80, headerHeight, fontSize),
                       SizedBox(height: 20),
                       userInformationBox(width-80, fontSize, normalMode),
+                      SizedBox(height: 20),
                     ]
                 ),
               )
@@ -256,11 +257,17 @@ class ProfileBoxState extends State<ProfileBox> {
           child: settings.getUser() == null
               ? Text(
             "No user logged in",
-            style: simpleTextStyle(fontSize),
+            style: TextStyle(
+                color: const Color(0xFFcba830),
+                fontSize: fontSize*1.4
+            ),
           )
             : Text(
             "Profile Page",
-            style: simpleTextStyle(fontSize)
+            style: TextStyle(
+                color: const Color(0xFFcba830),
+                fontSize: fontSize*1.4
+            ),
           ),
         ),
         IconButton(
@@ -308,7 +315,10 @@ class ProfileBoxState extends State<ProfileBox> {
                       text: kIsWeb
                           ? "Also try Flutterbird on Android or IOS!"
                           : "Also try Flutterbird in your browser on flutterbird.eu",
-                      style: simpleTextStyle(fontSize)
+                      style: TextStyle(
+                          color: const Color(0xFFcba830),
+                          fontSize: fontSize*1.4
+                      ),
                   )
               )
           ),
@@ -328,7 +338,10 @@ class ProfileBoxState extends State<ProfileBox> {
           width: achievementWidth,
           child: Text(
             "Achievements:",
-            style: simpleTextStyle(fontSize),
+            style: TextStyle(
+                color: const Color(0xFFcba830),
+                fontSize: fontSize*1.4
+            ),
           ),
         ),
         achievedAchievements.isNotEmpty ? Container(
@@ -348,7 +361,10 @@ class ProfileBoxState extends State<ProfileBox> {
           width: achievementWidth,
           child: Text(
             "No achievements yet!",
-            style: simpleTextStyle(fontSize),
+            style: TextStyle(
+                color: const Color(0xFFcba830),
+                fontSize: fontSize*1.4
+            ),
           ),
         ),
         SizedBox(height: 10),
@@ -373,7 +389,7 @@ class ProfileBoxState extends State<ProfileBox> {
           width: width/2,
           height: fontSize,
           child: Text(
-            'Check all achievements',
+            'Check achievements',
             style: simpleTextStyle(fontSize*0.7),
           ),
         ),
@@ -406,37 +422,43 @@ class ProfileBoxState extends State<ProfileBox> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
-            height: 50,
-            alignment: Alignment.center,
-            child: Text(
-                "Save your progress by logging in!",
-                textAlign: TextAlign.center,
-                style: simpleTextStyle(fontSize)
-            ),
-          ),
-          SizedBox(width: 10),
-          Container(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  profileChangeNotifier.setProfileVisible(false);
-                  LoginScreenChangeNotifier().setLoginScreenVisible(true);
-                });
-              },
-              style: buttonStyle(false, Colors.blue),
-              child: Container(
+          Column(
+            children: [
+              Container(
+                height: 50,
                 alignment: Alignment.center,
-                width: width / 4,
-                height: fontSize,
                 child: Text(
-                  'Log in',
-                  style: simpleTextStyle(fontSize),
+                    "Save your progress by logging in!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: const Color(0xFFcba830),
+                        fontSize: fontSize*1.4
+                    ),
                 ),
               ),
-            ),
-          ),
+              Container(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      profileChangeNotifier.setProfileVisible(false);
+                      LoginScreenChangeNotifier().setLoginScreenVisible(true);
+                    });
+                  },
+                  style: buttonStyle(false, Colors.blue),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: width / 4,
+                    height: fontSize,
+                    child: Text(
+                      'Log in',
+                      style: simpleTextStyle(fontSize),
+                    ),
+                  ),
+                ),
+              ),
+            ]
+          )
         ],
       );
     } else {
@@ -448,7 +470,10 @@ class ProfileBoxState extends State<ProfileBox> {
             child: Text(
                 "Save your progress by logging in!",
                 textAlign: TextAlign.center,
-                style: simpleTextStyle(fontSize)
+                style: TextStyle(
+                    color: const Color(0xFFcba830),
+                    fontSize: fontSize*1.4
+                ),
             ),
           ),
           Container(
@@ -687,7 +712,10 @@ class ProfileBoxState extends State<ProfileBox> {
                       overflow: TextOverflow.ellipsis,
                       TextSpan(
                         text: userName,
-                        style: TextStyle(color: Colors.white, fontSize: fontSize*2),
+                        style: TextStyle(
+                            color: const Color(0xFFcba830),
+                            fontSize: fontSize*2
+                        ),
                       ),
                     ),
                   ),

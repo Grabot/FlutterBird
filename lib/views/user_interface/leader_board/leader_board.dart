@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/services/settings.dart';
@@ -28,7 +29,9 @@ class LeaderBoardState extends State<LeaderBoard> {
   late LeaderBoardChangeNotifier leaderBoardChangeNotifier;
   late Settings settings;
   late UserScore userScore;
-  final FocusNode _focusLeaderBoard = FocusNode();
+
+  AutoSizeGroup sizeGroupTimeRanking = AutoSizeGroup();
+  AutoSizeGroup sizeGroupHeaderRow = AutoSizeGroup();
 
   ScrollController _controller = ScrollController();
   bool showTopLeaderBoard = true;
@@ -159,14 +162,19 @@ class LeaderBoardState extends State<LeaderBoard> {
               }
             },
             child: Container(
-              alignment: Alignment.center,
-              width: dayRowWidth,
-              height: timeRankingHeight-10,
-              color: selectedTimeRanking == 0 ? Colors.green[200] : Colors.transparent,
-              child: Text(
+                alignment: Alignment.center,
+                width: dayRowWidth,
+                height: timeRankingHeight-10,
+                color: selectedTimeRanking == 0 ? Colors.green[200] : Colors.transparent,
+                child: AutoSizeText(
                   "Day",
-                  style: TextStyle(fontSize: (fontSize/4)*3)
-              ),
+                  style: TextStyle(
+                    color: Color(0xFFcba830),
+                    fontSize: 50,
+                  ),
+                  group: sizeGroupTimeRanking,
+                  maxLines: 1,
+                )
             ),
           ),
           InkWell(
@@ -178,14 +186,19 @@ class LeaderBoardState extends State<LeaderBoard> {
               }
             },
             child: Container(
-              alignment: Alignment.center,
-              width: weekRowWidth,
-              height: timeRankingHeight-10,
-              color: selectedTimeRanking == 1 ? Colors.green[200] : Colors.transparent,
-              child: Text(
+                alignment: Alignment.center,
+                width: weekRowWidth,
+                height: timeRankingHeight-10,
+                color: selectedTimeRanking == 1 ? Colors.green[200] : Colors.transparent,
+                child: AutoSizeText(
                   "Week",
-                  style: TextStyle(fontSize: (fontSize/4)*3)
-              ),
+                  style: TextStyle(
+                    color: Color(0xFFcba830),
+                    fontSize: 50,
+                  ),
+                  group: sizeGroupTimeRanking,
+                  maxLines: 1,
+                )
             ),
           ),
           InkWell(
@@ -197,14 +210,19 @@ class LeaderBoardState extends State<LeaderBoard> {
               }
             },
             child: Container(
-              alignment: Alignment.center,
-              width: monthRowWidth,
-              height: timeRankingHeight-10,
-              color: selectedTimeRanking == 2 ? Colors.green[200] : Colors.transparent,
-              child: Text(
+                alignment: Alignment.center,
+                width: monthRowWidth,
+                height: timeRankingHeight-10,
+                color: selectedTimeRanking == 2 ? Colors.green[200] : Colors.transparent,
+                child: AutoSizeText(
                   "Month",
-                  style: TextStyle(fontSize: (fontSize/4)*3)
-              ),
+                  style: TextStyle(
+                    color: Color(0xFFcba830),
+                    fontSize: 50,
+                  ),
+                  group: sizeGroupTimeRanking,
+                  maxLines: 1,
+                )
             ),
           ),
           InkWell(
@@ -216,14 +234,19 @@ class LeaderBoardState extends State<LeaderBoard> {
               }
             },
             child: Container(
-              alignment: Alignment.center,
-              width: yearRowWidth,
-              height: timeRankingHeight-10,
-              color: selectedTimeRanking == 3 ? Colors.green[200] : Colors.transparent,
-              child: Text(
+                alignment: Alignment.center,
+                width: yearRowWidth,
+                height: timeRankingHeight-10,
+                color: selectedTimeRanking == 3 ? Colors.green[200] : Colors.transparent,
+                child: AutoSizeText(
                   "Year",
-                  style: TextStyle(fontSize: (fontSize/4)*3)
-              ),
+                  style: TextStyle(
+                    color: Color(0xFFcba830),
+                    fontSize: 50,
+                  ),
+                  group: sizeGroupTimeRanking,
+                  maxLines: 1,
+                )
             ),
           ),
           InkWell(
@@ -235,14 +258,19 @@ class LeaderBoardState extends State<LeaderBoard> {
               }
             },
             child: Container(
-              alignment: Alignment.center,
-              width: allTimeRowWidth,
-              height: timeRankingHeight-10,
-              color: selectedTimeRanking == 4 ? Colors.green[200] : Colors.transparent,
-              child: Text(
+                alignment: Alignment.center,
+                width: allTimeRowWidth,
+                height: timeRankingHeight-10,
+                color: selectedTimeRanking == 4 ? Colors.green[200] : Colors.transparent,
+                child: AutoSizeText(
                   "All Time",
-                  style: TextStyle(fontSize: (fontSize/4)*3)
-              ),
+                  style: TextStyle(
+                    color: Color(0xFFcba830),
+                    fontSize: 50,
+                  ),
+                  group: sizeGroupTimeRanking,
+                  maxLines: 1,
+                )
             ),
           ),
         ],
@@ -263,44 +291,65 @@ class LeaderBoardState extends State<LeaderBoard> {
       child: Row(
         children: [
           Container(
-            alignment: Alignment.center,
-            width: rankRowWidth,
-            height: headerRowHeight-10,
-            color: Colors.blue[200],
-            child: Text(
+              alignment: Alignment.center,
+              width: rankRowWidth,
+              height: headerRowHeight-10,
+              color: Colors.black.withOpacity(0.05),
+              child: AutoSizeText(
                 "Rank",
-                style: TextStyle(fontSize: (fontSize/4)*3)
-            ),
+                style: TextStyle(
+                  color: Color(0xFFcba830),
+                  fontSize: 50,
+                ),
+                group: sizeGroupHeaderRow,
+                maxLines: 1,
+              )
           ),
           Container(
-            alignment: Alignment.center,
-            width: nameRowWidth,
-            height: headerRowHeight-10,
-            color: Colors.blue[200],
-            child: Text(
+              alignment: Alignment.center,
+              width: nameRowWidth,
+              height: headerRowHeight-10,
+              color: Colors.black.withOpacity(0.05),
+              child: AutoSizeText(
                 "Name",
-                style: TextStyle(fontSize: (fontSize/4)*3)
-            ),
+                style: TextStyle(
+                  color: Color(0xFFcba830),
+                  fontSize: 50,
+                ),
+                group: sizeGroupHeaderRow,
+                maxLines: 1,
+              )
           ),
           Container(
-            alignment: Alignment.center,
-            width: scoreRowWidth,
-            height: headerRowHeight-10,
-            color: Colors.blue[200],
-            child: Text(
+              alignment: Alignment.center,
+              width: scoreRowWidth,
+              height: headerRowHeight-10,
+              color: Colors.black.withOpacity(0.05),
+              child: AutoSizeText(
                 "Score",
-                style: TextStyle(fontSize: (fontSize/4)*3)
-            ),
+                style: TextStyle(
+                  color: Color(0xFFcba830),
+                  fontSize: 50,
+                ),
+                group: sizeGroupHeaderRow,
+                maxLines: 1,
+              )
           ),
           Container(
-            alignment: Alignment.center,
-            width: achievedAtWidth,
-            height: headerRowHeight-10,
-            color: Colors.blue[200],
-            child: Text(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: leaderBoardWidth/20, left: leaderBoardWidth/20),
+              width: achievedAtWidth,
+              height: headerRowHeight-10,
+              color: Colors.black.withOpacity(0.05),
+              child: AutoSizeText(
                 "Achieved at",
-                style: TextStyle(fontSize: (fontSize/4)*3)
-            ),
+                style: TextStyle(
+                  color: Color(0xFFcba830),
+                  fontSize: 50,
+                ),
+                group: sizeGroupHeaderRow,
+                maxLines: 1,
+              )
           ),
         ],
       ),
@@ -315,21 +364,22 @@ class LeaderBoardState extends State<LeaderBoard> {
     double achievedAtWidth = (totalHeaderWidth/3);
     return Container(
       height: 100,
-      color: userRank.getMe() ? Colors.green.withOpacity(0.3) : Colors.black12,
+      color: userRank.getMe() ? Colors.green.withOpacity(0.3) : Colors.black26,
       child: Row(
         children: [
           Container(
             alignment: Alignment.center,
             width: rankRowWidth,
             height: 30,
-            child: Text(
-                "${index + 1}",
-                style: userRank.getMe()
-                    ? TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                )
-                    : TextStyle(fontSize: fontSize),
+            child: AutoSizeText(
+              "${index + 1}",
+              style: userRank.getMe()
+                  ? TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              )
+                  : TextStyle(fontSize: 50),
+              maxLines: 1,
             )
           ),
           Expanded(
@@ -343,10 +393,10 @@ class LeaderBoardState extends State<LeaderBoard> {
                   text: userRank.getUserName(),
                     style: userRank.getMe()
                         ? TextStyle(
-                      fontSize: fontSize,
+                      fontSize: fontSize*1.4,
                       fontWeight: FontWeight.bold,
                     )
-                        : TextStyle(fontSize: fontSize),
+                        : TextStyle(fontSize: fontSize*1.4),
                 )
                 )
             ),
@@ -355,29 +405,40 @@ class LeaderBoardState extends State<LeaderBoard> {
             alignment: Alignment.center,
             width: scoreRowWidth,
             height: 30,
-            child: Text(
-                "${userRank.getScore()}",
-                style: userRank.getMe()
-                    ? TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                )
-                    : TextStyle(fontSize: fontSize),
-            ),
+            child: AutoSizeText(
+              "${userRank.getScore()}",
+              style: userRank.getMe()
+                  ? TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              )
+                  : TextStyle(fontSize: 50),
+              maxLines: 1,
+            )
           ),
           Container(
             alignment: Alignment.center,
             width: achievedAtWidth,
             height: 30,
-            child: Text(
-                DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
-                style: userRank.getMe()
-                    ? TextStyle(
-                  fontSize: (fontSize/4)*3,
-                  fontWeight: FontWeight.bold,
-                )
-                    : TextStyle(fontSize: (fontSize/4)*3)
-            ),
+            child: AutoSizeText(
+              DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
+              style: userRank.getMe()
+                  ? TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              )
+                  : TextStyle(fontSize: 50),
+              maxLines: 2,
+            )
+            // child: Text(
+            //     DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
+            //     style: userRank.getMe()
+            //         ? TextStyle(
+            //       fontSize: (fontSize/4)*3,
+            //       fontWeight: FontWeight.bold,
+            //     )
+            //         : TextStyle(fontSize: (fontSize/4)*3)
+            // ),
           ),
         ],
       ),

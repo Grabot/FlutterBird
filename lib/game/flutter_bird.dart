@@ -337,6 +337,12 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
         userAchievements.achievedFlutterThree();
         scoreScreenChangeNotifier.addAchievement(userAchievements.flutterThreeAchievement);
       }
+      if (!userAchievements.getFlutterFour()) {
+        if (userScore.getTotalFlutters() > 50000) {
+          userAchievements.achievedFlutterFour();
+          scoreScreenChangeNotifier.addAchievement(userAchievements.flutterFourAchievement);
+        }
+      }
     }
     if (!userAchievements.getPipesOne()) {
       if (userScore.getTotalPipesCleared() > 250) {

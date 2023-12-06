@@ -179,6 +179,12 @@ getAchievements(LoginResponse loginResponse, int userId) async {
       achievements.setFlutterThree(userAchievements.getFlutterThree());
       updateAchievements = true;
     }
+    if (achievements.getFlutterFour() && !userAchievements.getFlutterFour()) {
+      userAchievements.achievedFlutterFour();
+    } else if (!achievements.getFlutterFour() && userAchievements.getFlutterFour()) {
+      achievements.setFlutterFour(userAchievements.getFlutterFour());
+      updateAchievements = true;
+    }
     if (achievements.getPipesOne() && !userAchievements.getPipesOne()) {
       userAchievements.achievedPipesOne();
     } else if (!achievements.getPipesOne() && userAchievements.getPipesOne()) {
@@ -328,8 +334,8 @@ Widget expandedText(double width, String text, double fontSize, bool bold) {
             child: Text(
               text,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: fontSize,
+                color: const Color(0xFFcba830),
+                fontSize: fontSize*1.4,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
               ),
             ),

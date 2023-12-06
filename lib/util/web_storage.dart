@@ -136,6 +136,7 @@ class SecureStorage {
   final String _keyFlutterOne = 'flutterOne';
   final String _keyFlutterTwo = 'flutterTwo';
   final String _keyFlutterThree = 'flutterThree';
+  final String _keyFlutterFour = 'flutterFour';
   final String _keyPipesOne = 'pipesOne';
   final String _keyPipesTwo = 'pipesTwo';
   final String _keyPipesThree = 'pipesThree';
@@ -222,6 +223,13 @@ class SecureStorage {
     return await storage.read(key: _keyFlutterThree);
   }
 
+  Future setFlutterFour(String flutterFour) async {
+    await storage.write(key: _keyFlutterFour, value: flutterFour);
+  }
+  Future<String?> getFlutterFour() async {
+    return await storage.read(key: _keyFlutterFour);
+  }
+
   Future setPipesOne(String pipesOne) async {
     await storage.write(key: _keyPipesOne, value: pipesOne);
   }
@@ -306,6 +314,7 @@ class SecureStorage {
     await storage.write(key: _keyFlutterOne, value: null);
     await storage.write(key: _keyFlutterTwo, value: null);
     await storage.write(key: _keyFlutterThree, value: null);
+    await storage.write(key: _keyFlutterFour, value: null);
     await storage.write(key: _keyPipesOne, value: null);
     await storage.write(key: _keyPipesTwo, value: null);
     await storage.write(key: _keyPipesThree, value: null);

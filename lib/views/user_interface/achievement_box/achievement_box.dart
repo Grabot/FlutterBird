@@ -148,7 +148,10 @@ class AchievementBoxState extends State<AchievementBox> {
                     overflow: TextOverflow.ellipsis,
                     TextSpan(
                       text: achievement.getTooltip(),
-                      style: simpleTextStyle(fontSize*0.8),
+                      style: TextStyle(
+                          color: const Color(0xFFcba830),
+                          fontSize: fontSize
+                      ),
                     ),
                 )
             ),
@@ -170,7 +173,10 @@ class AchievementBoxState extends State<AchievementBox> {
               overflow: TextOverflow.ellipsis,
               TextSpan(
                 text: "Total achievements achieved ${numberOfAchievementsAchieved}/${totalOfAchievements}",
-                style: simpleTextStyle(fontSize),
+                style: TextStyle(
+                    color: const Color(0xFFcba830),
+                    fontSize: fontSize*1.4
+                ),
               ),
             )
         ),
@@ -306,7 +312,10 @@ class AchievementBoxState extends State<AchievementBox> {
           margin: EdgeInsets.all(20),
           child: Text(
             "Achievement window",
-            style: simpleTextStyle(fontSize),
+            style: TextStyle(
+                color: const Color(0xFFcba830),
+                fontSize: fontSize*1.4
+            ),
           )
         ),
         IconButton(

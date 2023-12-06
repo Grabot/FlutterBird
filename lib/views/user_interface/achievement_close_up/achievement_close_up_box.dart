@@ -120,7 +120,10 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
               margin: EdgeInsets.all(20),
               child: Text(
                 "Achievement",
-                style: simpleTextStyle(fontSize),
+                style: TextStyle(
+                    color: const Color(0xFFcba830),
+                    fontSize: fontSize*1.4
+                ),
               )
           ),
           IconButton(
@@ -136,56 +139,67 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
     );
   }
 
-  Widget achievementName() {
+  Widget achievementName(double fontSize) {
     return Container(
       margin: EdgeInsets.all(20),
       child: Text(
         closeUpAchievement!.getAchievementName(),
-        style: simpleTextStyle(20),
+        style: TextStyle(
+            color: const Color(0xFFcba830),
+            fontSize: fontSize*1.4
+        ),
       ),
     );
   }
 
   achievementImage(double width) {
-    return ChangeColors(
-      saturation: closeUpAchievement!.achieved ? 0 : -1,
-      child: Image.asset(
-        closeUpAchievement!.getImagePath(),
-        width: width,
-        height: width,
-        gaplessPlayback: true,
-        fit: BoxFit.fill,
+    return Container(
+      child: ChangeColors(
+        saturation: closeUpAchievement!.achieved ? 0 : -1,
+        child: Image.asset(
+          closeUpAchievement!.getImagePath(),
+          width: width,
+          height: width,
+          gaplessPlayback: true,
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }
 
-  Widget achievementAchieved() {
+  Widget achievementAchieved(double fontSize) {
     return Container(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: Text(
         closeUpAchievement!.achieved ? "Achieved" : "Not achieved",
-        style: simpleTextStyle(16),
+        style: TextStyle(
+            color: const Color(0xFFcba830),
+            fontSize: fontSize*1.2
+        ),
       ),
     );
   }
 
-  Widget achievementInformation() {
+  Widget achievementInformation(double fontSize) {
     return Container(
       margin: EdgeInsets.all(20),
       child: Text(
         closeUpAchievement!.getTooltip(),
-        style: simpleTextStyle(16),
+        style: TextStyle(
+            color: const Color(0xFFcba830),
+            fontSize: fontSize*1.2
+        ),
       ),
     );
   }
 
-  Widget achievementDetail(double width) {
+  Widget achievementDetail(double width, double fontSize) {
     return Column(
       children: [
-        achievementName(),
-        achievementInformation(),
-        achievementImage(width-20),
-        achievementAchieved(),
+        achievementName(fontSize),
+        achievementInformation(fontSize),
+        achievementImage(width-80),
+        achievementAchieved(fontSize),
       ],
     );
   }
@@ -223,7 +237,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
                         [
                           achievementWindowHeader(width-80, headerHeight, fontSize),
                           SizedBox(height: 20),
-                          closeUpAchievement != null ? achievementDetail(width) : Container()
+                          closeUpAchievement != null ? achievementDetail(width, fontSize) : Container()
                         ]
                     ),
                   )
