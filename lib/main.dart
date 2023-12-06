@@ -5,6 +5,8 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/locator.dart';
+import 'package:flutter_bird/views/privacy_page.dart';
+import 'package:flutter_bird/views/terms_page.dart';
 import 'package:flutter_bird/views/user_interface/achievement_box/achievement_box.dart';
 import 'package:flutter_bird/views/user_interface/are_you_sure_box/are_you_sure_box.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen.dart';
@@ -80,6 +82,8 @@ Future<void> main() async {
 
   Widget birdAccess = BirdAccess(key: UniqueKey(), game: game);
   Widget passwordReset = PasswordReset(key: UniqueKey(), game: game);
+  Widget privacy = PrivacyPage(key: UniqueKey());
+  Widget terms = TermsPage(key: UniqueKey());
 
   runApp(
       OKToast(
@@ -98,6 +102,8 @@ Future<void> main() async {
             routes.HomeRoute: (context) => gameWidget,
             routes.BirdAccessRoute: (context) => birdAccess,
             routes.PasswordResetRoute: (context) => passwordReset,
+            routes.PrivacyRoute: (context) => privacy,
+            routes.TermsRoute: (context) => terms,
           },
           scrollBehavior: MyCustomScrollBehavior(),
             onGenerateRoute: (settings) {
@@ -111,6 +117,18 @@ Future<void> main() async {
                 return MaterialPageRoute(
                     builder: (context) {
                       return passwordReset;
+                    }
+                );
+              } else if (settings.name!.startsWith(routes.PrivacyRoute)) {
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return privacy;
+                    }
+                );
+              } else if (settings.name!.startsWith(routes.TermsRoute)) {
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return terms;
                     }
                 );
               } else {
