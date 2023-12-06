@@ -335,7 +335,7 @@ Widget expandedText(double width, String text, double fontSize, bool bold) {
               text,
               style: TextStyle(
                 color: const Color(0xFFcba830),
-                fontSize: fontSize*1.4,
+                fontSize: fontSize,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
               ),
             ),

@@ -133,6 +133,8 @@ flutter:
     - assets/images/ui/game_settings_button.png
     - assets/images/ui/sound_on.png
     - assets/images/ui/sound_off.png
+    - assets/images/ui/visible_on.png
+    - assets/images/ui/visible_off.png
     - assets/images/ui/game_settings/bird/bird_yellow.png
     - assets/images/ui/game_settings/bird/bird_red.png
     - assets/images/ui/game_settings/bird/bird_blue.png

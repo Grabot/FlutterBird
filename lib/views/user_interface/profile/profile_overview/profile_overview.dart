@@ -35,6 +35,8 @@ class ProfileOverviewState extends State<ProfileOverview> {
   bool unansweredFriendRequests = false;
   bool unreadMessages = false;
 
+  bool showHideProfile = true;
+
   final NavigationService _navigationService = locator<NavigationService>();
 
   @override
@@ -98,6 +100,11 @@ class ProfileOverviewState extends State<ProfileOverview> {
 
   profileChangeListener() {
     if (mounted) {
+      if (profileChangeNotifier.getProfileOverviewVisible()) {
+        showHideProfile = true;
+      } else {
+        showHideProfile = false;
+      }
       setState(() {});
     }
   }
@@ -185,7 +192,7 @@ class ProfileOverviewState extends State<ProfileOverview> {
     return Container(
       child: Column(
         children: [
-          profileWidget(profileOverviewWidth, profileAvatarHeight),
+          showHideProfile ? profileWidget(profileOverviewWidth, profileAvatarHeight) : Container(),
         ]
       ),
     );
@@ -200,7 +207,7 @@ class ProfileOverviewState extends State<ProfileOverview> {
             children: [
               Column(
                 children: [
-                  profileWidget(profileOverviewWidth, profileOverviewHeight),
+                  showHideProfile ? profileWidget(profileOverviewWidth, profileOverviewHeight) : Container(),
                 ],
               ),
             ]
