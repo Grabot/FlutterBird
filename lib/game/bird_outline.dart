@@ -29,6 +29,8 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
 
   setInitialPos(Vector2 initialPosition) {
     initialPos = initialPosition;
+    initialPos.x -= 1;
+    initialPos.y -= 1;
   }
 
   setSize(Vector2 newSize) {
@@ -54,8 +56,6 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     size.y = (size.y / birdHeight) * (birdHeight + 2);
 
     position = Vector2(initialPos.x, initialPos.y);
-    position.x -= 1;
-    position.y -= 1;
   }
 
   double flapSpeed = 600;
@@ -78,8 +78,7 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     size.y = (size.y / birdHeight) * (birdHeight + 2);
 
     position = Vector2(initialPos.x, initialPos.y);
-    position.x -= 1;
-    position.y -= 1;
+
     flapSpeed = 600;
     velocityY = 0;
     accelerationY = 5000;
@@ -116,8 +115,6 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     heightScale = gameSize.y / 800;
     if (!gameRef.gameStarted) {
       position = Vector2(initialPos.x, initialPos.y);
-      position.x -= 1;
-      position.y -= 1;
     }
   }
 }

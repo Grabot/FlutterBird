@@ -92,6 +92,9 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   Vector2 birdSize = Vector2(85, 60);
 
+  double birdWidth = 27;
+  double birdHeight = 18;
+
   @override
   Future<void> onLoad() async {
     sky = Sky();
@@ -695,7 +698,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   Vector2 determineBirdPos(Vector2 gameSize) {
     birdSize.y = (gameSize.y / 10000) * 466;
-    birdSize.x = (birdSize.y / 12) * 17;
+    birdSize.x = (birdSize.y / birdHeight) * birdWidth;
 
     // The bird is anchored in the center, so subtract half of himself.
     double birdSeparationX = gameSize.x / 100;
@@ -731,7 +734,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       helpMessage.updateMessageImage(size);
 
       birdSize.y = (size.y / 10000) * 466;
-      birdSize.x = (birdSize.y / 12) * 17;
+      birdSize.x = (birdSize.y / birdHeight) * birdWidth;
 
       Vector2 initialPosBird2 = determineBirdPos(size);
       bird2.setInitialPos(initialPosBird2);
@@ -774,7 +777,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       settings.getLeaderBoardsTwoPlayer();
 
       birdSize.y = (size.y / 10000) * 466;
-      birdSize.x = (birdSize.y / 12) * 17;
+      birdSize.x = (birdSize.y / birdHeight) * birdWidth;
 
       Vector2 initialPosBird2 = determineBirdPos(size);
       bird2.setInitialPos(initialPosBird2);

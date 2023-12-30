@@ -19,7 +19,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
     anchor = Anchor.center;
     // dirty check for phone or computer
     showSingleWeb = true;
-    Image image = await Flame.images.load('message_web_single.png');
+    Image image = await Flame.images.load('help_messages/message_web_single.png');
     // placed in the center with a size of 200x267
     position = Vector2(gameRef.size.x/2, gameRef.size.y/2);
     position.y -= gameRef.size.y/8;
@@ -64,7 +64,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
         showSinglePhone = false;
         showDoubleWeb = false;
         showSingleWeb = false;
-        var image = await Flame.images.load('message_phone_double.png');
+        var image = await Flame.images.load('help_messages/message_phone_double.png');
         sprite = Sprite(image);
       }
     } else if (gameRef.twoPlayers && !isPhone) {
@@ -73,7 +73,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
         showSinglePhone = false;
         showDoubleWeb = true;
         showSingleWeb = false;
-        var image = await Flame.images.load('message_web_double.png');
+        var image = await Flame.images.load('help_messages/message_web_double.png');
         sprite = Sprite(image);
       }
     } else if (!gameRef.twoPlayers && isPhone) {
@@ -84,7 +84,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
         showSinglePhone = true;
         showDoubleWeb = false;
         showSingleWeb = false;
-        var image = await Flame.images.load('message_phone_single.png');
+        var image = await Flame.images.load('help_messages/message_phone_single.png');
         sprite = Sprite(image);
       }
     } else if (!gameRef.twoPlayers && !isPhone) {
@@ -93,7 +93,7 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
         showSinglePhone = false;
         showDoubleWeb = false;
         showSingleWeb = true;
-        var image = await Flame.images.load('message_web_single.png');
+        var image = await Flame.images.load('help_messages/message_web_single.png');
         sprite = Sprite(image);
       }
     }
