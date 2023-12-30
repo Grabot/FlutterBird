@@ -91,25 +91,35 @@ flutter:
           weight: 700
 
   assets:
-    - assets/images/pipe-green_big.png
-    - assets/images/pipe-red_big.png
-    - assets/images/pipe-yellow_big.png
-    - assets/images/pipe-blue_big.png
-    - assets/images/pipe-white_big.png
-    - assets/images/pipe-black_big.png
+    - assets/images/pipes/pipe-green_big.png
+    - assets/images/pipes/pipe-red_big.png
+    - assets/images/pipes/pipe-yellow_big.png
+    - assets/images/pipes/pipe-blue_big.png
+    - assets/images/pipes/pipe-purple_big.png
+    - assets/images/pipes/pipe-white_big.png
+    - assets/images/pipes/pipe-black_big.png
     - assets/images/parallax/city_night/city_bg_night_1.png
     - assets/images/parallax/city_night/city_bg_night_2.png
     - assets/images/parallax/city_day/city_bg_day_1.png
     - assets/images/parallax/city_day/city_bg_day_2.png
     - assets/images/parallax/city_bg_3.png
     - assets/images/parallax/city_bg_4.png
-    - assets/images/flutter_yellow.png
-    - assets/images/flutter_blue.png
-    - assets/images/flutter_red.png
-    - assets/images/flutter_green.png
-    - assets/images/flutter_white.png
-    - assets/images/flutter_black.png
-    - assets/images/bird_outline_animation.png
+    - assets/images/bird/flutter_bird_outline.png
+    - assets/images/bird/flutter_bird_black.png
+    - assets/images/bird/flutter_bird_blue.png
+    - assets/images/bird/flutter_bird_green.png
+    - assets/images/bird/flutter_bird_purple.png
+    - assets/images/bird/flutter_bird_red.png
+    - assets/images/bird/flutter_bird_white.png
+    - assets/images/bird/flutter_bird_yellow.png
+    - assets/images/bird/flutter_bird_outline.png
+    - assets/images/bird/settings/flutter_bird_black_settings.png
+    - assets/images/bird/settings/flutter_bird_blue_settings.png
+    - assets/images/bird/settings/flutter_bird_green_settings.png
+    - assets/images/bird/settings/flutter_bird_purple_settings.png
+    - assets/images/bird/settings/flutter_bird_red_settings.png
+    - assets/images/bird/settings/flutter_bird_white_settings.png
+    - assets/images/bird/settings/flutter_bird_yellow_settings.png
     - assets/images/message_phone_single.png
     - assets/images/message_phone_double.png
     - assets/images/message_web_single.png

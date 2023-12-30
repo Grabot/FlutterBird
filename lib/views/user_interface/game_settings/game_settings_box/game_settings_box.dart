@@ -182,6 +182,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
       onTap: () {
         setState(() {
           if (category == 0) {
+            _controller.jumpTo(0);
             pressedPlayerChange(selectionType);
           } else if (category == 1) {
             pressedBird1Change(selectionType);
@@ -298,12 +299,13 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
   }
 
   List<String> flutterBirdImagePath = [
-    'assets/images/ui/game_settings/bird/bird_red.png',
-    'assets/images/ui/game_settings/bird/bird_blue.png',
-    'assets/images/ui/game_settings/bird/bird_green.png',
-    'assets/images/ui/game_settings/bird/bird_yellow.png',
-    'assets/images/ui/game_settings/bird/bird_white.png',
-    'assets/images/ui/game_settings/bird/bird_black.png',
+    'assets/images/bird/settings/flutter_bird_red_settings.png',
+    'assets/images/bird/settings/flutter_bird_blue_settings.png',
+    'assets/images/bird/settings/flutter_bird_green_settings.png',
+    'assets/images/bird/settings/flutter_bird_yellow_settings.png',
+    'assets/images/bird/settings/flutter_bird_purple_settings.png',
+    'assets/images/bird/settings/flutter_bird_white_settings.png',
+    'assets/images/bird/settings/flutter_bird_black_settings.png',
   ];
 
   Widget birdSelection1(double gameSettingsWidth, double fontSize) {

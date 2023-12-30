@@ -27,22 +27,26 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
 
   late GameSettings gameSettings;
 
+  double birdWidth = 27;
+  double birdHeight = 18;
 
   @override
   Future<void> onLoad() async {
     gameSettings = GameSettings();
     if (birdType == 0) {
-      await loadBird("flutter_red.png");
+      await loadBird("bird/flutter_bird_red.png");
     } else if (birdType == 1) {
-      await loadBird("flutter_blue.png");
+      await loadBird("bird/flutter_bird_blue.png");
     } else if (birdType == 2) {
-      await loadBird("flutter_green.png");
+      await loadBird("bird/flutter_bird_green.png");
     } else if (birdType == 3) {
-      await loadBird("flutter_yellow.png");
+      await loadBird("bird/flutter_bird_yellow.png");
     } else if (birdType == 4) {
-      await loadBird("flutter_white.png");
+      await loadBird("bird/flutter_bird_purple.png");
     } else if (birdType == 5) {
-      await loadBird("flutter_black.png");
+      await loadBird("bird/flutter_bird_white.png");
+    } else if (birdType == 6) {
+      await loadBird("bird/flutter_bird_black.png");
     }
 
     return super.onLoad();
@@ -65,7 +69,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     animation = SpriteAnimation.fromFrameData(image, SpriteAnimationData.sequenced(
       amount: 3,
       stepTime: 0.10,
-      textureSize: Vector2(17, 12),
+      textureSize: Vector2(birdWidth, birdHeight),
     ));
 
     anchor = Anchor.center;
@@ -73,7 +77,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     heightScale = gameRef.size.y / 800;
 
     size.y = (gameRef.size.y / 10000) * 466;
-    size.x = (size.y / 12) * 17;
+    size.x = (size.y / birdHeight) * birdWidth;
 
     position = Vector2(initialPos.x, initialPos.y);
 
@@ -82,7 +86,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
       minPlayers: 0,
       maxPlayers: 4,
     );
-    birdOutline2.loadBird("bird_outline_animation.png");
+    birdOutline2.loadBird("bird/flutter_bird_outline.png");
   }
 
   double flapSpeed = 600;
@@ -101,7 +105,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     heightScale = screenSizeY / 800;
 
     size.y = (screenSizeY / 10000) * 466;
-    size.x = (size.y / 12) * 17;
+    size.x = (size.y / birdHeight) * birdWidth;
 
     position = Vector2(initialPos.x, initialPos.y);
     flapSpeed = 600;
@@ -139,7 +143,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY -= (((accelerationY * dt) / 2) * -1);
     position.y -= ((velocityY * dt) * heightScale) * -1;
 
-    rotation = ((velocityY * -1) / 12).clamp(-90, 90);
+    rotation = ((velocityY * -1) / birdHeight).clamp(-90, 90);
     angle = radians(rotation * -1);
 
     // There were issues syncing the position and rotation of the bird and the outline.
@@ -153,7 +157,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY -= (((accelerationY * dt) / 2) * -1);
     position.y -= ((velocityY * dt) * heightScale) * -1;
 
-    rotation = ((velocityY * -1) / 12).clamp(-90, 20);
+    rotation = ((velocityY * -1) / birdHeight).clamp(-90, 20);
     angle = radians(rotation * -1);
 
     // There were issues syncing the position and rotation of the bird and the outline.
@@ -174,7 +178,7 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
     velocityY = velocityY.clamp(-250, 250);
     position.y -= ((velocityY * dt) * heightScale) * -1;
 
-    rotation = ((velocityY * -1) / 12).clamp(-90, 90);
+    rotation = ((velocityY * -1) / birdHeight).clamp(-90, 90);
     angle = radians(rotation * -1);
 
     // There were issues syncing the position and rotation of the bird and the outline.
@@ -222,22 +226,25 @@ class Bird extends SpriteAnimationComponent with CollisionCallbacks, HasGameRef<
   changeBird(int newBirdType) async {
     if (newBirdType == 0 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_red.png");
+      await loadBird("bird/flutter_bird_red.png");
     } else if (newBirdType == 1 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_blue.png");
+      await loadBird("bird/flutter_bird_blue.png");
     } else if (newBirdType == 2 && newBirdType != birdType) {
-      await loadBird("flutter_green.png");
       birdType = newBirdType;
+      await loadBird("bird/flutter_bird_green.png");
     } else if (newBirdType == 3 && newBirdType != birdType) {
-      await loadBird("flutter_yellow.png");
       birdType = newBirdType;
+      await loadBird("bird/flutter_bird_yellow.png");
     } else if (newBirdType == 4 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_white.png");
+      await loadBird("bird/flutter_bird_purple.png");
     } else if (newBirdType == 5 && newBirdType != birdType) {
       birdType = newBirdType;
-      await loadBird("flutter_black.png");
+      await loadBird("bird/flutter_bird_white.png");
+    } else if (newBirdType == 6 && newBirdType != birdType) {
+      birdType = newBirdType;
+      await loadBird("bird/flutter_bird_black.png");
     }
     birdOutline2.changeBird();
   }

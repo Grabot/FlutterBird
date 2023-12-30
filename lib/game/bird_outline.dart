@@ -16,10 +16,13 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
 
   late GameSettings gameSettings;
 
+  double birdWidth = 27;
+  double birdHeight = 18;
+
   @override
   Future<void> onLoad() async {
     gameSettings = GameSettings();
-    loadBird("bird_outline_animation.png");
+    loadBird("bird/flutter_bird_outline.png");
 
     return super.onLoad();
   }
@@ -30,8 +33,8 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
 
   setSize(Vector2 newSize) {
     size = newSize;
-    size.x = (size.x / 17) * 19;
-    size.y = (size.y / 12) * 14;
+    size.x = (size.x / birdWidth) * (birdWidth + 2);
+    size.y = (size.y / birdHeight) * (birdHeight + 2);
   }
 
   loadBird(String birdImageName) async {
@@ -39,16 +42,16 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     animation = SpriteAnimation.fromFrameData(image, SpriteAnimationData.sequenced(
       amount: 3,
       stepTime: 0.10,
-      textureSize: Vector2(19, 14),
+      textureSize: Vector2((birdWidth + 2), (birdHeight + 2)),
     ));
     anchor = Anchor.center;
 
     heightScale = gameRef.size.y / 800;
 
     size.y = (gameRef.size.y / 10000) * 466;
-    size.x = (size.y / 12) * 17;
-    size.x = (size.x / 17) * 19;
-    size.y = (size.y / 12) * 14;
+    size.x = (size.y / birdHeight) * birdWidth;
+    size.x = (size.x / birdWidth) * (birdWidth + 2);
+    size.y = (size.y / birdHeight) * (birdHeight + 2);
 
     position = Vector2(initialPos.x, initialPos.y);
     position.x -= 1;
@@ -70,9 +73,9 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
     heightScale = screenSizeY / 800;
 
     size.y = (screenSizeY / 10000) * 466;
-    size.x = (size.y / 12) * 17;
-    size.x = (size.x / 17) * 19;
-    size.y = (size.y / 12) * 14;
+    size.x = (size.y / birdHeight) * birdWidth;
+    size.x = (size.x / birdWidth) * (birdWidth + 2);
+    size.y = (size.y / birdHeight) * (birdHeight + 2);
 
     position = Vector2(initialPos.x, initialPos.y);
     position.x -= 1;
@@ -104,7 +107,7 @@ class BirdOutline extends SpriteAnimationComponent with HasGameRef<FlutterBird> 
   }
 
   changeBird() {
-    loadBird("bird_outline_animation.png");
+    loadBird("bird/flutter_bird_outline.png");
   }
 
   @override
