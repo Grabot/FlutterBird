@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/game/flutter_bird.dart';
 import 'package:flutter_bird/models/user.dart';
@@ -118,6 +119,8 @@ class AchievementBoxState extends State<AchievementBox> {
     achievementBoxChangeNotifier.setAchievementBoxVisible(false);
   }
 
+  AutoSizeGroup sizeGroupAchievements = AutoSizeGroup();
+
   Widget achievementItem(Achievement achievement, double achievementWindowWidth, double achievementSize, double fontSize) {
     double marginWidth = 20;
     return GestureDetector(
@@ -140,18 +143,16 @@ class AchievementBoxState extends State<AchievementBox> {
               ),
             ),
             const SizedBox(width: 10),
-            SizedBox(
+            Container(
                 width: achievementWindowWidth - achievementSize - marginWidth - 10,
-                child: Text.rich(
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    TextSpan(
-                      text: achievement.getTooltip(),
-                      style: TextStyle(
-                          color: const Color(0xFFcba830),
-                          fontSize: fontSize
-                      ),
-                    ),
+                child: AutoSizeText(
+                  achievement.getTooltip(),
+                  style: const TextStyle(
+                    color: Color(0xFFcba830),
+                    fontSize: 50,
+                  ),
+                  group: sizeGroupAchievements,
+                  maxLines: 3,
                 )
             ),
           ],
@@ -243,20 +244,15 @@ class AchievementBoxState extends State<AchievementBox> {
     );
   }
 
-  Widget achievementBox() {
+  Widget achievementBox(double totalWidth, double totalHeight) {
     // normal mode is for desktop, mobile mode is for mobile.
-    double totalWidth = MediaQuery.of(context).size.width;
-    double totalHeight = MediaQuery.of(context).size.height;
-    bool normalMode = true;
     double heightScale = totalHeight / 800;
     double fontSize = 16 * heightScale;
     double width = 800;
-    double height = (totalHeight / 10) * 9;
+    double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
     if (totalWidth <= 800 || totalHeight > totalWidth) {
       width = totalWidth - 50;
-      height = totalHeight - 250;
-      normalMode = false;
     }
     double headerHeight = 40;
 
@@ -274,7 +270,7 @@ class AchievementBoxState extends State<AchievementBox> {
                 child: Column(
                     children:
                     [
-                      achievementWindowHeader(width-80, headerHeight, fontSize),
+                      achievementWindowHeader(width-30, headerHeight, fontSize),
                       const SizedBox(height: 20),
                       currentUser == null ? logInToGetAchievements(width, fontSize) : Container(),
                       achievementTableHeader(width, fontSize),
@@ -330,17 +326,48 @@ class AchievementBoxState extends State<AchievementBox> {
     );
   }
 
-  Widget profileBoxScreen(BuildContext context) {
+  Widget continueButton(double screenWidth, double screenHeight, double fontSize) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+      child: TextButton(
+          onPressed: () {
+            goBack();
+          },
+          child: Container(
+            width: screenWidth/8,
+            height: screenHeight/20,
+            color: Colors.blue,
+            child: Center(
+              child: Text(
+                'Ok',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: fontSize),
+              ),
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget profileBoxScreen(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Container(
+        width: screenWidth,
+        height: screenHeight,
         color: Colors.black.withOpacity(0.7),
         child: Center(
             child: TapRegion(
                 onTapOutside: (tap) {
                   goBack();
                 },
-                child: achievementBox()
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(),
+                      achievementBox(screenWidth, screenHeight),
+                      continueButton(screenWidth, screenHeight, 16),
+                    ]
+                )
             )
         )
     );

@@ -295,7 +295,7 @@ class ScoreScreenState extends State<ScoreScreen> {
               fontSize: fontSize*2,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
-                ..strokeWidth = (scoreWidth / 30)
+                ..strokeWidth = (fontSize / 2)
                 ..color = Colors.black,
             ),
           ),
@@ -342,7 +342,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 fontSize: fontSize*2,
                 foreground: Paint()
                   ..style = PaintingStyle.stroke
-                  ..strokeWidth = (scoreWidth / 30)
+                  ..strokeWidth = (scoreWidth / 20)
                   ..color = Colors.black,
               ),
             ),
@@ -372,7 +372,7 @@ class ScoreScreenState extends State<ScoreScreen> {
               fontSize: fontSize*2,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
-                ..strokeWidth = (scoreWidth / 30)
+                ..strokeWidth = (fontSize / 2)
                 ..color = Colors.black,
             ),
           ),
@@ -471,7 +471,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    scoreSingleBirdDoubleBirdHeader(rightWidth, rightWidth/12, fontSize),
+                    scoreSingleBirdDoubleBirdHeader(rightWidth, (2*rightWidth)/12, fontSize),
                     scoreNowHeader(rightWidth, rightWidth/6, fontSize),
                     scoreNow(rightWidth, scoreHeight, fontSize),
                     scoreBestHeader(rightWidth, rightWidth/6, fontSize),

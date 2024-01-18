@@ -74,17 +74,12 @@ class _PasswordResetState extends State<PasswordReset> {
     }
   }
 
-  Widget invalidPasswordBox(double width, double fontSize) {
+  Widget invalidPasswordBox(double width, double fontSize, bool normalMode) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
-          Container(
-              padding: EdgeInsets.only(left: width/4, right: width/4, top: 20),
-              alignment: Alignment.center,
-              child: Image.asset(
-                  "assets/images/flutterbird_logo.png")
-          ),
+          flutterBirdLogo(width, normalMode),
           Text(
             "Invalid link",
             style: TextStyle(color: Colors.white, fontSize: fontSize*2),
@@ -103,19 +98,14 @@ class _PasswordResetState extends State<PasswordReset> {
     );
   }
 
-  Widget enterNewPassword(double width, double fontSize) {
+  Widget enterNewPassword(double width, double fontSize, bool normalMode) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Form(
         key: formKeyPasswordReset,
         child: Column(
           children: [
-            Container(
-                padding: EdgeInsets.only(left: width/4, right: width/4, top: 20),
-                alignment: Alignment.center,
-                child: Image.asset(
-                    "assets/images/flutterbird_logo.png")
-            ),
+            flutterBirdLogo(width, normalMode),
             Text(
               "Reset your password",
               style: TextStyle(color: Colors.white, fontSize: fontSize*2),
@@ -169,19 +159,14 @@ class _PasswordResetState extends State<PasswordReset> {
     );
   }
 
-  Widget passwordHasBeenUpdated(double width, double fontSize) {
+  Widget passwordHasBeenUpdated(double width, double fontSize, bool normalMode) {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Form(
             key: formKeyPasswordReset,
             child: Column(
                 children: [
-                Container(
-                    padding: EdgeInsets.only(left: width/4, right: width/4, top: 20),
-                    alignment: Alignment.center,
-                    child: Image.asset(
-                    "assets/images/flutterbird_logo.png")
-            ),
+                  flutterBirdLogo(width, normalMode),
             Text(
               "Password Changed!",
               style: TextStyle(color: Colors.white, fontSize: fontSize*2),
@@ -219,8 +204,8 @@ class _PasswordResetState extends State<PasswordReset> {
     _navigationService.navigateTo(routes.HomeRoute);
   }
 
-  Widget newPasswordBox(double width, double fontSize) {
-    return passwordUpdated ? passwordHasBeenUpdated(width, fontSize) : enterNewPassword(width, fontSize);
+  Widget newPasswordBox(double width, double fontSize, bool normalMode) {
+    return passwordUpdated ? passwordHasBeenUpdated(width, fontSize, normalMode) : enterNewPassword(width, fontSize, normalMode);
   }
 
   Widget passwordBox() {
@@ -230,12 +215,12 @@ class _PasswordResetState extends State<PasswordReset> {
     double fontSize = 16 * heightScale;
     double width = 800;
     double height = (totalHeight / 10) * 9;
+    bool normalMode = true;
     // When the width is smaller than this we assume it's mobile.
     if (totalWidth <= 800) {
       width = totalWidth - 50;
       height = totalHeight - 250;
-      // double newHeightScaleFont = width / 800;
-      // fontSize = 16 * newHeightScaleFont;
+      normalMode = false;
     }
 
     return Container(
@@ -243,8 +228,8 @@ class _PasswordResetState extends State<PasswordReset> {
       height: height,
       color: Colors.orange,
       child: SingleChildScrollView(
-        child: !invalid ? newPasswordBox(width, fontSize)
-            : invalidPasswordBox(width, fontSize)
+        child: !invalid ? newPasswordBox(width, fontSize, normalMode)
+            : invalidPasswordBox(width, fontSize, normalMode)
       ),
     );
   }

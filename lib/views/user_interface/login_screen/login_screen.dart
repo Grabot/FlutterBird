@@ -114,6 +114,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   signInFlutterBird() {
     if (formKeyLogin.currentState!.validate() && !isLoading) {
+      _controller.jumpTo(0);
       isLoading = true;
       // send login request
       String emailOrUserName = emailOrUsernameController.text;
@@ -144,6 +145,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   signUpFlutterBird() {
     if (formKeyRegister.currentState!.validate() && !isLoading) {
+      _controller.jumpTo(0);
       isLoading = true;
       String email = emailController.text;
       String userName = usernameController.text;
@@ -174,6 +176,7 @@ class LoginScreenState extends State<LoginScreen> {
   String resetEmail = "";
   forgotPassword() {
     if (formKeyReset.currentState!.validate() && !isLoading) {
+      _controller.jumpTo(0);
       isLoading = true;
       resetEmail = forgotPasswordEmailController.text;
       AuthServiceLogin authService = AuthServiceLogin();
@@ -226,7 +229,13 @@ class LoginScreenState extends State<LoginScreen> {
                       height: 36,
                     )),
               ),
-              const Text("or"),
+              Text(
+                "or",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize
+                ),
+              ),
               Expanded(
                 child: Container(
                     margin: const EdgeInsets.only(left: 20.0, right: 10.0),
@@ -269,8 +278,20 @@ class LoginScreenState extends State<LoginScreen> {
                       height: 36,
                     )),
               ),
-              signUpMode == 0 ? const Text("or login with") : Container(),
-              signUpMode == 1 ? const Text("or register with") : Container(),
+              signUpMode == 0 ? Text(
+                "or login with",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize
+                ),
+              ) : Container(),
+              signUpMode == 1 ? Text(
+                "or register with",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize
+                ),
+              ) : Container(),
               Expanded(
                 child: Container(
                     margin: const EdgeInsets.only(left: 20.0, right: 10.0),
@@ -301,7 +322,10 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   Text(
                     "Google",
-                    style: TextStyle(fontSize: fontSize),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fontSize
+                    ),
                   )
                 ]
             ),
@@ -323,7 +347,10 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
                 Text(
                   "Github",
-                  style: TextStyle(fontSize: fontSize),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fontSize
+                  ),
                 )
               ],
             ),
@@ -345,7 +372,10 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   Text(
                     "Reddit",
-                    style: TextStyle(fontSize: fontSize),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fontSize
+                    ),
                   )
                 ]
             ),
@@ -486,6 +516,17 @@ class LoginScreenState extends State<LoginScreen> {
                   "Create Account",
                   style: TextStyle(
                       color: Colors.white,
+                      fontSize: fontSize*1.5),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "",
+                  style: TextStyle(
+                      color: Colors.white,
                       fontSize: fontSize*1.5
                   ),
                 ),
@@ -509,7 +550,10 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     Text(
                         " instead?",
-                        style: TextStyle(fontSize: fontSize*0.8)
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: fontSize*0.8
+                        )
                     )
                   ],
                 ),
@@ -629,6 +673,17 @@ class LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: fontSize*1.5),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fontSize*1.5),
                 ),
                 Row(
                   children: [
@@ -650,7 +705,10 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     Text(
                         " instead?",
-                        style: TextStyle(fontSize: fontSize*0.8)
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: fontSize*0.8
+                        )
                     )
                   ],
                 ),
@@ -773,11 +831,7 @@ class LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
-                Container(
-                    padding: EdgeInsets.only(left: width/4, right: width/4, top: 20),
-                    alignment: Alignment.center,
-                    child: Image.asset("assets/images/flutterbird_logo.png")
-                ),
+                flutterBirdLogo(width, normalMode),
                 signUpMode == 0 ? login(width - (30 * 2), fontSize) : Container(),
                 signUpMode == 1 ? register(width - (30 * 2), fontSize) : Container(),
                 signUpMode == 2 && !passwordResetSend ? resetPassword(width - (30 * 2), fontSize) : Container(),
@@ -796,7 +850,7 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget LoginOrRegisterBox(BuildContext context) {
+  Widget loginOrRegisterBox(BuildContext context) {
     double totalWidth = MediaQuery.of(context).size.width;
     double totalHeight = MediaQuery.of(context).size.height;
     double heightScale = totalHeight / 800;
@@ -809,9 +863,8 @@ class LoginScreenState extends State<LoginScreen> {
     if (totalWidth <= 800 || totalHeight > totalWidth) {
       width = MediaQuery.of(context).size.width - 50;
       height = MediaQuery.of(context).size.height - 150;
+      normalMode = false;
       loginBoxSize = 50;
-      // double newHeightScaleFont = width / 800;
-      // fontSize = 16 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.center,
@@ -825,7 +878,7 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget LoginOrRegisterScreen(BuildContext context) {
+  Widget loginOrRegisterScreen(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -835,7 +888,7 @@ class LoginScreenState extends State<LoginScreen> {
                 onTapOutside: (tap) {
                   goBack();
                 },
-                child: LoginOrRegisterBox(context)
+                child: loginOrRegisterBox(context)
             )
         )
     );
@@ -845,7 +898,7 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Align(
       alignment: FractionalOffset.center,
-      child: showLoginScreen ? LoginOrRegisterScreen(context) : Container()
+      child: showLoginScreen ? loginOrRegisterScreen(context) : Container()
     );
   }
 

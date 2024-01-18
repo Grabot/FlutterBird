@@ -165,11 +165,11 @@ class ProfileOverviewState extends State<ProfileOverview> {
                 SizedBox(
                   width: profileOverviewWidth - profileOverviewHeight - 5,
                   child: Text.rich(
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     TextSpan(
                       text: settings.getUser() != null ? settings.getUser()!.getUserName() : "Guest",
-                      style: simpleTextStyle(30),
+                      style: simpleTextStyle(18),
                     ),
                   ),
                 ),

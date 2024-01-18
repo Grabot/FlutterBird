@@ -198,19 +198,14 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
     );
   }
 
-  Widget achievementCloseUp() {
-    double totalWidth = MediaQuery.of(context).size.width;
-    double totalHeight = MediaQuery.of(context).size.height;
-    bool normalMode = true;
+  Widget achievementCloseUp(double totalWidth, double totalHeight) {
     double heightScale = totalHeight / 800;
     double fontSize = 16 * heightScale;
     double width = 800;
-    double height = (totalHeight / 10) * 9;
+    double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
     if (totalWidth <= 800 || totalHeight > totalWidth) {
       width = totalWidth - 50;
-      height = totalHeight - 250;
-      normalMode = false;
     }
     double headerHeight = 40;
     return TapRegion(
@@ -246,13 +241,44 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
     );
   }
 
-  Widget achievementCloseUpBox(BuildContext context) {
+  Widget continueButton(double screenWidth, double screenHeight, double fontSize) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      child: TextButton(
+          onPressed: () {
+            goBack();
+          },
+          child: Container(
+            width: screenWidth/8,
+            height: screenHeight/20,
+            color: Colors.blue,
+            child: Center(
+              child: Text(
+                'Ok',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: fontSize),
+              ),
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget achievementCloseUpBox(BuildContext context) {
+    double totalWidth = MediaQuery.of(context).size.width;
+    double totalHeight = MediaQuery.of(context).size.height;
+    return Container(
+      width: totalWidth,
+      height: totalHeight,
       color: Colors.black.withOpacity(0.7),
       child: Center(
-        child: achievementCloseUp()
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(),
+              achievementCloseUp(totalWidth, totalHeight),
+              continueButton(totalWidth, totalHeight, 16)
+            ]
+        )
       )
     );
   }

@@ -134,23 +134,39 @@ class ProfileBoxState extends State<ProfileBox> {
     }
   }
 
-  Widget profile() {
+  Widget continueButton(double screenWidth, double screenHeight, double fontSize) {
+    return Container(
+      child: TextButton(
+          onPressed: () {
+            goBack();
+          },
+          child: Container(
+            width: screenWidth/8,
+            height: screenHeight/20,
+            color: Colors.blue,
+            child: Center(
+              child: Text(
+                'Ok',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: fontSize),
+              ),
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget profile(double totalWidth, double totalHeight) {
     // normal mode is for desktop, mobile mode is for mobile.
-    double totalWidth = MediaQuery.of(context).size.width;
-    double totalHeight = MediaQuery.of(context).size.height;
     bool normalMode = true;
     double heightScale = totalHeight / 800;
     double fontSize = 16 * heightScale;
     double width = 800;
-    double height = (totalHeight / 10) * 9;
+    double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
-    if (totalWidth <= 800 || totalHeight > totalWidth) {
+    if (totalWidth - 50 <= 800 || totalHeight > totalWidth) {
       width = totalWidth - 50;
-      height = totalHeight - 250;
       normalMode = false;
-      // double newHeightScaleFont = width / 800;
-      // fontSize = 16 * newHeightScaleFont;
-      // fontSize = 16;
     }
     double headerHeight = 40;
 
@@ -166,9 +182,9 @@ class ProfileBoxState extends State<ProfileBox> {
                 child: Column(
                     children:
                     [
-                      profileHeader(width-80, headerHeight, fontSize),
+                      profileHeader(width-30, headerHeight, fontSize),
                       const SizedBox(height: 20),
-                      userInformationBox(width-80, fontSize, normalMode),
+                      userInformationBox(width-30, fontSize, normalMode),
                       const SizedBox(height: 20),
                     ]
                 ),
@@ -705,13 +721,13 @@ class ProfileBoxState extends State<ProfileBox> {
                 children: [
                   Expanded(
                     child: Text.rich(
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       TextSpan(
                         text: userName,
                         style: TextStyle(
-                            color: const Color(0xFFcba830),
-                            fontSize: fontSize*2
+                            color: const Color(0xffffffff),
+                            fontSize: fontSize*1.2
                         ),
                       ),
                     ),
@@ -777,16 +793,25 @@ class ProfileBoxState extends State<ProfileBox> {
   }
 
   Widget profileBoxScreen(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: screenWidth,
+        height: screenHeight,
         color: Colors.black.withOpacity(0.7),
         child: Center(
             child: TapRegion(
                 onTapOutside: (tap) {
                   goBack();
                 },
-                child: profile()
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(),
+                      profile(screenWidth, screenHeight),
+                      continueButton(screenWidth, screenHeight, 16),
+                    ]
+                )
             )
         )
     );

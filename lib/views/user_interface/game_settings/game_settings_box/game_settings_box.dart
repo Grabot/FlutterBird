@@ -484,20 +484,17 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     );
   }
 
-  Widget gameSettingsWindow() {
+  Widget gameSettingsWindow(double totalWidth, double totalHeight) {
     // normal mode is for desktop, mobile mode is for mobile.
-    double totalWidth = MediaQuery.of(context).size.width;
-    double totalHeight = MediaQuery.of(context).size.height;
     normalMode = true;
     double heightScale = totalHeight / 800;
     double fontSize = 20 * heightScale;
     double width = 800;
-    double height = (totalHeight / 10) * 9;
+    double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
     // If it's a mobile but it's landscaped, we also use normal mode.
     if (totalWidth <= 800 || totalHeight > totalWidth) {
       width = totalWidth - 50;
-      height = totalHeight - 250;
       normalMode = false;
       // double newHeightScaleFont = width / 800;
       // fontSize = 20 * newHeightScaleFont;
@@ -532,17 +529,48 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     );
   }
 
-  Widget gameSettingsBoxScreen(BuildContext context) {
+  Widget continueButton(double screenWidth, double screenHeight, double fontSize) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+      child: TextButton(
+          onPressed: () {
+            goBack();
+          },
+          child: Container(
+            width: screenWidth/8,
+            height: screenHeight/20,
+            color: Colors.blue,
+            child: Center(
+              child: Text(
+                'Ok',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: fontSize),
+              ),
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget gameSettingsBoxScreen(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Container(
+        width: screenWidth,
+        height: screenHeight,
         color: Colors.black.withOpacity(0.7),
         child: Center(
             child: TapRegion(
                 onTapOutside: (tap) {
                   goBack();
                 },
-                child: gameSettingsWindow()
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(),
+                      gameSettingsWindow(screenWidth, screenHeight),
+                      continueButton(screenWidth, screenHeight, 16),
+                    ]
+                )
             )
         )
     );

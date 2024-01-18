@@ -24,7 +24,13 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
     position = Vector2(gameRef.size.x/2, gameRef.size.y/2);
     position.y -= gameRef.size.y/8;
     double heightScale = gameRef.size.y / 800;
-    size = Vector2(200 * heightScale * 1.5, 267 * heightScale * 1.5);
+
+    if (gameRef.size.x <= 800 || gameRef.size.y > gameRef.size.x) {
+      size = Vector2(200 * heightScale * 1.2, 267 * heightScale * 1.2);
+    } else {
+      size = Vector2(200 * heightScale * 2, 267 * heightScale * 2);
+    }
+
     sprite = Sprite(image);
     return super.onLoad();
   }
@@ -35,7 +41,13 @@ class HelpMessage extends SpriteComponent with HasGameRef<FlutterBird> {
     position = Vector2(gameSize.x / 2, gameSize.y / 2);
     position.y -= gameSize.y / 8;
     double heightScale = gameRef.size.y / 800;
-    size = Vector2(200 * heightScale * 1.5, 267 * heightScale * 1.5);
+
+    if (gameSize.x <= 800 || gameSize.y > gameSize.x) {
+      size = Vector2(200 * heightScale * 1.2, 267 * heightScale * 1.2);
+    } else {
+      size = Vector2(200 * heightScale * 2, 267 * heightScale * 2);
+    }
+
     updateMessageImage(gameSize);
   }
 

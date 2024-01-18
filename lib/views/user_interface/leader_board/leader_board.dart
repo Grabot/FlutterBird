@@ -76,10 +76,6 @@ class LeaderBoardState extends State<LeaderBoard> {
     }
   }
 
-  // void _onFocusChange() {
-  //   widget.game.leaderBoardFocus(_focusLeaderBoard.hasFocus);
-  // }
-
   @override
   void dispose() {
     _controller.dispose();
@@ -281,19 +277,19 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardHeaderRow(double leaderBoardWidth, double headerRowHeight, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
-    double nameRowWidth = (totalHeaderWidth/6)*2;
+    double nameRowWidth = (totalHeaderWidth/12)*5;
     double scoreRowWidth = totalHeaderWidth/6;
-    double achievedAtWidth = totalHeaderWidth/3;
+    double achievedAtWidth = (totalHeaderWidth/4);
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),
       width: leaderBoardWidth-20,
-      height: headerRowHeight-10,
+      height: headerRowHeight - 20,
       child: Row(
         children: [
           Container(
               alignment: Alignment.center,
               width: rankRowWidth,
-              height: headerRowHeight-10,
+              height: headerRowHeight - 20,
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Rank",
@@ -308,7 +304,7 @@ class LeaderBoardState extends State<LeaderBoard> {
           Container(
               alignment: Alignment.center,
               width: nameRowWidth,
-              height: headerRowHeight-10,
+              height: headerRowHeight - 20,
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Name",
@@ -323,7 +319,7 @@ class LeaderBoardState extends State<LeaderBoard> {
           Container(
               alignment: Alignment.center,
               width: scoreRowWidth,
-              height: headerRowHeight-10,
+              height: headerRowHeight - 20,
               color: Colors.black.withOpacity(0.05),
               child: AutoSizeText(
                 "Score",
@@ -336,20 +332,19 @@ class LeaderBoardState extends State<LeaderBoard> {
               )
           ),
           Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(right: leaderBoardWidth/20, left: leaderBoardWidth/20),
-              width: achievedAtWidth,
-              height: headerRowHeight-10,
-              color: Colors.black.withOpacity(0.05),
-              child: AutoSizeText(
-                "Achieved at",
-                style: const TextStyle(
-                  color: Color(0xFFcba830),
-                  fontSize: 50,
-                ),
-                group: sizeGroupHeaderRow,
-                maxLines: 1,
-              )
+            alignment: Alignment.center,
+            width: achievedAtWidth,
+            height: headerRowHeight - 20,
+            color: Colors.black.withOpacity(0.05),
+            child: AutoSizeText(
+              "Date achieved",
+              style: const TextStyle(
+                color: Color(0xFFcba830),
+                fontSize: 50,
+              ),
+              group: sizeGroupHeaderRow,
+              maxLines: 2,
+            ),
           ),
         ],
       ),
@@ -359,11 +354,11 @@ class LeaderBoardState extends State<LeaderBoard> {
   Widget leaderBoardTableRow(double leaderBoardWidth, Rank userRank, int index, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
-    double nameRowWidth = (totalHeaderWidth/6)*2;
+    double nameRowWidth = (totalHeaderWidth/12)*5;
     double scoreRowWidth = totalHeaderWidth/6;
-    double achievedAtWidth = (totalHeaderWidth/3);
+    double achievedAtWidth = (totalHeaderWidth/4);
     return Container(
-      height: 100,
+      height: 40,
       color: userRank.getMe() ? Colors.green.withOpacity(0.3) : Colors.black26,
       child: Row(
         children: [
@@ -393,10 +388,10 @@ class LeaderBoardState extends State<LeaderBoard> {
                   text: userRank.getUserName(),
                     style: userRank.getMe()
                         ? TextStyle(
-                      fontSize: fontSize*1.4,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.bold,
                     )
-                        : TextStyle(fontSize: fontSize*1.4),
+                        : TextStyle(fontSize: fontSize),
                 )
                 )
             ),
@@ -430,15 +425,6 @@ class LeaderBoardState extends State<LeaderBoard> {
                   : const TextStyle(fontSize: 50),
               maxLines: 2,
             )
-            // child: Text(
-            //     DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
-            //     style: userRank.getMe()
-            //         ? TextStyle(
-            //       fontSize: (fontSize/4)*3,
-            //       fontWeight: FontWeight.bold,
-            //     )
-            //         : TextStyle(fontSize: (fontSize/4)*3)
-            // ),
           ),
         ],
       ),
@@ -476,14 +462,15 @@ class LeaderBoardState extends State<LeaderBoard> {
     if (rankingList.length < 10) {
       itemCount = rankingList.length;
     }
-    return SizedBox(
+    return Container(
       width: leaderBoardWidth-20,
-      height: leaderBoardHeight,
+      height: leaderBoardHeight + 10,
       child: NotificationListener(
         child: SizedBox(
           width: leaderBoardWidth,
-          height: leaderBoardHeight,
+          height: leaderBoardHeight + 10,
           child: ListView.builder(
+              padding: const EdgeInsets.all(0),
               controller: _controller,
               itemCount: itemCount,
               itemBuilder: (BuildContext context, int index) {
@@ -499,8 +486,8 @@ class LeaderBoardState extends State<LeaderBoard> {
   }
 
   Widget leaderBoardContent(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
-    double timeRankingHeight = 70;
-    double headerRowHeight = 70;
+    double timeRankingHeight = 40;
+    double headerRowHeight = 60;
     double remainingHeight = leaderBoardHeight - timeRankingHeight - headerRowHeight;
     return Column(
       children: [
@@ -524,6 +511,28 @@ class LeaderBoardState extends State<LeaderBoard> {
           ),
           onePlayerTwoPlayerSelectionWidget(onePlayerTwoPlayerOptionWidth)
         ]
+      ),
+    );
+  }
+
+  Widget continueButton(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
+    return Container(
+      child: TextButton(
+        onPressed: () {
+          nextScreen();
+        },
+        child: Container(
+          width: leaderBoardWidth/3,
+          height: leaderBoardHeight/10,
+          color: Colors.blue,
+          child: Center(
+            child: Text(
+              'Ok',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: fontSize),
+            ),
+          ),
+        )
       ),
     );
   }
@@ -600,19 +609,17 @@ class LeaderBoardState extends State<LeaderBoard> {
 
     double heightScale = height / 800;
     double leaderBoardWidth = 800 * heightScale;
-    double leaderBoardHeight = (leaderBoardWidth/4) * 3;
+    double leaderBoardHeight = (leaderBoardWidth/4) * 2;
     double fontSize = 18 * heightScale;
     if (width < (leaderBoardWidth + (leaderBoardWidth/10))) {
       leaderBoardWidth = width-(leaderBoardWidth/10);
-      // double newHeightScaleFont = width / 800;
-      // fontSize = 18 * newHeightScaleFont;
-      // leaderBoardHeight = (height/10)*8;
     }
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           leaderBoardMessage(heightScale),
-          leaderContent(leaderBoardWidth, leaderBoardHeight, fontSize)
+          leaderContent(leaderBoardWidth, leaderBoardHeight, fontSize),
+          continueButton(leaderBoardWidth, leaderBoardHeight, fontSize)
         ]
     );
   }
