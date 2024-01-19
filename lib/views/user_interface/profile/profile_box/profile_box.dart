@@ -141,8 +141,8 @@ class ProfileBoxState extends State<ProfileBox> {
             goBack();
           },
           child: Container(
-            width: screenWidth/8,
-            height: screenHeight/20,
+            width: 150,
+            height: 30,
             color: Colors.blue,
             child: Center(
               child: Text(
@@ -159,14 +159,15 @@ class ProfileBoxState extends State<ProfileBox> {
   Widget profile(double totalWidth, double totalHeight) {
     // normal mode is for desktop, mobile mode is for mobile.
     bool normalMode = true;
-    double heightScale = totalHeight / 800;
-    double fontSize = 16 * heightScale;
+    double fontSize = 16;
     double width = 800;
     double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
-    if (totalWidth - 50 <= 800 || totalHeight > totalWidth) {
+    if (totalWidth - 50 <= 800) {
       width = totalWidth - 50;
       normalMode = false;
+      double heightScale = totalHeight / 800;
+      fontSize = 16 * heightScale;
     }
     double headerHeight = 40;
 

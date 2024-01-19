@@ -216,7 +216,12 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Widget justPlayGame(double width, double fontSize) {
+  Widget justPlayGame(double screenWidth, double fontSize) {
+    double width = 400;
+    // When the width is smaller than this we assume it's mobile.
+    if (screenWidth <= 500) {
+      width = screenWidth-100;
+    }
     return Column(
       children: [
         Row(
@@ -823,6 +828,24 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget loginHeader(double headerWidth, double headerHeight, double fontSize) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(),
+          IconButton(
+              icon: const Icon(Icons.close),
+              color: Colors.orangeAccent.shade200,
+              onPressed: () {
+                setState(() {
+                  goBack();
+                });
+              }
+          ),
+        ]
+    );
+  }
+
   Widget loginScreen(double width, double loginBoxSize, double fontSize) {
     return NotificationListener(
         child: SingleChildScrollView(
@@ -831,13 +854,13 @@ class LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
+                loginHeader(width, 40, fontSize),
                 flutterBirdLogo(width, normalMode),
                 signUpMode == 0 ? login(width - (30 * 2), fontSize) : Container(),
                 signUpMode == 1 ? register(width - (30 * 2), fontSize) : Container(),
                 signUpMode == 2 && !passwordResetSend ? resetPassword(width - (30 * 2), fontSize) : Container(),
                 signUpMode == 2 && passwordResetSend ? resetPasswordEmailSend(width - (30 * 2), fontSize) : Container(),
                 signUpMode != 2 ? loginAlternatives(loginBoxSize, fontSize) : Container(),
-                signUpMode != 2 ? justPlayGame(width, fontSize) : Container(),
                 const SizedBox(height: 40),
               ],
             ),
@@ -850,19 +873,14 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget loginOrRegisterBox(BuildContext context) {
-    double totalWidth = MediaQuery.of(context).size.width;
-    double totalHeight = MediaQuery.of(context).size.height;
-    double heightScale = totalHeight / 800;
-    double fontSize = 16 * heightScale;
+  Widget loginOrRegisterBox(double screenWidth, double screenHeight, double fontSize) {
     normalMode = true;
     double loginBoxSize = 100;
     double width = 800;
-    double height = (MediaQuery.of(context).size.height / 10) * 9;
+    double height = (screenHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
-    if (totalWidth <= 800 || totalHeight > totalWidth) {
-      width = MediaQuery.of(context).size.width - 50;
-      height = MediaQuery.of(context).size.height - 150;
+    if (screenWidth <= 800 || screenHeight > screenWidth) {
+      width = screenWidth - 50;
       normalMode = false;
       loginBoxSize = 50;
     }
@@ -879,6 +897,9 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginOrRegisterScreen(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double fontSize = 16;
     return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -888,7 +909,14 @@ class LoginScreenState extends State<LoginScreen> {
                 onTapOutside: (tap) {
                   goBack();
                 },
-                child: loginOrRegisterBox(context)
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(),
+                      loginOrRegisterBox(screenWidth, screenHeight, fontSize),
+                      justPlayGame(screenWidth, fontSize),
+                    ]
+                )
             )
         )
     );

@@ -522,8 +522,8 @@ class LeaderBoardState extends State<LeaderBoard> {
           nextScreen();
         },
         child: Container(
-          width: leaderBoardWidth/3,
-          height: leaderBoardHeight/10,
+          width: 150,
+          height: 30,
           color: Colors.blue,
           child: Center(
             child: Text(

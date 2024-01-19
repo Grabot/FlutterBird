@@ -342,7 +342,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 fontSize: fontSize*2,
                 foreground: Paint()
                   ..style = PaintingStyle.stroke
-                  ..strokeWidth = (scoreWidth / 20)
+                  ..strokeWidth = (fontSize / 2)
                   ..color = Colors.black,
               ),
             ),
@@ -519,7 +519,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 },
                 child: Container(
                   width: scoreWidth/3,
-                  height: scoreWidth/20,
+                  height: 30,
                   color: Colors.blue,
                   child: Center(
                     child: Text(
@@ -539,7 +539,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 },
                 child: Container(
                   width: scoreWidth/3,
-                  height: scoreWidth/20,
+                  height: 30,
                   color: Colors.blue,
                   child: Center(
                     child: Text(

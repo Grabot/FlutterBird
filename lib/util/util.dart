@@ -436,8 +436,8 @@ int getRankingSelection(bool onePlayer, int currentScore, Settings settings) {
 Widget flutterBirdLogo(double width, bool normalMode) {
   return Container(
         padding: normalMode
-            ? EdgeInsets.only(left: width/4, right: width/4, top: 20)
-            : EdgeInsets.only(left: width/8, right: width/8, top: 20),
+            ? EdgeInsets.only(left: width/4, right: width/4)
+            : EdgeInsets.only(left: width/8, right: width/8),
         alignment: Alignment.center,
         child: Image.asset("assets/images/flutterbird_logo.png")
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bird/util/web_storage.dart';
+import 'package:flutter_bird/views/user_interface/profile/profile_box/profile_change_notifier.dart';
 
 
 class GameSettings extends ChangeNotifier {
@@ -12,7 +13,10 @@ class GameSettings extends ChangeNotifier {
   int pipeType = 0;
   int playerType = 0;
 
+  int storageLoaded = 0;
+
   bool sound = true;
+  bool buttonVisibility = true;
 
   SecureStorage secureStorage = SecureStorage();
 
@@ -23,46 +27,78 @@ class GameSettings extends ChangeNotifier {
         int newPlayerType = int.parse(value);
         if (newPlayerType != playerType) {
           playerType = newPlayerType;
-          notifyListeners();
         }
       }
+      storageLoaded += 1;
+      checkIfShouldNotify();
     });
     secureStorage.getBirdType1().then((value) {
       if (value != null) {
         int newBirdType1 = int.parse(value);
         if (newBirdType1 != birdType1) {
           birdType1 = newBirdType1;
-          notifyListeners();
         }
       }
+      storageLoaded += 1;
+      checkIfShouldNotify();
     });
     secureStorage.getBirdType2().then((value) {
       if (value != null) {
         int newBirdType2 = int.parse(value);
         if (newBirdType2 != birdType2) {
           birdType2 = newBirdType2;
-          notifyListeners();
         }
       }
+      storageLoaded += 1;
+      checkIfShouldNotify();
     });
     secureStorage.getBackgroundType().then((value) {
       if (value != null) {
         int newBackgroundType = int.parse(value);
         if (newBackgroundType != backgroundType) {
           backgroundType = newBackgroundType;
-          notifyListeners();
         }
       }
+      storageLoaded += 1;
+      checkIfShouldNotify();
     });
     secureStorage.getPipeType().then((value) {
       if (value != null) {
         int newPipeType = int.parse(value);
         if (newPipeType != pipeType) {
           pipeType = newPipeType;
-          notifyListeners();
         }
       }
+      storageLoaded += 1;
+      checkIfShouldNotify();
     });
+    secureStorage.getSound().then((value) {
+      if (value != null) {
+        bool soundType = bool.parse(value);
+        if (soundType != sound) {
+          sound = soundType;
+        }
+      }
+      storageLoaded += 1;
+      checkIfShouldNotify();
+    });
+    secureStorage.getButtonVisibility().then((value) {
+      if (value != null) {
+        bool buttonVisibilityType = bool.parse(value);
+        if (buttonVisibilityType != buttonVisibility) {
+          buttonVisibility = buttonVisibilityType;
+          ProfileChangeNotifier().setProfileOverviewVisible(buttonVisibility);
+        }
+      }
+      storageLoaded += 1;
+      checkIfShouldNotify();
+    });
+  }
+
+  checkIfShouldNotify() {
+    if (storageLoaded == 7) {
+      notify();
+    }
   }
 
   factory GameSettings() {
@@ -127,12 +163,23 @@ class GameSettings extends ChangeNotifier {
     return sound;
   }
 
+  setButtonVisibility(bool buttonVisibility) {
+    this.buttonVisibility = buttonVisibility;
+    secureStorage.setButtonVisibility(buttonVisibility.toString());
+  }
+
+  bool getButtonVisibility() {
+    return buttonVisibility;
+  }
+
   logout() {
     birdType1 = 0;
     birdType2 = 1;
     backgroundType = 0;
     pipeType = 0;
     playerType = 0;
+    sound = false;
+    buttonVisibility = false;
     notifyListeners();
   }
 }

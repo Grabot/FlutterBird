@@ -76,6 +76,7 @@ class SecureStorage {
   final String _keyPipeType = 'pipeType';
   final String _keyPlayerType = 'playerType';
   final String _keySound = 'sound';
+  final String _keyButtonVisibility = 'buttonVisibility';
 
   Future setBirdType1(String birdType1) async {
     await storage.write(key: _keyBirdType1, value: birdType1);
@@ -123,6 +124,14 @@ class SecureStorage {
 
   Future<String?> getSound() async {
     return await storage.read(key: _keySound);
+  }
+
+  Future setButtonVisibility(String buttonVisibility) async {
+    await storage.write(key: _keyButtonVisibility, value: buttonVisibility);
+  }
+
+  Future<String?> getButtonVisibility() async {
+    return await storage.read(key: _keyButtonVisibility);
   }
 
   final String _keyWoodSingle = 'bronzeSingle';

@@ -251,7 +251,7 @@ class AchievementBoxState extends State<AchievementBox> {
     double width = 800;
     double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
-    if (totalWidth <= 800 || totalHeight > totalWidth) {
+    if (totalWidth <= 800) {
       width = totalWidth - 50;
     }
     double headerHeight = 40;
@@ -333,8 +333,8 @@ class AchievementBoxState extends State<AchievementBox> {
             goBack();
           },
           child: Container(
-            width: screenWidth/8,
-            height: screenHeight/20,
+            width: 150,
+            height: 30,
             color: Colors.blue,
             child: Center(
               child: Text(

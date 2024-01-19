@@ -26,8 +26,6 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   int soundState = 0;
   int visibilityState = 0;
 
-  bool showGameButtons = true;
-
   GlobalKey settingsKey = GlobalKey();
 
   late GameSettings gameSettings;
@@ -58,9 +56,9 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
                 },
                 onTap: () {
                   setState(() {
-                    visibilityState = showGameButtons ? 2 : 0;
-                    showGameButtons = !showGameButtons;
-                    ProfileChangeNotifier().setProfileOverviewVisible(showGameButtons);
+                    visibilityState = gameSettings.getButtonVisibility() ? 2 : 0;
+                    gameSettings.setButtonVisibility(!gameSettings.getButtonVisibility());
+                    ProfileChangeNotifier().setProfileOverviewVisible(gameSettings.getButtonVisibility());
                   });
                 },
                 child: Stack(
@@ -74,7 +72,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
                           )
                       ),
                     ),
-                    showGameButtons ? Image.asset(
+                    gameSettings.getButtonVisibility() ? Image.asset(
                       "assets/images/ui/visible_on.png",
                       width: profileButtonSize,
                       height: profileButtonSize,
@@ -191,6 +189,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   }
 
   Widget gameSettingsButtonNormal(double buttonWidth, double buttonHeight, double profileHeight, double fontSize) {
+    print("buttons visible");
     return Column(
       children: [
         Container(
@@ -277,6 +276,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   }
 
   Widget hiddenButtonsNormal(double buttonWidth, double buttonHeight, double statusBarPadding) {
+    print("buttons NOT visible");
     return SizedBox(
       width: buttonWidth + 20,
       child: Column(
@@ -304,7 +304,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
     double buttonWidth = 50;
     normalMode = true;
     double extraPadding = 60;
-    if (totalWidth <= 800 || totalHeight > totalWidth) {
+    if (totalWidth <= 800) {
       normalMode = false;
       profileOverviewHeight = 50;
       buttonHeight = 30;
@@ -316,7 +316,7 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
     return Align(
       alignment: FractionalOffset.topRight,
       child: SingleChildScrollView(
-        child: showGameButtons ? SizedBox(
+        child: gameSettings.getButtonVisibility() ? SizedBox(
             width: buttonWidth + 20,
             height: combinedHeight + extraPadding,
             child: normalMode

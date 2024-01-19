@@ -228,13 +228,14 @@ class ProfileOverviewState extends State<ProfileOverview> {
     double profileOverviewHeight = 100;
     normalMode = true;
     double statusBarPadding = MediaQuery.of(context).viewPadding.top;
-    if (totalWidth <= 800 || totalHeight > totalWidth) {
+    if (totalWidth <= 800) {
       profileOverviewWidth = totalWidth/2;
+      if (totalHeight < totalWidth) {
+        profileOverviewWidth = totalWidth/3;
+      }
       profileOverviewWidth += 5;
       profileOverviewHeight = 50;
       normalMode = false;
-      // double newHeightScaleFont = profileOverviewWidth / 800;
-      // fontSize = 16 * newHeightScaleFont;
     }
     return Align(
       alignment: FractionalOffset.topRight,

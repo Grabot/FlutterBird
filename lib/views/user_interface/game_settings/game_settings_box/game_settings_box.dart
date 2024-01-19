@@ -493,7 +493,7 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
     // If it's a mobile but it's landscaped, we also use normal mode.
-    if (totalWidth <= 800 || totalHeight > totalWidth) {
+    if (totalWidth <= 800) {
       width = totalWidth - 50;
       normalMode = false;
       // double newHeightScaleFont = width / 800;
@@ -536,8 +536,8 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
             goBack();
           },
           child: Container(
-            width: screenWidth/8,
-            height: screenHeight/20,
+            width: 150,
+            height: 30,
             color: Colors.blue,
             child: Center(
               child: Text(
