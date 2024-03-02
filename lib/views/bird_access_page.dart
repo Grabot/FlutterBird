@@ -14,9 +14,9 @@ class BirdAccess extends StatefulWidget {
   final FlutterBird game;
 
   const BirdAccess({
-    Key? key,
+    super.key,
     required this.game
-  }) : super(key: key);
+  });
 
   @override
   State<BirdAccess> createState() => _BirdAccessState();

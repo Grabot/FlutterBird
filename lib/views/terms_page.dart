@@ -6,7 +6,7 @@ class TermsPage extends StatefulWidget {
 
   static const String route = '/terms';
 
-  const TermsPage({Key? key}) : super(key: key);
+  const TermsPage({super.key});
 
   @override
   State<TermsPage> createState() => _TermsPageState();
@@ -27,9 +27,9 @@ class _TermsPageState extends State<TermsPage> {
             SelectionArea(
               child: Container(
                 padding: const EdgeInsets.all(40.0),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     SizedBox(height: 10),
                     Text(
                         "End-User License Agreement (EULA) of FlutterBird",

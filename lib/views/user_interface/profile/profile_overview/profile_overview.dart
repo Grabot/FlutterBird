@@ -83,7 +83,7 @@ class ProfileOverviewState extends State<ProfileOverview> {
     );  // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: const Text("Leave?"),
-      content: const Text("Do you want to logout of Age of Gold?"),
+      content: const Text("Do you want to logout of FlutterBird?"),
       actions: [
         cancelButton,
         continueButton,
@@ -120,10 +120,6 @@ class ProfileOverviewState extends State<ProfileOverview> {
     } else if (profileChangeNotifier.getProfileVisible()) {
       profileChangeNotifier.setProfileVisible(false);
     }
-  }
-
-  openFriendWindow() {
-    // FriendWindowChangeNotifier().setFriendWindowVisible(true);
   }
 
   Color overviewColour(int state) {

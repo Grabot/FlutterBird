@@ -281,18 +281,13 @@ class ScoreScreenState extends State<ScoreScreen> {
     );
   }
 
-  Widget scoreNow(double scoreWidth, double scoreHeight, double fontSize) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20),
-      alignment: Alignment.centerRight,
-      width: scoreWidth-20,
-      height: scoreHeight,
-      child: Stack(
+  Widget textWithBlackBorders(String text, double fontSize) {
+    return Stack(
         children: [
           Text(
-            "${scoreScreenChangeNotifier.getScore()}",
+            text,
             style: TextStyle(
-              fontSize: fontSize*2,
+              fontSize: fontSize*2-5,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = (fontSize / 2)
@@ -300,14 +295,23 @@ class ScoreScreenState extends State<ScoreScreen> {
             ),
           ),
           Text(
-            "${scoreScreenChangeNotifier.getScore()}",
+            text,
             style: TextStyle(
               color: Colors.white,
-              fontSize: fontSize*2,
+              fontSize: fontSize*2-5,
             ),
           ),
         ]
-      ),
+    );
+  }
+
+  Widget scoreNow(double scoreWidth, double scoreHeight, double fontSize) {
+    return Container(
+      margin: const EdgeInsets.only(right: 20),
+      alignment: Alignment.centerRight,
+      width: scoreWidth-20,
+      height: scoreHeight,
+      child: textWithBlackBorders("${scoreScreenChangeNotifier.getScore()}", fontSize)
     );
   }
 
@@ -334,27 +338,7 @@ class ScoreScreenState extends State<ScoreScreen> {
       alignment: Alignment.centerRight,
       width: scoreWidth-20,
       height: scoreHeight,
-      child: Stack(
-          children: [
-            Text(
-              "${userScore.getBestScoreDoubleBird()}",
-              style: TextStyle(
-                fontSize: fontSize*2,
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = (fontSize / 2)
-                  ..color = Colors.black,
-              ),
-            ),
-            Text(
-              "${userScore.getBestScoreDoubleBird()}",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: fontSize*2,
-              ),
-            ),
-          ]
-      ),
+      child: textWithBlackBorders("${userScore.getBestScoreDoubleBird()}", fontSize)
     );
   }
 
@@ -364,27 +348,7 @@ class ScoreScreenState extends State<ScoreScreen> {
       alignment: Alignment.centerRight,
       width: scoreWidth-20,
       height: scoreHeight,
-      child: Stack(
-        children: [
-          Text(
-            "${userScore.getBestScoreSingleBird()}",
-            style: TextStyle(
-              fontSize: fontSize*2,
-              foreground: Paint()
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = (fontSize / 2)
-                ..color = Colors.black,
-            ),
-          ),
-          Text(
-            "${userScore.getBestScoreSingleBird()}",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: fontSize*2,
-            ),
-          ),
-        ]
-      ),
+      child: textWithBlackBorders("${userScore.getBestScoreSingleBird()}", fontSize)
     );
   }
 
@@ -506,6 +470,10 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   Widget userInteractionButtons(double scoreWidth, double fontSize) {
+    double buttonHeight = 40;
+    if (fontSize > 25) {
+      buttonHeight = 60;
+    }
     return SizedBox(
       width: scoreWidth,
       height: 100,
@@ -519,7 +487,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 },
                 child: Container(
                   width: scoreWidth/3,
-                  height: 30,
+                  height: buttonHeight,
                   color: Colors.blue,
                   child: Center(
                     child: Text(
@@ -539,7 +507,7 @@ class ScoreScreenState extends State<ScoreScreen> {
                 },
                 child: Container(
                   width: scoreWidth/3,
-                  height: 30,
+                  height: buttonHeight,
                   color: Colors.blue,
                   child: Center(
                     child: Text(
@@ -699,8 +667,8 @@ class ScoreScreenState extends State<ScoreScreen> {
   }
 
   void _showTooltip(BuildContext context, GlobalKey achievementsKey, String tooltip) {
-    Offset _tapPosition = _storePosition(context, achievementsKey);
-    _showTooltipPopup(context, achievementsKey, _tapPosition, tooltip);
+    Offset tapPosition = _storePosition(context, achievementsKey);
+    _showTooltipPopup(context, achievementsKey, tapPosition, tooltip);
   }
 
   Offset _storePosition(BuildContext context, GlobalKey achievementsKey) {
@@ -710,7 +678,7 @@ class ScoreScreenState extends State<ScoreScreen> {
     return position;
   }
 
-  void _showTooltipPopup(BuildContext context, GlobalKey achievementsKey, Offset _tapPosition, String tooltip) {
+  void _showTooltipPopup(BuildContext context, GlobalKey achievementsKey, Offset tapPosition, String tooltip) {
     final RenderBox overlay =
     Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -725,7 +693,7 @@ class ScoreScreenState extends State<ScoreScreen> {
         context: context,
         items: [TooltipPopup(key: UniqueKey(), tooltip: tooltip)],
         position: RelativeRect.fromRect(
-            _tapPosition & const Size(40, 40), Offset.zero & overlay.size))
+            tapPosition & const Size(40, 40), Offset.zero & overlay.size))
         .then((int? delta) {
       // do nothing, this will remove the tooltip.
       tooltipShowing = false;

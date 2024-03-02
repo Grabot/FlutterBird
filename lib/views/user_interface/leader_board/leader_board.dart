@@ -351,21 +351,27 @@ class LeaderBoardState extends State<LeaderBoard> {
     );
   }
 
-  Widget leaderBoardTableRow(double leaderBoardWidth, Rank userRank, int index, double fontSize) {
+  Widget leaderBoardTableRow(double leaderBoardWidth, double leaderBoardHeight, Rank userRank, int index, double fontSize) {
     double totalHeaderWidth = leaderBoardWidth - 20;
     double rankRowWidth = totalHeaderWidth/6;
     double nameRowWidth = (totalHeaderWidth/12)*5;
     double scoreRowWidth = totalHeaderWidth/6;
     double achievedAtWidth = (totalHeaderWidth/4);
+    double rowHeight = (leaderBoardHeight/9);
+    // We have 10 rows and we always want to fill the scrollview to the bottom.
+    // We leave 1 row for aesthetic reasons so 'leaderBoardHeight/9'
+    if (achievedAtWidth < 120) {
+      rowHeight *= 2;
+    }
     return Container(
-      height: 40,
+      height: rowHeight,
       color: userRank.getMe() ? Colors.green.withOpacity(0.3) : Colors.black26,
       child: Row(
         children: [
           Container(
             alignment: Alignment.center,
             width: rankRowWidth,
-            height: 30,
+            height: rowHeight-10,
             child: AutoSizeText(
               "${index + 1}",
               style: userRank.getMe()
@@ -399,7 +405,7 @@ class LeaderBoardState extends State<LeaderBoard> {
           Container(
             alignment: Alignment.center,
             width: scoreRowWidth,
-            height: 30,
+            height: rowHeight-10,
             child: AutoSizeText(
               "${userRank.getScore()}",
               style: userRank.getMe()
@@ -414,7 +420,7 @@ class LeaderBoardState extends State<LeaderBoard> {
           Container(
             alignment: Alignment.center,
             width: achievedAtWidth,
-            height: 30,
+            height: rowHeight-10,
             child: AutoSizeText(
               DateFormat('kk:mm - yyyy-MM-dd').format(userRank.getTimestamp()),
               style: userRank.getMe()
@@ -462,7 +468,7 @@ class LeaderBoardState extends State<LeaderBoard> {
     if (rankingList.length < 10) {
       itemCount = rankingList.length;
     }
-    return Container(
+    return SizedBox(
       width: leaderBoardWidth-20,
       height: leaderBoardHeight + 10,
       child: NotificationListener(
@@ -474,7 +480,7 @@ class LeaderBoardState extends State<LeaderBoard> {
               controller: _controller,
               itemCount: itemCount,
               itemBuilder: (BuildContext context, int index) {
-                return leaderBoardTableRow(leaderBoardWidth, rankingList[index], index, fontSize);
+                return leaderBoardTableRow(leaderBoardWidth, leaderBoardHeight, rankingList[index], index, fontSize);
               }),
         ),
         onNotification: (t) {
@@ -516,14 +522,18 @@ class LeaderBoardState extends State<LeaderBoard> {
   }
 
   Widget continueButton(double leaderBoardWidth, double leaderBoardHeight, double fontSize) {
+    double buttonHeight = 40;
+    if (fontSize > 25) {
+      buttonHeight = 60;
+    }
     return Container(
       child: TextButton(
         onPressed: () {
           nextScreen();
         },
         child: Container(
-          width: 150,
-          height: 30,
+          width: leaderBoardWidth/3,
+          height: buttonHeight,
           color: Colors.blue,
           child: Center(
             child: Text(

@@ -7,7 +7,7 @@ class PrivacyPage extends StatefulWidget {
 
   static const String route = '/privacy';
 
-  const PrivacyPage({Key? key}) : super(key: key);
+  const PrivacyPage({super.key});
 
   @override
   State<PrivacyPage> createState() => _PrivacyPageState();

@@ -199,8 +199,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
   }
 
   Widget achievementCloseUp(double totalWidth, double totalHeight) {
-    double heightScale = totalHeight / 800;
-    double fontSize = 16 * heightScale;
+    double fontSize = 16;
     double width = 800;
     double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
@@ -220,7 +219,7 @@ class AchievementCloseUpBoxState extends State<AchievementCloseUpBox> {
           child: NotificationListener(
               child: SingleChildScrollView(
                   controller: _controller,
-                  child: Container(
+                  child: SizedBox(
                     child: Column(
                         children:
                         [

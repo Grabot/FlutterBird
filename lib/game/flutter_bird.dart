@@ -741,6 +741,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       bird2.reset(size.y);
       add(bird2);
       add(birdOutlineBird2);
+      bird1.reset(size.y);
       clearPipes();
     }
     if (gameSettings.getPlayerType() != 1 && twoPlayers) {
@@ -749,6 +750,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       helpMessage.updateMessageImage(size);
       remove(bird2);
       remove(birdOutlineBird2);
+      bird1.reset(size.y);
       clearPipes();
     }
     if (gameSettings.getBirdType1() != bird1.getBirdType()) {

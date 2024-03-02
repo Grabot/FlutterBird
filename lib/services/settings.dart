@@ -93,8 +93,8 @@ class Settings extends ChangeNotifier {
   }
 
   loginCheck(String path) async {
-    SecureStorage _secureStorage = SecureStorage();
-    String? accessToken = await _secureStorage.getAccessToken();
+    SecureStorage secureStorage = SecureStorage();
+    String? accessToken = await secureStorage.getAccessToken();
     int current = (DateTime.now().millisecondsSinceEpoch / 1000).round();
 
     if (accessToken != null && accessToken != "") {
@@ -108,7 +108,7 @@ class Settings extends ChangeNotifier {
       }
 
       // If there is an access token but it is not valid we might be able to refresh the tokens.
-      String? refreshToken = await _secureStorage.getRefreshToken();
+      String? refreshToken = await secureStorage.getRefreshToken();
       if (refreshToken != null && refreshToken != "") {
         int expirationRefresh = Jwt.parseJwt(refreshToken)['exp'];
         if ((expirationRefresh - current) > 0) {

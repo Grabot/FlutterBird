@@ -30,9 +30,9 @@ import 'views/user_interface/score_screen/score_screen.dart';
 import 'views/bird_access_page.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
   setupLocator();
-  WidgetsFlutterBinding.ensureInitialized();
 
   // initialize the settings and users score singleton
   Settings settings = Settings();

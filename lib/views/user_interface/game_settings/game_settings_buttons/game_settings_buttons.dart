@@ -189,7 +189,6 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   }
 
   Widget gameSettingsButtonNormal(double buttonWidth, double buttonHeight, double profileHeight, double fontSize) {
-    print("buttons visible");
     return Column(
       children: [
         Container(
@@ -276,7 +275,6 @@ class GameSettingsButtonSState extends State<GameSettingsButtons> {
   }
 
   Widget hiddenButtonsNormal(double buttonWidth, double buttonHeight, double statusBarPadding) {
-    print("buttons NOT visible");
     return SizedBox(
       width: buttonWidth + 20,
       child: Column(

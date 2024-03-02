@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,8 +14,9 @@ import 'package:flutter_bird/util/box_window_painter.dart';
 import 'package:flutter_bird/util/util.dart';
 import 'package:flutter_bird/views/user_interface/login_screen/login_screen_change_notifier.dart';
 import 'package:flutter_bird/views/user_interface/score_screen/score_screen_change_notifier.dart';
+import 'package:flutter_bird/constants/route_paths.dart' as routes;
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:uni_links/uni_links.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -68,6 +71,77 @@ class LoginScreenState extends State<LoginScreen> {
       checkTopBottomScroll();
     });
     super.initState();
+    _handleIncomingLinks();
+    _handleInitialUri();
+  }
+
+  bool _initialUriIsHandled = false;
+  Uri? _initialUri;
+  Uri? _latestUri;
+  Object? _err;
+  StreamSubscription? _sub;
+
+  refreshLogin(Uri uri) {
+    String? accessToken = uri.queryParameters["access_token"];
+    String? refreshToken = uri.queryParameters["refresh_token"];
+
+    // Use the tokens to immediately refresh the access token
+    if (accessToken != null && refreshToken != null) {
+      AuthServiceLogin authService = AuthServiceLogin();
+      authService.getRefresh(accessToken, refreshToken).then((loginResponse) {
+        if (loginResponse.getResult()) {
+          // We go back to the home screen now that we are logged in.
+          goBack();
+          return;
+        }
+      });
+    }
+  }
+
+  void _handleIncomingLinks() {
+    if (!kIsWeb) {
+      // It will handle app links while the app is already started - be it in
+      // the foreground or in the background.
+      _sub = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) return;
+        setState(() {
+          if (uri != null) {
+            if (uri.path == routes.BirdAccessRoute) {
+              refreshLogin(uri);
+              return;
+            }
+          }
+          _latestUri = uri;
+          _err = null;
+        });
+      }, onError: (Object err) {
+        if (!mounted) return;
+        setState(() {
+          _latestUri = null;
+          if (err is FormatException) {
+            _err = err;
+          } else {
+            _err = null;
+          }
+        });
+      });
+    }
+  }
+
+  Future<void> _handleInitialUri() async {
+    if (!_initialUriIsHandled) {
+      _initialUriIsHandled = true;
+      try {
+        final uri = await getInitialUri();
+        if (!mounted) return;
+        setState(() => _initialUri = uri);
+      } on PlatformException {
+        // Platform messages may fail but we ignore the exception
+      } on FormatException catch (err) {
+        if (!mounted) return;
+        setState(() => _err = err);
+      }
+    }
   }
 
   @override
@@ -314,8 +388,10 @@ class LoginScreenState extends State<LoginScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      final Uri _url = Uri.parse(googleLogin);
-                      _launchUrl(_url);
+                      final Uri url0 = Uri.parse(googleLogin);
+                      _launchUrl(url0);
+                      // final Uri url = Uri.parse(googleLogin);
+                      // launchGoogle();
                     },
                     child: SizedBox(
                       height: loginBoxSize,
@@ -339,8 +415,8 @@ class LoginScreenState extends State<LoginScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    final Uri _url = Uri.parse(githubLogin);
-                    _launchUrl(_url);
+                    final Uri url = Uri.parse(githubLogin);
+                    _launchUrl(url);
                   },
                   child: SizedBox(
                     height: loginBoxSize,
@@ -364,8 +440,9 @@ class LoginScreenState extends State<LoginScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      final Uri _url = Uri.parse(redditLogin);
-                      _launchUrl(_url);
+                      final Uri url = Uri.parse(redditLogin);
+                      _launchUrl(url);
+                      // launchReddit();
                     },
                     child: SizedBox(
                       height: loginBoxSize,
@@ -931,11 +1008,20 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _launchUrl(Uri url) async {
-    if (!await launchUrl(
-        url,
-        webOnlyWindowName: '_self'
-    )) {
-      throw 'Could not launch $url';
+    if (kIsWeb) {
+      if (!await launchUrl(
+          url,
+          webOnlyWindowName: '_self'
+      )) {
+        throw 'Could not launch $url';
+      }
+    } else {
+      if (!await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication
+      )) {
+        throw 'Could not launch $url';
+      }
     }
   }
 }

@@ -2,7 +2,7 @@
     package="flutterbird.eu.flutterBird">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-   <application
+    <application
         android:label="FlutterBird"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -26,6 +26,16 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <meta-data android:name="flutter_deeplink_enabled" android:value="true" />
+            <intent-filter
+                android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="flutterbird.eu" />
+                <data android:scheme="https" android:host="flutterbird.eu" android:pathPattern="/birdaccess" />
+            </intent-filter>
+
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

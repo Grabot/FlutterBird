@@ -143,7 +143,7 @@ class AchievementBoxState extends State<AchievementBox> {
               ),
             ),
             const SizedBox(width: 10),
-            Container(
+            SizedBox(
                 width: achievementWindowWidth - achievementSize - marginWidth - 10,
                 child: AutoSizeText(
                   achievement.getTooltip(),
@@ -167,7 +167,6 @@ class AchievementBoxState extends State<AchievementBox> {
         const SizedBox(width: 10),
         SizedBox(
             width: achievementWindowWidth - 20,
-            height: 50,
             child:Text.rich(
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -245,9 +244,7 @@ class AchievementBoxState extends State<AchievementBox> {
   }
 
   Widget achievementBox(double totalWidth, double totalHeight) {
-    // normal mode is for desktop, mobile mode is for mobile.
-    double heightScale = totalHeight / 800;
-    double fontSize = 16 * heightScale;
+    double fontSize = 16;
     double width = 800;
     double height = (totalHeight / 10) * 6;
     // When the width is smaller than this we assume it's mobile.
@@ -266,7 +263,7 @@ class AchievementBoxState extends State<AchievementBox> {
         child: NotificationListener(
           child: SingleChildScrollView(
               controller: _controller,
-              child: Container(
+              child: SizedBox(
                 child: Column(
                     children:
                     [

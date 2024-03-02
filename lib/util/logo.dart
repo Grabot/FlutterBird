@@ -21,14 +21,14 @@ Widget logo(double maxWidth) {
             image: AssetImage("assets/images/flutterbird_logo.png"),
           ),
         ),
-        Text(
+        const Text(
             "FlutterBird",
-            style: TextStyle(color: const Color(0xff949494), fontSize: 35)
+            style: TextStyle(color: Color(0xff949494), fontSize: 35)
         ),
-        SizedBox(height: 30),
-        Text(
+        const SizedBox(height: 30),
+        const Text(
             "From",
-            style: TextStyle(color: const Color(0xff949494), fontSize: 10, fontWeight: FontWeight.bold)
+            style: TextStyle(color: Color(0xff949494), fontSize: 10, fontWeight: FontWeight.bold)
         ),
         InkWell(
           onTap: () {

@@ -227,6 +227,7 @@ class ProfileBoxState extends State<ProfileBox> {
               settings.notify();
             }
             setState(() {
+              userNameController.text = "";
               showToastMessage("Username changed!");
               changeUserName = false;
             });
@@ -244,6 +245,7 @@ class ProfileBoxState extends State<ProfileBox> {
         if (response.getResult()) {
           setState(() {
             setState(() {
+              passwordController.text = "";
               showToastMessage("password changed!");
               changePassword = false;
             });
@@ -920,8 +922,8 @@ class ProfileBoxState extends State<ProfileBox> {
   }
 
   void _showTooltip(BuildContext context, GlobalKey achievementsKey, String tooltip) {
-    Offset _tapPosition = _storePosition(context, achievementsKey);
-    _showTooltipPopup(context, achievementsKey, _tapPosition, tooltip);
+    Offset tapPosition = _storePosition(context, achievementsKey);
+    _showTooltipPopup(context, achievementsKey, tapPosition, tooltip);
   }
 
   Offset _storePosition(BuildContext context, GlobalKey achievementsKey) {
@@ -931,7 +933,7 @@ class ProfileBoxState extends State<ProfileBox> {
     return position;
   }
 
-  void _showTooltipPopup(BuildContext context, GlobalKey achievementsKey, Offset _tapPosition, String tooltip) {
+  void _showTooltipPopup(BuildContext context, GlobalKey achievementsKey, Offset tapPosition, String tooltip) {
     final RenderBox overlay =
     Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -946,7 +948,7 @@ class ProfileBoxState extends State<ProfileBox> {
         context: context,
         items: [TooltipPopup(key: UniqueKey(), tooltip: tooltip)],
         position: RelativeRect.fromRect(
-            _tapPosition & const Size(40, 40), Offset.zero & overlay.size))
+            tapPosition & const Size(40, 40), Offset.zero & overlay.size))
         .then((int? delta) {
       // do nothing, this will remove the tooltip.
       tooltipShowing = false;

@@ -12,9 +12,9 @@ class PasswordReset extends StatefulWidget {
   final FlutterBird game;
 
   const PasswordReset({
-    Key? key,
+    super.key,
     required this.game
-  }) : super(key: key);
+  });
 
   @override
   State<PasswordReset> createState() => _PasswordResetState();
