@@ -9,7 +9,6 @@ class GameSettings extends ChangeNotifier {
 
   int birdType1 = 0;
   int birdType2 = 1;
-  int backgroundType = 0;
   int pipeType = 0;
   int playerType = 0;
 
@@ -52,16 +51,6 @@ class GameSettings extends ChangeNotifier {
       storageLoaded += 1;
       checkIfShouldNotify();
     });
-    secureStorage.getBackgroundType().then((value) {
-      if (value != null) {
-        int newBackgroundType = int.parse(value);
-        if (newBackgroundType != backgroundType) {
-          backgroundType = newBackgroundType;
-        }
-      }
-      storageLoaded += 1;
-      checkIfShouldNotify();
-    });
     secureStorage.getPipeType().then((value) {
       if (value != null) {
         int newPipeType = int.parse(value);
@@ -96,7 +85,7 @@ class GameSettings extends ChangeNotifier {
   }
 
   checkIfShouldNotify() {
-    if (storageLoaded == 7) {
+    if (storageLoaded == 6) {
       notify();
     }
   }
@@ -125,15 +114,6 @@ class GameSettings extends ChangeNotifier {
 
   int getBirdType2() {
     return birdType2;
-  }
-
-  setBackgroundType(int backgroundType) {
-    this.backgroundType = backgroundType;
-    secureStorage.setBackgroundType(backgroundType.toString());
-  }
-
-  int getBackgroundType() {
-    return backgroundType;
   }
 
   setPipeType(int pipeType) {
@@ -175,7 +155,6 @@ class GameSettings extends ChangeNotifier {
   logout() {
     birdType1 = 0;
     birdType2 = 1;
-    backgroundType = 0;
     pipeType = 0;
     playerType = 0;
     sound = false;

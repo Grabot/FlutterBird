@@ -27,7 +27,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   bool playFieldFocus = true;
 
-  bool twoPlayers = false;
+  bool twoPlayers = true;
   late final Bird bird1;
   late final Bird bird2;
   late final BirdOutline birdOutlineBird1;
@@ -35,7 +35,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   bool gameStarted = false;
   bool gameEnded = false;
-  double speed = 160;
+  double speed = 130;
   double heightScale = 1;
 
   PipeDuo? lastPipeDuoBird1;
@@ -123,6 +123,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
     scoreIndicator = ScoreIndicator();
     add(sky);
     add(bird1);
+    add(bird2);
     add(birdOutlineBird1);
     add(Floor());
     add(helpMessage);
@@ -729,6 +730,16 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
   settingsChangeListener() {
     if (gameSettings.getPlayerType() != 0 && !twoPlayers) {
+      settings.getLeaderBoardsOnePlayer();
+      twoPlayers = false;
+      helpMessage.updateMessageImage(size);
+      remove(bird2);
+      remove(birdOutlineBird2);
+      bird1.reset(size.y);
+      clearPipes();
+      speed = 160;
+    }
+    if (gameSettings.getPlayerType() != 1 && twoPlayers) {
       settings.getLeaderBoardsTwoPlayer();
       twoPlayers = true;
       helpMessage.updateMessageImage(size);
@@ -743,15 +754,7 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       add(birdOutlineBird2);
       bird1.reset(size.y);
       clearPipes();
-    }
-    if (gameSettings.getPlayerType() != 1 && twoPlayers) {
-      settings.getLeaderBoardsOnePlayer();
-      twoPlayers = false;
-      helpMessage.updateMessageImage(size);
-      remove(bird2);
-      remove(birdOutlineBird2);
-      bird1.reset(size.y);
-      clearPipes();
+      speed = 130;
     }
     if (gameSettings.getBirdType1() != bird1.getBirdType()) {
       bird1.changeBird(gameSettings.getBirdType1());
@@ -761,20 +764,12 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
       bird2.changeBird(gameSettings.getBirdType2());
       clearPipes();
     }
-    if (gameSettings.getBackgroundType() != sky.getBackgroundType()) {
-      sky.changeBackground(gameSettings.getBackgroundType());
-    }
   }
 
   changePlayer(int playerType) async {
     if (playerType == 0) {
-      twoPlayers = false;
-      helpMessage.updateMessageImage(size);
-      remove(bird2);
-      remove(birdOutlineBird2);
-      clearPipes();
-    } else {
       twoPlayers = true;
+      speed = 130;
       helpMessage.updateMessageImage(size);
       settings.getLeaderBoardsTwoPlayer();
 
@@ -783,9 +778,18 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
 
       Vector2 initialPosBird2 = determineBirdPos(size);
       bird2.setInitialPos(initialPosBird2);
+      bird1.reset(size.y);
       bird2.reset(size.y);
       add(bird2);
       add(birdOutlineBird2);
+      clearPipes();
+    } else {
+      twoPlayers = false;
+      speed = 160;
+      helpMessage.updateMessageImage(size);
+      remove(bird2);
+      bird1.reset(size.y);
+      remove(birdOutlineBird2);
       clearPipes();
     }
   }
@@ -797,10 +801,6 @@ class FlutterBird extends FlameGame with MultiTouchTapDetector, HasCollisionDete
   changeBird2(int birdType2) async {
     bird2.changeBird(birdType2);
     clearPipes();
-  }
-
-  changeBackground(int backgroundType) async {
-    sky.changeBackground(backgroundType);
   }
 
   focusGame() {

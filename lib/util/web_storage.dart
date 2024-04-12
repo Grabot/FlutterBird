@@ -72,7 +72,6 @@ class SecureStorage {
 
   final String _keyBirdType1 = 'birdType1';
   final String _keyBirdType2 = 'birdType2';
-  final String _keyBackgroundType = 'backgroundType';
   final String _keyPipeType = 'pipeType';
   final String _keyPlayerType = 'playerType';
   final String _keySound = 'sound';
@@ -92,14 +91,6 @@ class SecureStorage {
 
   Future<String?> getBirdType2() async {
     return await storage.read(key: _keyBirdType2);
-  }
-
-  Future setBackgroundType(String backgroundType) async {
-    await storage.write(key: _keyBackgroundType, value: backgroundType);
-  }
-
-  Future<String?> getBackgroundType() async {
-    return await storage.read(key: _keyBackgroundType);
   }
 
   Future setPipeType(String pipeType) async {
@@ -307,7 +298,6 @@ class SecureStorage {
 
     await storage.write(key: _keyBirdType1, value: null);
     await storage.write(key: _keyBirdType2, value: null);
-    await storage.write(key: _keyBackgroundType, value: null);
     await storage.write(key: _keyPipeType, value: null);
     await storage.write(key: _keyPlayerType, value: null);
     await storage.write(key: _keySound, value: null);

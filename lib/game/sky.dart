@@ -7,44 +7,32 @@ import 'package:flutter_bird/game/flutter_bird.dart';
 
 class Sky extends ParallaxComponent<FlutterBird> with HasGameRef<FlutterBird> {
 
-  int backgroundType = 0;
-
   @override
   Future<void> onLoad() async {
-    await loadParallax(backgroundType);
+    await loadParallax();
   }
 
-  loadParallax(int type) async {
+  loadParallax() async {
 
-    List parallaxList = [];
-    if (type == 0) {
-      parallaxList = [
-        "parallax/city_day/city_bg_day_1.png",
-        "parallax/city_day/city_bg_day_2.png",
-        "parallax/city_bg_3.png",
-        "parallax/city_bg_4.png",
-      ];
-    } else if (type == 1) {
-      parallaxList = [
-        "parallax/city_night/city_bg_night_1.png",
-        "parallax/city_night/city_bg_night_2.png",
-        "parallax/city_bg_3.png",
-        "parallax/city_bg_4.png",
-      ];
-    }
-    if (parallaxList.isNotEmpty && parallaxList.length == 4) {
-      parallax = await gameRef.loadParallax(
-        [
-          ParallaxImageData(parallaxList[0]),
-          ParallaxImageData(parallaxList[1]),
-          ParallaxImageData(parallaxList[2]),
-          ParallaxImageData(parallaxList[3]),
-        ],
-        baseVelocity: Vector2(20, 0),
-        velocityMultiplierDelta: Vector2(1.8, 1.0),
-        filterQuality: FilterQuality.none,
-      );
-    }
+    List parallaxList = [
+      "parallax/city_day/new_background_sky_day_gradient_4.png",
+      "parallax/city_day/new_background_city_2_day.png",
+      "parallax/city_day/new_background_city_2_day_2.png",
+      "parallax/city_bg_3.png",
+      "parallax/city_bg_4.png",
+    ];
+    parallax = await gameRef.loadParallax(
+      [
+        ParallaxImageData(parallaxList[0]),
+        ParallaxImageData(parallaxList[1]),
+        ParallaxImageData(parallaxList[2]),
+        ParallaxImageData(parallaxList[3]),
+        ParallaxImageData(parallaxList[4]),
+      ],
+      baseVelocity: Vector2(15, 0),
+      velocityMultiplierDelta: Vector2(1.6, 1.0),
+      filterQuality: FilterQuality.none,
+    );
   }
 
   gameOver() {
@@ -57,16 +45,5 @@ class Sky extends ParallaxComponent<FlutterBird> with HasGameRef<FlutterBird> {
     if (parallax != null) {
       parallax!.baseVelocity = Vector2(20, 0);
     }
-  }
-
-  changeBackground(int newBackgroundType) async {
-    if (backgroundType != newBackgroundType) {
-      await loadParallax(newBackgroundType);
-      backgroundType = newBackgroundType;
-    }
-  }
-
-  int getBackgroundType() {
-    return backgroundType;
   }
 }

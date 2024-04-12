@@ -101,12 +101,11 @@ flutter:
     - assets/images/pipes/pipe-purple_big.png
     - assets/images/pipes/pipe-white_big.png
     - assets/images/pipes/pipe-black_big.png
-    - assets/images/parallax/city_night/city_bg_night_1.png
-    - assets/images/parallax/city_night/city_bg_night_2.png
-    - assets/images/parallax/city_day/city_bg_day_1.png
-    - assets/images/parallax/city_day/city_bg_day_2.png
     - assets/images/parallax/city_bg_3.png
     - assets/images/parallax/city_bg_4.png
+    - assets/images/parallax/city_day/new_background_city_2_day.png
+    - assets/images/parallax/city_day/new_background_city_2_day_2.png
+    - assets/images/parallax/city_day/new_background_sky_day_gradient_4.png
     - assets/images/bird/flutter_bird_outline.png
     - assets/images/bird/flutter_bird_black.png
     - assets/images/bird/flutter_bird_blue.png

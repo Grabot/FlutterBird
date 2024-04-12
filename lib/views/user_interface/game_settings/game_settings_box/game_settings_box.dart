@@ -27,10 +27,7 @@ class GameSettingsBox extends StatefulWidget {
 class GameSettingsBoxState extends State<GameSettingsBox> {
 
   // Used if any text fields are added to the profile.
-  final FocusNode _focusGameSettingsBox = FocusNode();
   late GameSettingsChangeNotifier gameSettingsChangeNotifier;
-
-  final NavigationService _navigationService = locator<NavigationService>();
 
   bool showGameSettings = false;
   final ScrollController _controller = ScrollController();
@@ -107,10 +104,6 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     }
   }
 
-  // _onFocusChange() {
-  //   widget.game.gameSettingsFocus(_focusGameSettingsBox.hasFocus);
-  // }
-
   Widget gameSettingsHeader(double headerWidth, double headerHeight, double fontSize) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,9 +130,9 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
 
   pressedPlayerChange(int playerType) {
     if (playerType == 1) {
-      Settings().getLeaderBoardsTwoPlayer();
-    } else {
       Settings().getLeaderBoardsOnePlayer();
+    } else {
+      Settings().getLeaderBoardsTwoPlayer();
     }
     if (gameSettings.getPlayerType() != playerType) {
       gameSettings.setPlayerType(playerType);
@@ -158,13 +151,6 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     if (gameSettings.getBirdType2() != birdType2) {
       gameSettings.setBirdType2(birdType2);
       widget.game.changeBird2(birdType2);
-    }
-  }
-
-  pressedBackgroundChange(int backgroundType) {
-    if (gameSettings.getBackgroundType() != backgroundType) {
-      gameSettings.setBackgroundType(backgroundType);
-      widget.game.changeBackground(backgroundType);
     }
   }
 
@@ -188,8 +174,6 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
             pressedBird1Change(selectionType);
           } else if (category == 2) {
             pressedBird2Change(selectionType);
-          } else if (category == 3) {
-            pressedBackgroundChange(selectionType);
           }
         });
       },
@@ -276,8 +260,8 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
   }
 
   List<String> playerImagePath = [
-    'assets/images/ui/game_settings/player/1_bird.png',
     'assets/images/ui/game_settings/player/2_birds.png',
+    'assets/images/ui/game_settings/player/1_bird.png',
   ];
 
   Widget playerSelection(double gameSettingsWidth, double fontSize) {
@@ -362,29 +346,6 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     );
   }
 
-  List<String> backgroundImagePath = [
-    'assets/images/ui/game_settings/background/day.png',
-    'assets/images/ui/game_settings/background/night.png',
-  ];
-
-  Widget backgroundSelection(double gameSettingsWidth, double fontSize) {
-    double imageSize = gameSettingsWidth / 6;
-    if (imageSize > 100) {
-      imageSize = 100;
-    }
-    return SizedBox(
-      width: gameSettingsWidth,
-      height: imageSize + 20,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: List.generate(2, (int backgroundType) {
-          bool selected = gameSettings.getBackgroundType() == backgroundType;
-          return selectionButton(backgroundImagePath[backgroundType], imageSize, imageSize, backgroundType, 3, selected);
-        }),
-      ),
-    );
-  }
-
   List<String> pipeImagePath = [
     'assets/images/ui/game_settings/pipes/green_pipe.png',
     'assets/images/ui/game_settings/pipes/red_pipe.png',
@@ -451,35 +412,14 @@ class GameSettingsBoxState extends State<GameSettingsBox> {
     );
   }
 
-  Widget backgroundSelectionRow(double gameSettingsWidth, double fontSize) {
-    return Column(
-      children: [
-        Row(
-            children: [
-              const SizedBox(width: 20),
-              Text(
-                  "Background",
-                  style: simpleTextStyle(fontSize)
-              ),
-            ]
-        ),
-        const SizedBox(height: 20),
-        backgroundSelection(gameSettingsWidth, fontSize),
-        const SizedBox(height: 40),
-      ],
-    );
-  }
-
   Widget gameSettingContent(double gameSettingsWidth, double fontSize) {
 
     return Column(
       children: [
         playerSelectionRow(gameSettingsWidth, fontSize),
         flutterBird1SelectionRow(gameSettingsWidth, fontSize),
-        gameSettings.getPlayerType() == 1
+        gameSettings.getPlayerType() == 0
             ? flutterBird2SelectionRow(gameSettingsWidth, fontSize) : Container(),
-        backgroundSelectionRow(gameSettingsWidth, fontSize),
-        // pipeSelectionRow(gameSettingsWidth, fontSize),
       ]
     );
   }
